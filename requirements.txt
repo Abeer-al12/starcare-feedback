@@ -1,0 +1,5 @@
+Flask
+pymongo
+qrcode
+Pillow
+gunicorn
