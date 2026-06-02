@@ -81,9 +81,33 @@ def feedback(location):
         locations=locations
     )
 
+# ---------------- LOGIN ----------------
+@app.route('/login', methods=['GET','POST'])
+def login():
+
+    if request.method == 'POST':
+
+        username = request.form['username']
+        password = request.form['password']
+
+        if username == "admin" and password == "1234":
+            session['admin'] = True
+            return redirect('/admin')
+
+        return "Wrong credentials"
+
+    return render_template("login.html")
+
+# ---------------- LOGOUT ----------------
+@app.route('/logout')
+def logout():
+    session.pop('admin', None)
+    return redirect('/login')
+
 # ---------------- ADMIN ----------------
 @app.route('/admin')
 def admin():
+
     if 'admin' not in session:
         return redirect('/login')
 
@@ -99,18 +123,21 @@ def admin():
 
     for i in data:
         loc = i["location"]
-        stats.setdefault(loc, {"count":0, "total":0})
+
+        if loc not in stats:
+            stats[loc] = {"count":0, "total":0}
+
         stats[loc]["count"] += 1
         stats[loc]["total"] += i["rating"]
 
-    stats_list = [
-        {
+    stats_list = []
+
+    for loc, v in stats.items():
+        stats_list.append({
             "location": loc,
             "count": v["count"],
             "avg": round(v["total"]/v["count"], 2)
-        }
-        for loc, v in stats.items()
-    ]
+        })
 
     return render_template(
         "dashboard.html",
@@ -123,6 +150,7 @@ def admin():
 # ---------------- ANALYTICS ----------------
 @app.route('/analytics')
 def analytics():
+
     if 'admin' not in session:
         return redirect('/login')
 
@@ -132,22 +160,28 @@ def analytics():
 
     for i in data:
         loc = i["location"]
-        stats.setdefault(loc, {"count":0, "total":0})
+
+        if loc not in stats:
+            stats[loc] = {"count":0, "total":0}
+
         stats[loc]["count"] += 1
         stats[loc]["total"] += i["rating"]
 
-    chart_data = [
-        {
+    chart_data = []
+
+    for loc, v in stats.items():
+        chart_data.append({
             "location": loc,
             "count": v["count"],
             "avg": round(v["total"]/v["count"], 2)
-        }
-        for loc, v in stats.items()
-    ]
+        })
 
-    return render_template("analytics.html", data=chart_data)
+    return render_template(
+        "analytics.html",
+        data=chart_data
+    )
 
-# ---------------- QR ----------------
+# ---------------- GENERATE QR ----------------
 @app.route('/generate_qr')
 def generate_qr():
 
@@ -159,6 +193,29 @@ def generate_qr():
         img.save(f"{folder}/{loc}.png")
 
     return "QR Generated Successfully"
+
+# ---------------- QR DASHBOARD ----------------
+@app.route('/qr_dashboard')
+def qr_dashboard():
+
+    rooms_data = []
+
+    for loc in locations:
+
+        count = collection.count_documents({
+            "location": loc
+        })
+
+        rooms_data.append({
+            "name": loc,
+            "count": count,
+            "qr": BASE_URL + loc
+        })
+
+    return render_template(
+        "qr_dashboard.html",
+        rooms=rooms_data
+    )
 
 # ---------------- RUN ----------------
 if __name__ == "__main__":
