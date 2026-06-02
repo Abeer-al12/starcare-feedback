@@ -1,4 +1,11 @@
+<<<<<<< HEAD
 Flask
 pymongo
 qrcode
 gunicorn
+=======
+Flask
+pymongo
+qrcode
+gunicorn
+>>>>>>> a90fab5cd0b20ed35be740d9a29bc0e2e6a653f4

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html>
 <head>
@@ -143,4 +144,151 @@ function downloadQR(id,name){
 </script>
 
 </body>
+=======
+<!DOCTYPE html>
+<html>
+<head>
+    <title>QR Dashboard</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+    <style>
+
+        body{
+            margin:0;
+            font-family:Arial;
+            background:#f6fbfc;
+        }
+
+        .sidebar{
+            position:fixed;
+            left:0;
+            top:0;
+            width:240px;
+            height:100%;
+            background:#59e3ec;
+            color:white;
+            padding-top:30px;
+        }
+
+        .main{
+            margin-left:240px;
+            padding:30px;
+        }
+
+        h1{
+            color:#1b2a41;
+        }
+
+        .grid{
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+            gap:20px;
+        }
+
+        .card{
+            background:white;
+            padding:20px;
+            border-radius:20px;
+            box-shadow:0 5px 18px rgba(0,0,0,.08);
+            text-align:center;
+        }
+
+        .room{
+            font-weight:bold;
+            margin-bottom:10px;
+            color:#1b2a41;
+        }
+
+        .count{
+            color:#777;
+            margin-bottom:10px;
+        }
+
+        .qr{
+            margin:10px auto;
+        }
+
+        button{
+            margin-top:10px;
+            padding:10px;
+            border:none;
+            background:#59e3ec;
+            color:white;
+            border-radius:10px;
+            cursor:pointer;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="sidebar">
+    <h2 style="text-align:center;">❤ StarCare</h2>
+</div>
+
+<div class="main">
+
+    <h1>QR Dashboard</h1>
+
+    <div class="grid">
+
+        {% for room in rooms %}
+
+        <div class="card">
+
+            <div class="room">
+                {{ room.name.replace('_',' ').title() }}
+            </div>
+
+            <div class="count">
+                Feedback: {{ room.count }}
+            </div>
+
+            <div class="qr" id="qr{{ loop.index }}"></div>
+
+            <button onclick="downloadQR('qr{{ loop.index }}','{{ room.name }}')">
+                Download QR
+            </button>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+<script>
+
+let rooms = {{ rooms | tojson }};
+
+// generate QR
+rooms.forEach((r, i) => {
+
+    new QRCode(document.getElementById("qr"+(i+1)), {
+        text: r.qr,
+        width: 120,
+        height: 120
+    });
+
+});
+
+function downloadQR(id,name){
+
+    let canvas = document.querySelector("#"+id+" canvas");
+
+    let link = document.createElement("a");
+
+    link.download = name + ".png";
+    link.href = canvas.toDataURL();
+
+    link.click();
+}
+
+</script>
+
+</body>
+>>>>>>> a90fab5cd0b20ed35be740d9a29bc0e2e6a653f4
 </html>
