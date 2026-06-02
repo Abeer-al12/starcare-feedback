@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 from flask import Flask, render_template, request, redirect, session
 from pymongo import MongoClient
 from datetime import datetime
@@ -212,7 +211,6 @@ def qr_dashboard():
 
 # ---------------- RUN ----------------
 if __name__ == "__main__":
-=======
 from flask import Flask, render_template, request, redirect, session
 from pymongo import MongoClient
 from datetime import datetime
