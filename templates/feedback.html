@@ -1,11 +1,9 @@
-<<<<<<< HEAD
 <!DOCTYPE html>
 <html>
 <head>
     <title>StarCare Feedback</title>
 
     <style>
-
         body{
             margin:0;
             font-family:Arial;
@@ -36,12 +34,10 @@
             margin:auto;
             font-size:40px;
             color:white;
-            box-shadow:0 4px 15px rgba(89,227,236,.45);
         }
 
         h1{
             color:#1b2a41;
-            margin:15px 0 5px;
         }
 
         .lang-switch{
@@ -58,20 +54,6 @@
             padding:8px 18px;
             border-radius:12px;
             cursor:pointer;
-            font-size:14px;
-            width:auto;
-            margin:0;
-        }
-
-        .lang-switch button:hover{
-            background:#59e3ec;
-            color:white;
-        }
-
-        .title{
-            color:#666;
-            margin-top:10px;
-            font-size:16px;
         }
 
         .room{
@@ -81,50 +63,16 @@
             margin:15px 0;
         }
 
-        .stars{
-            display:flex;
-            justify-content:center;
-            flex-direction:row-reverse;
-            margin:25px 0;
-        }
-
-        .stars input{
-            display:none;
-        }
-
         .stars label{
             font-size:48px;
             color:#d7d7d7;
-            cursor:pointer;
-            padding:4px;
-            transition:.2s;
-        }
-
-        .stars input:checked ~ label,
-        .stars label:hover,
-        .stars label:hover ~ label{
-            color:#59e3ec;
-        }
-
-        #starText{
-            color:#777;
-            margin-bottom:18px;
         }
 
         textarea{
             width:100%;
             height:110px;
-            border:1px solid #ddd;
             border-radius:18px;
             padding:15px;
-            font-size:15px;
-            resize:none;
-            box-sizing:border-box;
-            outline:none;
-        }
-
-        textarea:focus{
-            border-color:#59e3ec;
         }
 
         .submit-btn{
@@ -135,16 +83,7 @@
             border-radius:18px;
             background:#59e3ec;
             color:white;
-            font-size:17px;
-            cursor:pointer;
-            transition:.3s;
-            font-weight:bold;
         }
-
-        .submit-btn:hover{
-            background:#43d2dc;
-        }
-
     </style>
 </head>
 
@@ -156,339 +95,27 @@
 
     <h1>StarCare Hospital</h1>
 
-    <div class="lang-switch">
-        <button type="button" onclick="setLang('en')">
-            English
-        </button>
-
-        <button type="button" onclick="setLang('ar')">
-            عربي
-        </button>
-    </div>
-
-    <p class="title" id="titleText">
-        Rate our Service
-    </p>
-
     <div class="room">
-        {{ room_name }}   
+        {{ room_name }}
     </div>
 
     <form method="POST">
 
         <div class="stars">
-
-            <input type="radio" name="rating" value="5" id="5" required>
-            <label for="5">★</label>
-
-            <input type="radio" name="rating" value="4" id="4">
-            <label for="4">★</label>
-
-            <input type="radio" name="rating" value="3" id="3">
-            <label for="3">★</label>
-
-            <input type="radio" name="rating" value="2" id="2">
-            <label for="2">★</label>
-
-            <input type="radio" name="rating" value="1" id="1">
-            <label for="1">★</label>
-
+            <input type="radio" name="rating" value="5" required> ★
+            <input type="radio" name="rating" value="4"> ★
+            <input type="radio" name="rating" value="3"> ★
+            <input type="radio" name="rating" value="2"> ★
+            <input type="radio" name="rating" value="1"> ★
         </div>
 
-        <p id="starText">
-            Tap a star to rate
-        </p>
+        <textarea name="comment" placeholder="Share your thoughts..."></textarea>
 
-        <textarea
-            name="comment"
-            id="commentBox"
-            placeholder="Share your thoughts...">
-        </textarea>
-
-        <button class="submit-btn" type="submit">
-            <span id="btnText">
-                Submit Feedback
-            </span>
-        </button>
+        <button class="submit-btn">Submit Feedback</button>
 
     </form>
 
 </div>
 
-<script>
-
-function setLang(lang){
-
-    if(lang=="ar"){
-
-        document.documentElement.dir="rtl";
-
-        document.getElementById("titleText").innerHTML="قيّم خدمتنا";
-        document.getElementById("starText").innerHTML="اضغط على النجوم للتقييم";
-        document.getElementById("commentBox").placeholder="اكتب ملاحظاتك...";
-        document.getElementById("btnText").innerHTML="إرسال التقييم";
-    }
-
-    else{
-
-        document.documentElement.dir="ltr";
-
-        document.getElementById("titleText").innerHTML="Rate our Service";
-        document.getElementById("starText").innerHTML="Tap a star to rate";
-        document.getElementById("commentBox").placeholder="Share your thoughts...";
-        document.getElementById("btnText").innerHTML="Submit Feedback";
-    }
-
-}
-
-</script>
-
 </body>
-=======
-<!DOCTYPE html>
-<html>
-<head>
-    <title>StarCare Feedback</title>
-
-    <style>
-
-        body{
-            margin:0;
-            font-family:Arial;
-            background:#f6fbfc;
-            display:flex;
-            justify-content:center;
-            align-items:center;
-            height:100vh;
-        }
-
-        .card{
-            background:white;
-            width:430px;
-            padding:35px;
-            border-radius:30px;
-            text-align:center;
-            box-shadow:0 8px 25px rgba(0,0,0,.10);
-        }
-
-        .logo{
-            width:85px;
-            height:85px;
-            background:#59e3ec;
-            border-radius:50%;
-            display:flex;
-            justify-content:center;
-            align-items:center;
-            margin:auto;
-            font-size:40px;
-            color:white;
-            box-shadow:0 4px 15px rgba(89,227,236,.45);
-        }
-
-        h1{
-            color:#1b2a41;
-            margin:15px 0 5px;
-        }
-
-        .lang-switch{
-            display:flex;
-            justify-content:center;
-            gap:10px;
-            margin:15px 0;
-        }
-
-        .lang-switch button{
-            background:#eafcfd;
-            color:#59e3ec;
-            border:1px solid #59e3ec;
-            padding:8px 18px;
-            border-radius:12px;
-            cursor:pointer;
-            font-size:14px;
-            width:auto;
-            margin:0;
-        }
-
-        .lang-switch button:hover{
-            background:#59e3ec;
-            color:white;
-        }
-
-        .title{
-            color:#666;
-            margin-top:10px;
-            font-size:16px;
-        }
-
-        .room{
-            color:#59e3ec;
-            font-size:20px;
-            font-weight:bold;
-            margin:15px 0;
-        }
-
-        .stars{
-            display:flex;
-            justify-content:center;
-            flex-direction:row-reverse;
-            margin:25px 0;
-        }
-
-        .stars input{
-            display:none;
-        }
-
-        .stars label{
-            font-size:48px;
-            color:#d7d7d7;
-            cursor:pointer;
-            padding:4px;
-            transition:.2s;
-        }
-
-        .stars input:checked ~ label,
-        .stars label:hover,
-        .stars label:hover ~ label{
-            color:#59e3ec;
-        }
-
-        #starText{
-            color:#777;
-            margin-bottom:18px;
-        }
-
-        textarea{
-            width:100%;
-            height:110px;
-            border:1px solid #ddd;
-            border-radius:18px;
-            padding:15px;
-            font-size:15px;
-            resize:none;
-            box-sizing:border-box;
-            outline:none;
-        }
-
-        textarea:focus{
-            border-color:#59e3ec;
-        }
-
-        .submit-btn{
-            width:100%;
-            margin-top:20px;
-            padding:15px;
-            border:none;
-            border-radius:18px;
-            background:#59e3ec;
-            color:white;
-            font-size:17px;
-            cursor:pointer;
-            transition:.3s;
-            font-weight:bold;
-        }
-
-        .submit-btn:hover{
-            background:#43d2dc;
-        }
-
-    </style>
-</head>
-
-<body>
-
-<div class="card">
-
-    <div class="logo">❤</div>
-
-    <h1>StarCare Hospital</h1>
-
-    <div class="lang-switch">
-        <button type="button" onclick="setLang('en')">
-            English
-        </button>
-
-        <button type="button" onclick="setLang('ar')">
-            عربي
-        </button>
-    </div>
-
-    <p class="title" id="titleText">
-        Rate our Service
-    </p>
-
-    <div class="room">
-        {{ room_name }}   
-    </div>
-
-    <form method="POST">
-
-        <div class="stars">
-
-            <input type="radio" name="rating" value="5" id="5" required>
-            <label for="5">★</label>
-
-            <input type="radio" name="rating" value="4" id="4">
-            <label for="4">★</label>
-
-            <input type="radio" name="rating" value="3" id="3">
-            <label for="3">★</label>
-
-            <input type="radio" name="rating" value="2" id="2">
-            <label for="2">★</label>
-
-            <input type="radio" name="rating" value="1" id="1">
-            <label for="1">★</label>
-
-        </div>
-
-        <p id="starText">
-            Tap a star to rate
-        </p>
-
-        <textarea
-            name="comment"
-            id="commentBox"
-            placeholder="Share your thoughts...">
-        </textarea>
-
-        <button class="submit-btn" type="submit">
-            <span id="btnText">
-                Submit Feedback
-            </span>
-        </button>
-
-    </form>
-
-</div>
-
-<script>
-
-function setLang(lang){
-
-    if(lang=="ar"){
-
-        document.documentElement.dir="rtl";
-
-        document.getElementById("titleText").innerHTML="قيّم خدمتنا";
-        document.getElementById("starText").innerHTML="اضغط على النجوم للتقييم";
-        document.getElementById("commentBox").placeholder="اكتب ملاحظاتك...";
-        document.getElementById("btnText").innerHTML="إرسال التقييم";
-    }
-
-    else{
-
-        document.documentElement.dir="ltr";
-
-        document.getElementById("titleText").innerHTML="Rate our Service";
-        document.getElementById("starText").innerHTML="Tap a star to rate";
-        document.getElementById("commentBox").placeholder="Share your thoughts...";
-        document.getElementById("btnText").innerHTML="Submit Feedback";
-    }
-
-}
-
-</script>
-
-</body>
->>>>>>> a90fab5cd0b20ed35be740d9a29bc0e2e6a653f4
 </html>
