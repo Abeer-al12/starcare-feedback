@@ -222,35 +222,47 @@
     <!-- Table -->
     <table>
 
-        <tr>
-            <th>Location</th>
-            <th>Rating</th>
-            <th>Comment</th>
-            <th>Date</th>
-        </tr>
+    <tr>
+        <th>Location</th>
+        <th>Rating</th>
+        <th>Comment</th>
+        <th>Status</th>
+        <th>Date</th>
+    </tr>
 
-        {% for item in data %}
+    {% for item in data %}
+    <tr class="row">
 
-        <tr class="row">
+        <td class="loc" data-loc="{{ item.location }}">
+            {{ item.location.replace('_',' ').title() }}
+        </td>
 
-            <td class="loc" data-loc="{{ item.location }}">
-                {{ item.location.replace('_',' ').title() }}
-            </td>
+        <td class="stars">
+            {% for i in range(item.rating) %} ⭐ {% endfor %}
+        </td>
 
-            <td class="stars">
-                {% for i in range(item.rating) %} ⭐ {% endfor %}
-            </td>
+        <td class="comment">
+            {{ item.comment }}
+        </td>
 
-            <td class="comment">{{ item.comment }}</td>
+        <td>
+            {% if item.rating <= 2 %}
+                <span style="color:red; font-weight:bold;">⚠ Problem</span>
+            {% elif item.rating == 3 %}
+                <span style="color:orange; font-weight:bold;">⚠ Medium</span>
+            {% else %}
+                <span style="color:green; font-weight:bold;">✔ Good</span>
+            {% endif %}
+        </td>
 
-            <td class="date">{{ item.date.strftime('%Y-%m-%d') }}</td>
+        <td class="date">
+            {{ item.date.strftime('%Y-%m-%d') }}
+        </td>
 
-        </tr>
+    </tr>
+    {% endfor %}
 
-        {% endfor %}
-
-    </table>
-
+</table>
 </div>
 
 <script>
