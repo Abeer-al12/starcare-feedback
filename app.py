@@ -152,6 +152,15 @@ def admin():
         stats=stats_list
     )
 
+@app.route('/api/feedback')
+def api_feedback():
+    data = list(collection.find().sort("date", -1))
+
+    for i in data:
+        i["_id"] = str(i["_id"])
+        i["date"] = str(i["date"])
+
+    return {"data": data}
 # ---------------- ANALYTICS ----------------
 @app.route('/analytics')
 def analytics():
