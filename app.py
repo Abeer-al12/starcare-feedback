@@ -3,6 +3,11 @@ from pymongo import MongoClient
 from datetime import datetime
 import os
 import qrcode
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet
+from io import BytesIO
+from flask import Response
 
 app = Flask(__name__)
 app.secret_key = "starcare_secret"
@@ -161,6 +166,104 @@ def api_feedback():
         i["date"] = str(i["date"])
 
     return {"data": data}
+
+
+   @app.route('/download_pdf')
+def download_pdf():
+
+    if 'admin' not in session:
+        return redirect('/login')
+
+    data = list(collection.find().sort("date", -1))
+
+    total = len(data)
+    avg = round(sum(i["rating"] for i in data) / total, 2) if total else 0
+
+    # ---------------- GROUP BY LOCATION ----------------
+    stats = {}
+
+    for i in data:
+        loc = i["location"]
+        if loc not in stats:
+            stats[loc] = {"count": 0, "total": 0}
+
+        stats[loc]["count"] += 1
+        stats[loc]["total"] += i["rating"]
+
+    # ---------------- PDF SETUP ----------------
+    buffer = BytesIO()
+    doc = SimpleDocTemplate(buffer)
+
+    styles = getSampleStyleSheet()
+    elements = []
+
+    # 🏥 Hospital Name
+    elements.append(Paragraph("🏥 StarCare Hospital Report", styles['Title']))
+    elements.append(Spacer(1, 10))
+
+    # 📅 Date
+    from datetime import datetime
+    elements.append(Paragraph(f"Date: {datetime.now().strftime('%Y-%m-%d')}", styles['Normal']))
+    elements.append(Spacer(1, 15))
+
+    # 📊 Summary
+    summary = [
+        ["Total Feedback", str(total)],
+        ["Average Rating", str(avg)]
+    ]
+
+    summary_table = Table(summary)
+    summary_table.setStyle(TableStyle([
+        ('BACKGROUND', (0,0), (-1,0), colors.lightblue),
+        ('GRID', (0,0), (-1,-1), 0.5, colors.grey),
+        ('PADDING', (0,0), (-1,-1), 8),
+    ]))
+
+    elements.append(summary_table)
+    elements.append(Spacer(1, 20))
+
+    # 🏥 ROOM REPORT
+    elements.append(Paragraph("Room Performance", styles['Heading2']))
+    elements.append(Spacer(1, 10))
+
+    rows = [["Room", "Avg Rating", "Status"]]
+
+    for loc, v in stats.items():
+
+        avg_loc = round(v["total"] / v["count"], 2)
+
+        if avg_loc <= 2:
+            status = "⚠ CRITICAL"
+        elif avg_loc == 3:
+            status = "⚠ NEEDS IMPROVEMENT"
+        else:
+            status = "✔ GOOD"
+
+        rows.append([loc, str(avg_loc), status])
+
+    table = Table(rows)
+
+    table.setStyle(TableStyle([
+        ('BACKGROUND', (0,0), (-1,0), colors.grey),
+        ('TEXTCOLOR', (0,0), (-1,0), colors.white),
+        ('GRID', (0,0), (-1,-1), 0.5, colors.black),
+
+        # default text
+        ('PADDING', (0,0), (-1,-1), 6),
+    ]))
+
+    elements.append(table)
+
+    # Build PDF
+    doc.build(elements)
+    buffer.seek(0)
+
+    return Response(
+        buffer,
+        mimetype='application/pdf',
+        headers={"Content-Disposition": "attachment;filename=starcare_report.pdf"}
+    )
+    
 # ---------------- ANALYTICS ----------------
 @app.route('/analytics')
 def analytics():
