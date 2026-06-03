@@ -26,7 +26,7 @@ locations = [
     "consultation101","consultation102","consultation103","consultation104",
     "cystoscopy110","urodynamic109","waiting_area",
     "laboratory107","staff","ultrasound106","xray108",
-    "triage105","nurse","department","doctor","it","admin","toilet"
+    "triage105","nurse","department","doctor","it","admin","toilet","sample_collaction"
 ]
 
 # ---------------- ROOM NAMES ----------------
@@ -48,7 +48,8 @@ room_names = {
     "doctor":"Doctor Office",
     "it":"IT Department",
     "admin":"Administration",
-    "toilet":"Restroom"
+    "toilet":"Restroom",
+    "sample_collaction":"sample collection room"
 }
 
 # ---------------- HOME ----------------
