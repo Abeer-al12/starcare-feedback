@@ -157,18 +157,7 @@ def admin():
         stats=stats_list
     )
 
-@app.route('/api/feedback')
-def api_feedback():
-    data = list(collection.find().sort("date", -1))
-
-    for i in data:
-        i["_id"] = str(i["_id"])
-        i["date"] = str(i["date"])
-
-    return {"data": data}
-
-
-   @app.route('/download_pdf')
+@app.route('/download_pdf')
 def download_pdf():
 
     if 'admin' not in session:
@@ -179,7 +168,7 @@ def download_pdf():
     total = len(data)
     avg = round(sum(i["rating"] for i in data) / total, 2) if total else 0
 
-    # ---------------- GROUP BY LOCATION ----------------
+    # ---------------- GROUP DATA ----------------
     stats = {}
 
     for i in data:
@@ -197,16 +186,17 @@ def download_pdf():
     styles = getSampleStyleSheet()
     elements = []
 
-    # 🏥 Hospital Name
+    # 🏥 TITLE
     elements.append(Paragraph("🏥 StarCare Hospital Report", styles['Title']))
     elements.append(Spacer(1, 10))
 
-    # 📅 Date
-    from datetime import datetime
-    elements.append(Paragraph(f"Date: {datetime.now().strftime('%Y-%m-%d')}", styles['Normal']))
+    # 📅 DATE
+    elements.append(
+        Paragraph(f"Date: {datetime.now().strftime('%Y-%m-%d')}", styles['Normal'])
+    )
     elements.append(Spacer(1, 15))
 
-    # 📊 Summary
+    # 📊 SUMMARY
     summary = [
         ["Total Feedback", str(total)],
         ["Average Rating", str(avg)]
@@ -222,8 +212,8 @@ def download_pdf():
     elements.append(summary_table)
     elements.append(Spacer(1, 20))
 
-    # 🏥 ROOM REPORT
-    elements.append(Paragraph("Room Performance", styles['Heading2']))
+    # 🏥 ROOM PERFORMANCE
+    elements.append(Paragraph("Room Performance Report", styles['Heading2']))
     elements.append(Spacer(1, 10))
 
     rows = [["Room", "Avg Rating", "Status"]]
@@ -232,29 +222,32 @@ def download_pdf():
 
         avg_loc = round(v["total"] / v["count"], 2)
 
+        # 🧠 STATUS with colors
         if avg_loc <= 2:
-            status = "⚠ CRITICAL"
+            status = Paragraph('<font color="red">⚠ CRITICAL</font>', styles['Normal'])
         elif avg_loc == 3:
-            status = "⚠ NEEDS IMPROVEMENT"
+            status = Paragraph('<font color="orange">⚠ NEEDS IMPROVEMENT</font>', styles['Normal'])
         else:
-            status = "✔ GOOD"
+            status = Paragraph('<font color="green">✔ GOOD</font>', styles['Normal'])
 
-        rows.append([loc, str(avg_loc), status])
+        room_name = room_names.get(loc, loc)
+
+        rows.append([room_name, str(avg_loc), status])
 
     table = Table(rows)
 
     table.setStyle(TableStyle([
-        ('BACKGROUND', (0,0), (-1,0), colors.grey),
+        ('BACKGROUND', (0,0), (-1,0), colors.darkgrey),
         ('TEXTCOLOR', (0,0), (-1,0), colors.white),
         ('GRID', (0,0), (-1,-1), 0.5, colors.black),
-
-        # default text
+        ('ALIGN', (0,0), (-1,-1), 'CENTER'),
         ('PADDING', (0,0), (-1,-1), 6),
+        ('BACKGROUND', (0,1), (-1,-1), colors.whitesmoke),
     ]))
 
     elements.append(table)
 
-    # Build PDF
+    # ---------------- BUILD PDF ----------------
     doc.build(elements)
     buffer.seek(0)
 
@@ -264,6 +257,17 @@ def download_pdf():
         headers={"Content-Disposition": "attachment;filename=starcare_report.pdf"}
     )
     
+
+@app.route('/api/feedback')
+def api_feedback():
+    data = list(collection.find().sort("date", -1))
+
+    for i in data:
+        i["_id"] = str(i["_id"])
+        i["date"] = str(i["date"])
+
+    return {"data": data}
+
 # ---------------- ANALYTICS ----------------
 @app.route('/analytics')
 def analytics():
