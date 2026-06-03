@@ -94,7 +94,6 @@ def feedback(location):
         location=location,
         room_name=room_names[location]
     )
-
 # ---------------- LOGIN ----------------
 @app.route('/login', methods=['GET','POST'])
 def login():
