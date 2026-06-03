@@ -3,11 +3,7 @@ from pymongo import MongoClient
 from datetime import datetime
 import os
 import qrcode
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
-from reportlab.lib import colors
-from reportlab.lib.styles import getSampleStyleSheet
-from io import BytesIO
-from flask import Response
+
 
 app = Flask(__name__)
 app.secret_key = "starcare_secret"
