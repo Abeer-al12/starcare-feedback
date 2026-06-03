@@ -1,14 +1,19 @@
 from flask import Flask, render_template, request, redirect, session
 from pymongo import MongoClient
 from datetime import datetime
-import qrcode
 import os
+import qrcode
 
 app = Flask(__name__)
 app.secret_key = "starcare_secret"
 
-# ---------------- MONGO ----------------
-client = MongoClient("mongodb+srv://abeeralbalushia12_db_user:NP2h8oAmV1WCbC9e@cluster0.iszw6m4.mongodb.net/starcare_feedback?retryWrites=true&w=majority")
+# ---------------- MONGO (Atlas) ----------------
+MONGO_URI = os.environ.get("MONGO_URI")
+
+if not MONGO_URI:
+    raise Exception("MONGO_URI is missing in environment variables")
+
+client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=5000)
 db = client["starcare_feedback"]
 collection = db["feedback"]
 
@@ -51,34 +56,43 @@ def home():
     return "StarCare System Running 🚀"
 
 # ---------------- FEEDBACK ----------------
-@app.route('/feedback/<location>', methods=['GET','POST'])
+@app.route('/feedback/<location>', methods=['GET', 'POST'])
 def feedback(location):
 
     if location not in locations:
         return "Invalid Location", 404
 
     if request.method == 'POST':
+        try:
+            rating = request.form.get('rating')
+            comment = request.form.get('comment')
 
-        data = {
-            "location": location,
-            "rating": int(request.form['rating']),
-            "comment": request.form['comment'],
-            "date": datetime.now()
-        }
+            if not rating:
+                return "Rating required", 400
 
-        collection.insert_one(data)
+            data = {
+                "location": location,
+                "rating": int(rating),
+                "comment": comment,
+                "date": datetime.now()
+            }
 
-        return render_template(
-            "thankyou.html",
-            location=location,
-            room_name=room_names[location]
-        )
+            collection.insert_one(data)
+
+            return render_template(
+                "thankyou.html",
+                location=location,
+                room_name=room_names[location]
+            )
+
+        except Exception as e:
+            print("ERROR:", e)
+            return f"Server Error: {e}", 500
 
     return render_template(
         "feedback.html",
         location=location,
-        room_name=room_names[location],
-        locations=locations
+        room_name=room_names[location]
     )
 
 # ---------------- LOGIN ----------------
@@ -86,11 +100,7 @@ def feedback(location):
 def login():
 
     if request.method == 'POST':
-
-        username = request.form['username']
-        password = request.form['password']
-
-        if username == "admin" and password == "1234":
+        if request.form['username'] == "admin" and request.form['password'] == "1234":
             session['admin'] = True
             return redirect('/admin')
 
@@ -113,37 +123,33 @@ def admin():
 
     data = list(collection.find().sort("date", -1))
 
-    total_feedback = len(data)
-
-    avg_rating = round(
-        sum(i["rating"] for i in data) / total_feedback, 2
-    ) if total_feedback else 0
+    total = len(data)
+    avg = round(sum(i["rating"] for i in data) / total, 2) if total else 0
 
     stats = {}
 
     for i in data:
         loc = i["location"]
-
         if loc not in stats:
-            stats[loc] = {"count":0, "total":0}
+            stats[loc] = {"count": 0, "total": 0}
 
         stats[loc]["count"] += 1
         stats[loc]["total"] += i["rating"]
 
-    stats_list = []
-
-    for loc, v in stats.items():
-        stats_list.append({
+    stats_list = [
+        {
             "location": loc,
             "count": v["count"],
-            "avg": round(v["total"]/v["count"], 2)
-        })
+            "avg": round(v["total"] / v["count"], 2)
+        }
+        for loc, v in stats.items()
+    ]
 
     return render_template(
         "dashboard.html",
         data=data,
-        total_feedback=total_feedback,
-        avg_rating=avg_rating,
+        total_feedback=total,
+        avg_rating=avg,
         stats=stats_list
     )
 
@@ -160,37 +166,32 @@ def analytics():
 
     for i in data:
         loc = i["location"]
-
         if loc not in stats:
-            stats[loc] = {"count":0, "total":0}
+            stats[loc] = {"count": 0, "total": 0}
 
         stats[loc]["count"] += 1
         stats[loc]["total"] += i["rating"]
 
-    chart_data = []
-
-    for loc, v in stats.items():
-        chart_data.append({
+    chart_data = [
+        {
             "location": loc,
             "count": v["count"],
-            "avg": round(v["total"]/v["count"], 2)
-        })
+            "avg": round(v["total"] / v["count"], 2)
+        }
+        for loc, v in stats.items()
+    ]
 
-    return render_template(
-        "analytics.html",
-        data=chart_data
-    )
+    return render_template("analytics.html", data=chart_data)
 
 # ---------------- GENERATE QR ----------------
 @app.route('/generate_qr')
 def generate_qr():
 
-    folder = "qr_codes"
-    os.makedirs(folder, exist_ok=True)
+    os.makedirs("qr_codes", exist_ok=True)
 
     for loc in locations:
         img = qrcode.make(BASE_URL + loc)
-        img.save(f"{folder}/{loc}.png")
+        img.save(f"qr_codes/{loc}.png")
 
     return "QR Generated Successfully"
 
@@ -201,10 +202,7 @@ def qr_dashboard():
     rooms_data = []
 
     for loc in locations:
-
-        count = collection.count_documents({
-            "location": loc
-        })
+        count = collection.count_documents({"location": loc})
 
         rooms_data.append({
             "name": loc,
@@ -212,12 +210,9 @@ def qr_dashboard():
             "qr": BASE_URL + loc
         })
 
-    return render_template(
-        "qr_dashboard.html",
-        rooms=rooms_data
-    )
+    return render_template("qr_dashboard.html", rooms=rooms_data)
 
 # ---------------- RUN ----------------
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)  
+    app.run(host="0.0.0.0", port=port)
