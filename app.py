@@ -194,7 +194,7 @@ def admin():
 
     stats = {}
 
-for i in data:
+    for i in data:
     loc = i.get("location")
 
     if loc not in stats:
@@ -213,11 +213,11 @@ for i in data:
 ]
 
     return render_template(
-    "dashboard.html",
-    data=data,
-    total_feedback=total,
-    avg_rating=avg,
-    stats=stats_list
+        "dashboard.html",
+        data=data,
+        total_feedback=total,
+        avg_rating=avg,
+        stats=stats_list
 )
 
 
