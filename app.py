@@ -32,6 +32,8 @@ collection = db["feedback"]
 # ---------------- BASE URL ----------------
 BASE_URL = "https://starcare-feedback-1.onrender.com/feedback/"
 
+# ---------------- BRANCHES ----------------
+branches = ["alhail", "mabella", "alamerat"]
 # ---------------- LOCATIONS ----------------
 locations = [
     "consultation101","consultation102","consultation103","consultation104",
@@ -108,7 +110,10 @@ def feedback(location):
 def login():
 
     if request.method == 'POST':
-        if request.form['username'] == "admin" and request.form['password'] == "1234":
+        username = request.form.get('username')
+        password = request.form.get('password')
+
+        if username == "admin" and password == "1234":
             session['admin'] = True
             return redirect('/admin')
 
