@@ -30,6 +30,11 @@ db = client["starcare_feedback"]
 collection = db["feedback"]
 users_collection = db["users"]
 
+db.users.insert_one({
+    "username": "admin",
+    "password": "1234",
+    "role": "admin"
+})
 # ---------------- BASE URL ----------------
 BASE_URL = "https://starcare-feedback-1.onrender.com/feedback/"
 
