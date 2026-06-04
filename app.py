@@ -221,9 +221,9 @@ def api_feedback():
 
     return {"data": data}
 
-# @app.route('/get_rooms/<branch>')
-# def get_rooms(branch):
-#     return {"rooms": branch_rooms_map.get(branch, [])}
+@app.route('/get_rooms/<branch>')
+def get_rooms(branch):
+    return {"rooms": branch_rooms_map.get(branch, [])}
 # ---------------- PDF ----------------
 @app.route('/download_pdf')
 def download_pdf():

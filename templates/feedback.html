@@ -174,22 +174,18 @@
     </div>
 
         <form method="POST" action="/feedback/{{ location }}">
+            <select name="branch">
+                <option value="">Choose branch</option>
+                <option value="alhail">Al Hail</option>
+                <option value="mabella">Mabella</option>
+                <option value="alamerat">Al Amerat</option>
+                <option value="pharmacy">Pharmacy</option>
+            </select>
+            <select name="room">
+                <option>Select branch first</option>
+            </select>
     
-    <!-- 🏥 اختيار الغرفة (هنا تضيفه) -->
-    <!-- <select name="room" style="width:100%; padding:10px; border-radius:10px; margin-bottom:15px;"> -->
-       <!-- 🏥 Branch -->
-<!-- <select name="branch" style="width:100%; padding:10px; border-radius:10px; margin-bottom:10px;">
-    <option value="alhail">Al Hail</option>
-    <option value="mabella">Mabella</option>
-    <option value="alamerat">Al Amerat</option>
-    <option value="pharmacy">Pharmacy</option>
-</select> -->
-
-<!-- 🏥 Room -->
-<!-- <select name="room" style="width:100%; padding:10px; border-radius:10px; margin-bottom:15px;">
-    <option>Choose branch first</option>
-</select>
-    </select> -->
+    
 
 
         <div class="stars">
@@ -254,31 +250,54 @@ function setLang(lang){
         document.getElementById("commentBox").placeholder="Share your thoughts...";
         document.getElementById("btnText").innerHTML="Submit Feedback";
     }
-
 }
-// document.addEventListener("DOMContentLoaded", function () {
 
-//     document.querySelector('[name="branch"]').addEventListener('change', function () {
+document.addEventListener("DOMContentLoaded", function () {
 
-//         fetch('/get_rooms/' + this.value)
-//             .then(res => res.json())
-//             .then(data => {
+    const branchSelect = document.querySelector('[name="branch"]');
+    const roomSelect = document.querySelector('[name="room"]');
 
-//                 let roomSelect = document.querySelector('[name="room"]');
-//                 roomSelect.innerHTML = "";
+    if (!branchSelect || !roomSelect) return;
 
-//                 data.rooms.forEach(room => {
-//                     let opt = document.createElement("option");
-//                     opt.value = room;
-//                     opt.textContent = room.replace('_', ' ');
-//                     roomSelect.appendChild(opt);
-//                 });
+    branchSelect.addEventListener('change', function () {
 
-//             });
+        const branch = this.value;
 
-//     });
+        if (!branch) {
+            roomSelect.innerHTML = "<option>Select branch first</option>";
+            return;
+        }
 
-// });
+        roomSelect.innerHTML = "<option>Loading...</option>";
+
+        fetch('/get_rooms/' + branch)
+            .then(res => res.json())
+            .then(data => {
+
+                roomSelect.innerHTML = "";
+
+                if (!data.rooms || data.rooms.length === 0) {
+                    roomSelect.innerHTML = "<option>No rooms found</option>";
+                    return;
+                }
+
+                data.rooms.forEach(room => {
+                    let opt = document.createElement("option");
+                    opt.value = room;
+                    opt.textContent = room.replaceAll('_', ' ');
+                    roomSelect.appendChild(opt);
+                });
+
+            })
+            .catch(err => {
+                roomSelect.innerHTML = "<option>Error loading rooms</option>";
+                console.error(err);
+            });
+
+    });
+
+});
+
 </script>
 </body>
 </html>
