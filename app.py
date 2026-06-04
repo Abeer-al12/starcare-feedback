@@ -186,15 +186,22 @@ def download_pdf():
     data = list(collection.find())
 
     total = len(data)
-    avg = round(sum(i["rating"] for i in data) / total, 2) if total else 0
+    avg = round(
+        sum(i["rating"] for i in data) / total,
+        2
+    ) if total else 0
 
     stats = {}
 
     for i in data:
+
         loc = i["location"]
 
         if loc not in stats:
-            stats[loc] = {"count": 0, "total": 0}
+            stats[loc] = {
+                "count": 0,
+                "total": 0
+            }
 
         stats[loc]["count"] += 1
         stats[loc]["total"] += i["rating"]
@@ -208,7 +215,10 @@ def download_pdf():
     elements = []
 
     elements.append(
-        Paragraph("StarCare Hospital Feedback Report", styles['Title'])
+        Paragraph(
+            "StarCare Hospital Feedback Report",
+            styles['Title']
+        )
     )
 
     elements.append(
@@ -218,28 +228,47 @@ def download_pdf():
         )
     )
 
+    elements.append(
+        Paragraph(
+            f"Total Feedback: {total}",
+            styles['Normal']
+        )
+    )
+
+    elements.append(
+        Paragraph(
+            f"Overall Rating: {avg} ⭐",
+            styles['Normal']
+        )
+    )
+
     elements.append(Spacer(1, 20))
 
-        rows = [["Room", "Feedbacks", "Average", "Status"]]
+    rows = [["Room", "Feedbacks", "Average", "Status"]]
+
     for loc, v in stats.items():
 
-    avg_loc = round(v["total"] / v["count"], 2)
+        avg_loc = round(
+            v["total"] / v["count"],
+            2
+        )
 
-    if avg_loc <= 2:
-        status = "CRITICAL"
-    elif avg_loc <= 3:
-        status = "NEEDS IMPROVEMENT"
-    elif avg_loc <= 4:
-        status = "GOOD"
-    else:
-        status = "EXCELLENT"
+        if avg_loc <= 2:
+            status = "CRITICAL"
+        elif avg_loc <= 3:
+            status = "NEEDS IMPROVEMENT"
+        elif avg_loc <= 4:
+            status = "GOOD"
+        else:
+            status = "EXCELLENT"
 
-    rows.append([
-        room_names.get(loc, loc),
-        str(v["count"]),
-        str(avg_loc),
-        status
-    ])
+        rows.append([
+            room_names.get(loc, loc),
+            str(v["count"]),
+            str(avg_loc),
+            status
+        ])
+
     table = Table(rows)
 
     table.setStyle(TableStyle([
@@ -248,62 +277,37 @@ def download_pdf():
         ('GRID', (0,0), (-1,-1), 1, colors.black)
     ]))
 
-elements.append(Spacer(1, 20))
+    elements.append(table)
 
-rows = [["Room", "Feedbacks", "Average", "Status"]]
+    elements.append(Spacer(1, 20))
 
-for loc, v in stats.items():
-
-    avg_loc = round(v["total"] / v["count"], 2)
-
-    if avg_loc <= 2:
-        status = "CRITICAL"
-    elif avg_loc <= 3:
-        status = "NEEDS IMPROVEMENT"
-    elif avg_loc <= 4:
-        status = "GOOD"
-    else:
-        status = "EXCELLENT"
-
-    rows.append([
-        room_names.get(loc, loc),
-        str(v["count"]),
-        str(avg_loc),
-        status
-    ])
-
-table = Table(rows)
-
-table.setStyle(TableStyle([
-    ('BACKGROUND', (0,0), (-1,0), colors.HexColor("#59e3ec")),
-    ('TEXTCOLOR', (0,0), (-1,0), colors.white),
-    ('GRID', (0,0), (-1,-1), 1, colors.black)
-]))
-
-elements.append(table)
-
-elements.append(Spacer(1, 20))
-
-elements.append(
-    Paragraph("Rooms Requiring Attention", styles['Heading2'])
-)
-
-for loc, v in stats.items():
-
-    avg_loc = round(v["total"] / v["count"], 2)
-
-    if avg_loc <= 3:
-
-        elements.append(
-            Paragraph(
-                f"• {room_names.get(loc, loc)} → Average Rating: {avg_loc}",
-                styles['Normal']
-            )
+    elements.append(
+        Paragraph(
+            "Rooms Requiring Attention",
+            styles['Heading2']
         )
+    )
+
+    for loc, v in stats.items():
+
+        avg_loc = round(
+            v["total"] / v["count"],
+            2
+        )
+
+        if avg_loc <= 3:
+
+            elements.append(
+                Paragraph(
+                    f"• {room_names.get(loc, loc)} → Average Rating: {avg_loc}",
+                    styles['Normal']
+                )
+            )
 
     doc.build(elements)
 
     pdf = buffer.getvalue()
+
     buffer.close()
 
     return Response(
