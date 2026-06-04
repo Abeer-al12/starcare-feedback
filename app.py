@@ -220,21 +220,26 @@ def download_pdf():
 
     elements.append(Spacer(1, 20))
 
-    rows = [["Location", "Average Rating", "Status"]]
-
+        rows = [["Room", "Feedbacks", "Average", "Status"]]
     for loc, v in stats.items():
 
-        avg_loc = round(v["total"] / v["count"], 2)
+    avg_loc = round(v["total"] / v["count"], 2)
 
-        if avg_loc <= 2:
-            status = "CRITICAL"
-        elif avg_loc <= 3:
-            status = "NEEDS IMPROVEMENT"
-        else:
-            status = "GOOD"
+    if avg_loc <= 2:
+        status = "CRITICAL"
+    elif avg_loc <= 3:
+        status = "NEEDS IMPROVEMENT"
+    elif avg_loc <= 4:
+        status = "GOOD"
+    else:
+        status = "EXCELLENT"
 
-        rows.append([loc, str(avg_loc), status])
-
+    rows.append([
+        room_names.get(loc, loc),
+        str(v["count"]),
+        str(avg_loc),
+        status
+    ])
     table = Table(rows)
 
     table.setStyle(TableStyle([
@@ -243,7 +248,58 @@ def download_pdf():
         ('GRID', (0,0), (-1,-1), 1, colors.black)
     ]))
 
-    elements.append(table)
+elements.append(Spacer(1, 20))
+
+rows = [["Room", "Feedbacks", "Average", "Status"]]
+
+for loc, v in stats.items():
+
+    avg_loc = round(v["total"] / v["count"], 2)
+
+    if avg_loc <= 2:
+        status = "CRITICAL"
+    elif avg_loc <= 3:
+        status = "NEEDS IMPROVEMENT"
+    elif avg_loc <= 4:
+        status = "GOOD"
+    else:
+        status = "EXCELLENT"
+
+    rows.append([
+        room_names.get(loc, loc),
+        str(v["count"]),
+        str(avg_loc),
+        status
+    ])
+
+table = Table(rows)
+
+table.setStyle(TableStyle([
+    ('BACKGROUND', (0,0), (-1,0), colors.HexColor("#59e3ec")),
+    ('TEXTCOLOR', (0,0), (-1,0), colors.white),
+    ('GRID', (0,0), (-1,-1), 1, colors.black)
+]))
+
+elements.append(table)
+
+elements.append(Spacer(1, 20))
+
+elements.append(
+    Paragraph("Rooms Requiring Attention", styles['Heading2'])
+)
+
+for loc, v in stats.items():
+
+    avg_loc = round(v["total"] / v["count"], 2)
+
+    if avg_loc <= 3:
+
+        elements.append(
+            Paragraph(
+                f"• {room_names.get(loc, loc)} → Average Rating: {avg_loc}",
+                styles['Normal']
+            )
+        )
 
     doc.build(elements)
 
