@@ -165,6 +165,88 @@ def api_feedback():
 
     return {"data": data}
 
+
+@app.route('/download_pdf')
+def download_pdf():
+
+    if 'admin' not in session:
+        return redirect('/login')
+
+    data = list(collection.find())
+
+    total = len(data)
+    avg = round(sum(i["rating"] for i in data) / total, 2) if total else 0
+
+    stats = {}
+
+    for i in data:
+        loc = i["location"]
+
+        if loc not in stats:
+            stats[loc] = {"count": 0, "total": 0}
+
+        stats[loc]["count"] += 1
+        stats[loc]["total"] += i["rating"]
+
+    buffer = BytesIO()
+
+    doc = SimpleDocTemplate(buffer)
+
+    styles = getSampleStyleSheet()
+
+    elements = []
+
+    elements.append(
+        Paragraph("StarCare Hospital Feedback Report", styles['Title'])
+    )
+
+    elements.append(
+        Paragraph(
+            f"Date: {datetime.now().strftime('%Y-%m-%d')}",
+            styles['Normal']
+        )
+    )
+
+    elements.append(Spacer(1, 20))
+
+    rows = [["Location", "Average Rating", "Status"]]
+
+    for loc, v in stats.items():
+
+        avg_loc = round(v["total"] / v["count"], 2)
+
+        if avg_loc <= 2:
+            status = "CRITICAL"
+        elif avg_loc <= 3:
+            status = "NEEDS IMPROVEMENT"
+        else:
+            status = "GOOD"
+
+        rows.append([loc, str(avg_loc), status])
+
+    table = Table(rows)
+
+    table.setStyle(TableStyle([
+        ('BACKGROUND', (0,0), (-1,0), colors.HexColor("#59e3ec")),
+        ('TEXTCOLOR', (0,0), (-1,0), colors.white),
+        ('GRID', (0,0), (-1,-1), 1, colors.black)
+    ]))
+
+    elements.append(table)
+
+    doc.build(elements)
+
+    pdf = buffer.getvalue()
+    buffer.close()
+
+    return Response(
+        pdf,
+        mimetype='application/pdf',
+        headers={
+            'Content-Disposition':
+            'attachment; filename=starcare_report.pdf'
+        }
+    )
 # ---------------- ANALYTICS ----------------
 @app.route('/analytics')
 def analytics():
