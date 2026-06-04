@@ -327,7 +327,8 @@ def analytics():
 
     stats = {}
 
-    branch = i.get("branch", "unknown")
+    for i in data:
+        branch = i.get("branch", "unknown")
 
         if branch not in stats:
             stats[branch] = {"count": 0, "total": 0}
