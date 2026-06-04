@@ -133,10 +133,11 @@ def feedback(location):
 
         collection.insert_one({
             "location": location,
+            "room": room,
             "rating": int(rating),
             "comment": comment,
             "date": datetime.now()
-        })
+})
 
         return render_template(
             "thankyou.html",
@@ -221,9 +222,7 @@ def api_feedback():
 
     return {"data": data}
 
-@app.route('/get_rooms/<branch>')
-def get_rooms(branch):
-    return {"rooms": branch_rooms_map.get(branch, [])}
+
 # ---------------- PDF ----------------
 @app.route('/download_pdf')
 def download_pdf():

@@ -174,19 +174,11 @@
     </div>
 
         <form method="POST" action="/feedback/{{ location }}">
-            <select name="branch">
-                <option value="">Choose branch</option>
-                <option value="alhail">Al Hail</option>
-                <option value="mabella">Mabella</option>
-                <option value="alamerat">Al Amerat</option>
-                <option value="pharmacy">Pharmacy</option>
-            </select>
             <select name="room">
-                <option>Select branch first</option>
+                {% for room in rooms %}
+            <option value="{{ room }}">{{ room.replace('_',' ') }}</option>
+                {% endfor %}
             </select>
-    
-    
-
 
         <div class="stars">
 
@@ -252,51 +244,6 @@ function setLang(lang){
     }
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-
-    const branchSelect = document.querySelector('[name="branch"]');
-    const roomSelect = document.querySelector('[name="room"]');
-
-    if (!branchSelect || !roomSelect) return;
-
-    branchSelect.addEventListener('change', function () {
-
-        const branch = this.value;
-
-        if (!branch) {
-            roomSelect.innerHTML = "<option>Select branch first</option>";
-            return;
-        }
-
-        roomSelect.innerHTML = "<option>Loading...</option>";
-
-        fetch('/get_rooms/' + branch)
-            .then(res => res.json())
-            .then(data => {
-
-                roomSelect.innerHTML = "";
-
-                if (!data.rooms || data.rooms.length === 0) {
-                    roomSelect.innerHTML = "<option>No rooms found</option>";
-                    return;
-                }
-
-                data.rooms.forEach(room => {
-                    let opt = document.createElement("option");
-                    opt.value = room;
-                    opt.textContent = room.replaceAll('_', ' ');
-                    roomSelect.appendChild(opt);
-                });
-
-            })
-            .catch(err => {
-                roomSelect.innerHTML = "<option>Error loading rooms</option>";
-                console.error(err);
-            });
-
-    });
-
-});
 
 </script>
 </body>
