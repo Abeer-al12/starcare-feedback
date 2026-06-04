@@ -65,6 +65,53 @@ room_names = {
     "sample_collaction":"sample collection room"
 }
 
+branch_rooms_map = {
+    # 🏥 Al Hail
+    "alhail": [
+        "consultation101",
+        "consultation102",
+        "consultation103",
+        "consultation104",
+        "cystoscopy110",
+        "urodynamic109",
+        "waiting_area",
+        "laboratory107",
+        "staff",
+        "ultrasound106",
+        "xray108",
+        "triage105",
+        "nurse",
+        "department",
+        "doctor",
+        "it",
+        "admin",
+        "toilet",
+        "sample_collaction"
+    ],
+
+    # 💊 Pharmacy
+    "pharmacy": [
+        "pharmacy_area",
+        "pharmacy_store",
+        "medical_area"
+    ],
+
+    # 🏥 Al Amerat (مثال)
+    "alamerat": [
+        "consultation201",
+        "waiting_area_2",
+        "lab_201",
+        "nurse_station_2"
+    ],
+
+    # 🏥 Mabella (مثال)
+    "mabella": [
+        "consultation301",
+        "xray301",
+        "ultrasound301",
+        "reception"
+    ]
+}
 # ---------------- HOME ----------------
 @app.route('/')
 def home():
@@ -76,6 +123,9 @@ def feedback(location):
 
     if location not in locations:
         return "Invalid Location", 404
+
+    # 👇 لازم تحطه هنا (قبل GET/POST)
+    rooms = branch_rooms_map.get(location, [])
 
     if request.method == 'POST':
         rating = request.form.get('rating')
@@ -99,11 +149,14 @@ def feedback(location):
             room_name=room_names[location]
         )
 
+    branches = list(branch_rooms_map.keys())  # أو حطها ثابتة
+
     return render_template(
         "feedback.html",
         location=location,
         room_name=room_names[location],
-        branches=branches
+        branches=branches,
+        rooms=rooms
     )
 # ---------------- LOGIN ----------------
 @app.route('/login', methods=['GET','POST'])
@@ -179,6 +232,9 @@ def api_feedback():
 
     return {"data": data}
 
+@app.route('/get_rooms/<branch>')
+def get_rooms(branch):
+    return {"rooms": branch_rooms_map.get(branch, [])}
 # ---------------- PDF ----------------
 @app.route('/download_pdf')
 def download_pdf():
