@@ -338,13 +338,13 @@ def analytics():
         stats[loc]["total"] += i["rating"]
 
     chart_data = [
-        {
-            "location": loc,
-            "count": v["count"],
-            "avg": round(v["total"] / v["count"], 2)
-        }
-        for loc, v in stats.items()
-    ]
+    {
+        "location": room_names.get(loc, loc),
+        "count": v["count"],
+        "avg": round(v["total"] / v["count"], 2)
+    }
+    for loc, v in stats.items()
+]
 
     return render_template("analytics.html", data=chart_data)
 

@@ -166,19 +166,32 @@ canvas{
     <!-- Cards -->
     <div class="cards">
 
-        <div class="card">
-            <h3>Total Locations</h3>
-            <h2>{{ data|length }}</h2>
-        </div>
-
-        <div class="card">
-            <h3>Total Feedback</h3>
-            <h2>
-                {{ data | sum(attribute='count') }}
-            </h2>
-        </div>
-
+    <div class="card">
+        <h3>Total Locations</h3>
+        <h2>{{ data|length }}</h2>
     </div>
+
+    <div class="card">
+        <h3>Total Feedback</h3>
+        <h2>{{ data | sum(attribute='count') }}</h2>
+    </div>
+
+    <div class="card">
+        <h3>Best Room</h3>
+        <h2 id="bestRoom">-</h2>
+    </div>
+
+    <div class="card">
+        <h3>Needs Attention</h3>
+        <h2 id="worstRoom">-</h2>
+    </div>
+
+    <div class="card">
+    <h3>Overall Status</h3>
+    <h2 id="overallStatus">-</h2>
+</div>
+
+</div>
 
     <div class="charts">
 
@@ -189,6 +202,16 @@ canvas{
     <div class="chart-box">
         <canvas id="pieChart"></canvas>
     </div>
+
+</div>
+<div class="chart-box" style="margin-top:20px;">
+    <canvas id="ratingChart"></canvas>
+</div>
+<div class="card" style="margin-top:20px;">
+
+    <h3>Rooms Requiring Attention 🚨</h3>
+
+    <ul id="alerts"></ul>
 
 </div>
 </div>
@@ -250,6 +273,23 @@ new Chart(document.getElementById("pieChart"), {
         maintainAspectRatio: false
     }
 });
+new Chart(document.getElementById("ratingChart"), {
+    type: 'line',
+    data: {
+        labels: labels,
+        datasets: [{
+            label: 'Average Rating',
+            data: avgs,
+            borderColor: '#59e3ec',
+            fill: false,
+            tension: 0.3
+        }]
+    },
+    options: {
+        responsive:true,
+        maintainAspectRatio:false
+    }
+});
 function setLang(lang){
 
     localStorage.setItem("lang", lang);
@@ -263,6 +303,52 @@ function setLang(lang){
 window.onload = function(){
     let lang = localStorage.getItem("lang") || "en";
     setLang(lang);
+}
+
+let maxAvg = Math.max(...avgs);
+let minAvg = Math.min(...avgs);
+
+document.getElementById("bestRoom").innerText =
+labels[avgs.indexOf(maxAvg)];
+
+document.getElementById("worstRoom").innerText =
+labels[avgs.indexOf(minAvg)];
+
+let alerts = document.getElementById("alerts");
+let foundAlert = false;
+
+for(let i=0; i<avgs.length; i++){
+
+    if(avgs[i] <= 3){
+
+        foundAlert = true;
+
+        alerts.innerHTML +=
+        `<li style="color:red;">
+            🚨 ${labels[i]} - Rating ${avgs[i]}
+        </li>`;
+    }
+}
+
+if(!foundAlert){
+    alerts.innerHTML =
+    "<li style='color:green;'>✔ All rooms performing well</li>";
+}
+
+let overall =
+avgs.reduce((a,b)=>a+b,0) / avgs.length;
+
+if(overall >= 4){
+    document.getElementById("overallStatus").innerHTML =
+    "✔ Excellent";
+}
+else if(overall >= 3){
+    document.getElementById("overallStatus").innerHTML =
+    "⚠ Good";
+}
+else{
+    document.getElementById("overallStatus").innerHTML =
+    "🚨 Needs Improvement";
 }
 </script>
 
