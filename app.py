@@ -194,32 +194,31 @@ def admin():
 
     stats = {}
 
-    # for i in data:
-    #     branch = i.get("branch", "unknown")
+for i in data:
+    loc = i.get("location")
 
-    #     if branch not in stats:
-    #         stats[branch] = {"count": 0, "total": 0}
+    if loc not in stats:
+        stats[loc] = {"count": 0, "total": 0}
 
-    #     stats[branch]["count"] += 1
-    #     stats[branch]["total"] += i["rating"]
+    stats[loc]["count"] += 1
+    stats[loc]["total"] += i["rating"]
 
     stats_list = [
-        {
-            "location": b,
-            "count": v["count"],
-            "avg": round(v["total"] / v["count"], 2)
-        }
-        for b, v in stats.items()
-    ]
+    {
+        "location": loc,
+        "count": v["count"],
+        "avg": round(v["total"] / v["count"], 2)
+    }
+    for loc, v in stats.items()
+]
 
     return render_template(
-        "dashboard.html",
-        data=data,
-        total_feedback=total,
-        avg_rating=avg,
-        stats=stats_list,
-        # branches=branches
-    )
+    "dashboard.html",
+    data=data,
+    total_feedback=total,
+    avg_rating=avg,
+    stats=stats_list
+)
 
 
 @app.route('/api/feedback')

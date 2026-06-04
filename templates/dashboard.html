@@ -250,13 +250,13 @@
 
     <!-- Location Filter -->
     <select id="locationFilter" onchange="applyFilters()">
-        <option value="all">All Locations</option>
+       <option value="all">All Locations</option>
 
-        {% for item in stats %}
-        <option value="{{ item.location }}">
-            {{ item.location.replace('_',' ').title() }}
-        </option>
-        {% endfor %}
+{% for s in stats %}
+    <option value="{{ s.location }}">
+        {{ s.location }}
+    </option>
+{% endfor %}
     </select>
 
 </div>
