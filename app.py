@@ -124,19 +124,14 @@ def feedback(location):
     if location not in locations:
         return "Invalid Location", 404
 
-    # 👇 لازم تحطه هنا (قبل GET/POST)
-    # rooms = branch_rooms_map.get(location, [])
-
     if request.method == 'POST':
         rating = request.form.get('rating')
         comment = request.form.get('comment')
-        # branch = request.form.get("branch")
 
         if not rating:
             return "Rating required", 400
 
         collection.insert_one({
-            # "branch": branch,
             "location": location,
             "rating": int(rating),
             "comment": comment,
@@ -149,14 +144,10 @@ def feedback(location):
             room_name=room_names[location]
         )
 
-    # branches = list(branch_rooms_map.keys())  # أو حطها ثابتة
-
     return render_template(
         "feedback.html",
         location=location,
-        room_name=room_names[location],
-        # branches=branches,
-        # rooms=rooms
+        room_name=room_names[location]
     )
 # ---------------- LOGIN ----------------
 @app.route('/login', methods=['GET','POST'])
@@ -195,22 +186,22 @@ def admin():
     stats = {}
 
     for i in data:
-    loc = i.get("location")
+        loc = i.get("location")
 
-    if loc not in stats:
-        stats[loc] = {"count": 0, "total": 0}
+        if loc not in stats:
+            stats[loc] = {"count": 0, "total": 0}
 
-    stats[loc]["count"] += 1
-    stats[loc]["total"] += i["rating"]
+        stats[loc]["count"] += 1
+        stats[loc]["total"] += i["rating"]
 
     stats_list = [
-    {
-        "location": loc,
-        "count": v["count"],
-        "avg": round(v["total"] / v["count"], 2)
-    }
-    for loc, v in stats.items()
-]
+        {
+            "location": loc,
+            "count": v["count"],
+            "avg": round(v["total"] / v["count"], 2)
+        }
+        for loc, v in stats.items()
+    ]
 
     return render_template(
         "dashboard.html",
@@ -218,8 +209,7 @@ def admin():
         total_feedback=total,
         avg_rating=avg,
         stats=stats_list
-)
-
+    )
 
 @app.route('/api/feedback')
 def api_feedback():
@@ -387,26 +377,25 @@ def analytics():
 
     stats = {}
 
-    # for i in data:
-    #     branch = i.get("branch", "unknown")
+    for i in data:
+        loc = i.get("location")
 
-    #     if branch not in stats:
-    #         stats[branch] = {"count": 0, "total": 0}
+        if loc not in stats:
+            stats[loc] = {"count": 0, "total": 0}
 
-    #     stats[branch]["count"] += 1
-    #     stats[branch]["total"] += i["rating"]
+        stats[loc]["count"] += 1
+        stats[loc]["total"] += i["rating"]
 
     chart_data = [
         {
-            "location": b,
+            "location": room_names.get(loc, loc),
             "count": v["count"],
             "avg": round(v["total"] / v["count"], 2)
         }
-        for b, v in stats.items()
+        for loc, v in stats.items()
     ]
 
     return render_template("analytics.html", data=chart_data)
-
 # ---------------- GENERATE QR ----------------
 @app.route('/generate_qr')
 def generate_qr():
