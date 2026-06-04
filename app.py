@@ -76,36 +76,32 @@ def feedback(location):
         return "Invalid Location", 404
 
     if request.method == 'POST':
-        try:
-            rating = request.form.get('rating')
-            comment = request.form.get('comment')
+        rating = request.form.get('rating')
+        comment = request.form.get('comment')
+        branch = request.form.get("branch")
 
-            if not rating:
-                return "Rating required", 400
+        if not rating:
+            return "Rating required", 400
 
-            data = {
-                "location": location,
-                "rating": int(rating),
-                "comment": comment,
-                "date": datetime.now()
-            }
+        collection.insert_one({
+            "branch": branch,
+            "location": location,
+            "rating": int(rating),
+            "comment": comment,
+            "date": datetime.now()
+        })
 
-            collection.insert_one(data)
-
-            return render_template(
-                "thankyou.html",
-                location=location,
-                room_name=room_names[location]
-            )
-
-        except Exception as e:
-            print("ERROR:", e)
-            return f"Server Error: {e}", 500
+        return render_template(
+            "thankyou.html",
+            location=location,
+            room_name=room_names[location]
+        )
 
     return render_template(
         "feedback.html",
         location=location,
-        room_name=room_names[location]
+        room_name=room_names[location],
+        branches=branches
     )
 # ---------------- LOGIN ----------------
 @app.route('/login', methods=['GET','POST'])
@@ -141,20 +137,21 @@ def admin():
     stats = {}
 
     for i in data:
-        loc = i["location"]
-        if loc not in stats:
-            stats[loc] = {"count": 0, "total": 0}
+        branch = i.get("branch", "unknown")
 
-        stats[loc]["count"] += 1
-        stats[loc]["total"] += i["rating"]
+        if branch not in stats:
+            stats[branch] = {"count": 0, "total": 0}
+
+        stats[branch]["count"] += 1
+        stats[branch]["total"] += i["rating"]
 
     stats_list = [
         {
-            "location": loc,
+            "location": b,
             "count": v["count"],
             "avg": round(v["total"] / v["count"], 2)
         }
-        for loc, v in stats.items()
+        for b, v in stats.items()
     ]
 
     return render_template(
@@ -162,7 +159,8 @@ def admin():
         data=data,
         total_feedback=total,
         avg_rating=avg,
-        stats=stats_list
+        stats=stats_list,
+        branches=branches
     )
 
 
@@ -176,7 +174,7 @@ def api_feedback():
 
     return {"data": data}
 
-
+# ---------------- PDF ----------------
 @app.route('/download_pdf')
 def download_pdf():
 
@@ -329,22 +327,22 @@ def analytics():
 
     stats = {}
 
-    for i in data:
-        loc = i["location"]
-        if loc not in stats:
-            stats[loc] = {"count": 0, "total": 0}
+    branch = i.get("branch", "unknown")
 
-        stats[loc]["count"] += 1
-        stats[loc]["total"] += i["rating"]
+        if branch not in stats:
+            stats[branch] = {"count": 0, "total": 0}
+
+        stats[branch]["count"] += 1
+        stats[branch]["total"] += i["rating"]
 
     chart_data = [
-    {
-        "location": room_names.get(loc, loc),
-        "count": v["count"],
-        "avg": round(v["total"] / v["count"], 2)
-    }
-    for loc, v in stats.items()
-]
+        {
+            "location": b,
+            "count": v["count"],
+            "avg": round(v["total"] / v["count"], 2)
+        }
+        for b, v in stats.items()
+    ]
 
     return render_template("analytics.html", data=chart_data)
 

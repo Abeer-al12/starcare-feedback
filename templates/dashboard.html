@@ -236,15 +236,30 @@
 </a>
 
     <!-- Filter -->
-    <select onchange="filterTable(this.value)">
+    <!-- Filters Row -->
+<div style="display:flex; gap:10px; margin-bottom:20px;">
+
+    <!-- Branch Filter -->
+    <select id="branchFilter" onchange="applyFilters()">
+        <option value="all">All Branches</option>
+
+        <option value="alhail">Al Hail</option>
+        <option value="mabella">Mabella</option>
+        <option value="alamerat">Al Amerat</option>
+    </select>
+
+    <!-- Location Filter -->
+    <select id="locationFilter" onchange="applyFilters()">
         <option value="all">All Locations</option>
 
         {% for item in stats %}
-            <option value="{{ item.location }}">
-                {{ item.location.replace('_',' ').title() }}
-            </option>
+        <option value="{{ item.location }}">
+            {{ item.location.replace('_',' ').title() }}
+        </option>
         {% endfor %}
     </select>
+
+</div>
 
     <!-- Table -->
     <table>
@@ -334,6 +349,28 @@ function setLang(lang){
 
 }
 
+function applyFilters(){
+
+    let branch = document.getElementById("branchFilter").value;
+    let location = document.getElementById("locationFilter").value;
+
+    let rows = document.querySelectorAll(".row");
+
+    rows.forEach(row => {
+
+        let loc = row.querySelector(".loc").getAttribute("data-loc");
+
+        let matchBranch = (branch === "all" || loc.includes(branch));
+        let matchLocation = (location === "all" || loc === location);
+
+        if(matchBranch && matchLocation){
+            row.style.display = "table-row";
+        } else {
+            row.style.display = "none";
+        }
+
+    });
+}
 </script>
 
 </body>
