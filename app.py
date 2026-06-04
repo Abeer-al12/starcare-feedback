@@ -28,12 +28,20 @@ if not MONGO_URI:
 client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=5000)
 db = client["starcare_feedback"]
 collection = db["feedback"]
+users_collection = db["users"]
 
 # ---------------- BASE URL ----------------
 BASE_URL = "https://starcare-feedback-1.onrender.com/feedback/"
 
 # ---------------- BRANCHES ----------------
 # branches = ["alhail", "mabella", "alamerat"]
+
+users = {
+    "admin": {"password": "1234", "role": "admin"},
+    "it_head": {"password": "1111", "role": "it"},
+    "alhail_head": {"password": "2222", "role": "alhail"},
+    "mabella_head": {"password": "3333", "role": "mabella"},
+}
 # ---------------- LOCATIONS ----------------
 locations = [
     "consultation101","consultation102","consultation103","consultation104",
@@ -154,11 +162,21 @@ def feedback(location):
 def login():
 
     if request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get('password')
 
-        if username == "admin" and password == "1234":
+        username = request.form['username']
+        password = request.form['password']
+
+        user = db.users.find_one({
+            "username": username,
+            "password": password
+        })
+
+        if user:
+
             session['admin'] = True
+            session['role'] = user["role"]
+            session['username'] = username
+
             return redirect('/admin')
 
         return "Wrong credentials"
@@ -178,7 +196,13 @@ def admin():
     if 'admin' not in session:
         return redirect('/login')
 
+    role = session.get("role")
+
     data = list(collection.find().sort("date", -1))
+
+    # 🔥 فلترة حسب الدور
+    if role != "admin":
+        data = [d for d in data if d.get("location") == role]
 
     total = len(data)
     avg = round(sum(i["rating"] for i in data) / total, 2) if total else 0
@@ -196,11 +220,11 @@ def admin():
 
     stats_list = [
         {
-            "location": loc,
+            "location": l,
             "count": v["count"],
             "avg": round(v["total"] / v["count"], 2)
         }
-        for loc, v in stats.items()
+        for l, v in stats.items()
     ]
 
     return render_template(
@@ -208,8 +232,35 @@ def admin():
         data=data,
         total_feedback=total,
         avg_rating=avg,
-        stats=stats_list
+        stats=stats_list,
+        role=role
     )
+
+
+
+#اضاضه مستخدمين
+@app.route('/add_user', methods=['GET', 'POST'])
+def add_user():
+
+    if session.get("role") != "admin":
+        return "Forbidden", 403
+
+    if request.method == 'POST':
+
+        username = request.form['username']
+        password = request.form['password']
+        role = request.form['role']
+
+        db.users.insert_one({
+            "username": username,
+            "password": password,
+            "role": role
+        })
+
+        return redirect('/admin')
+
+    return render_template("add_user.html")
+
 
 @app.route('/api/feedback')
 def api_feedback():
