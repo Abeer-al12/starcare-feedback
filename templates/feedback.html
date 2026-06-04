@@ -174,11 +174,7 @@
     </div>
 
         <form method="POST" action="/feedback/{{ location }}">
-            <select name="room">
-                {% for room in rooms %}
-            <option value="{{ room }}">{{ room.replace('_',' ') }}</option>
-                {% endfor %}
-            </select>
+            
 
         <div class="stars">
 
