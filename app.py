@@ -33,7 +33,7 @@ collection = db["feedback"]
 BASE_URL = "https://starcare-feedback-1.onrender.com/feedback/"
 
 # ---------------- BRANCHES ----------------
-branches = ["alhail", "mabella", "alamerat"]
+# branches = ["alhail", "mabella", "alamerat"]
 # ---------------- LOCATIONS ----------------
 locations = [
     "consultation101","consultation102","consultation103","consultation104",
@@ -65,53 +65,53 @@ room_names = {
     "sample_collaction":"sample collection room"
 }
 
-branch_rooms_map = {
-    # 🏥 Al Hail
-    "alhail": [
-        "consultation101",
-        "consultation102",
-        "consultation103",
-        "consultation104",
-        "cystoscopy110",
-        "urodynamic109",
-        "waiting_area",
-        "laboratory107",
-        "staff",
-        "ultrasound106",
-        "xray108",
-        "triage105",
-        "nurse",
-        "department",
-        "doctor",
-        "it",
-        "admin",
-        "toilet",
-        "sample_collaction"
-    ],
+# branch_rooms_map = {
+#     # 🏥 Al Hail
+#     "alhail": [
+#         "consultation101",
+#         "consultation102",
+#         "consultation103",
+#         "consultation104",
+#         "cystoscopy110",
+#         "urodynamic109",
+#         "waiting_area",
+#         "laboratory107",
+#         "staff",
+#         "ultrasound106",
+#         "xray108",
+#         "triage105",
+#         "nurse",
+#         "department",
+#         "doctor",
+#         "it",
+#         "admin",
+#         "toilet",
+#         "sample_collaction"
+#     ],
 
-    # 💊 Pharmacy
-    "pharmacy": [
-        "pharmacy_area",
-        "pharmacy_store",
-        "medical_area"
-    ],
+#     # 💊 Pharmacy
+#     "pharmacy": [
+#         "pharmacy_area",
+#         "pharmacy_store",
+#         "medical_area"
+#     ],
 
-    # 🏥 Al Amerat (مثال)
-    "alamerat": [
-        "consultation201",
-        "waiting_area_2",
-        "lab_201",
-        "nurse_station_2"
-    ],
+#     # 🏥 Al Amerat (مثال)
+#     "alamerat": [
+#         "consultation201",
+#         "waiting_area_2",
+#         "lab_201",
+#         "nurse_station_2"
+#     ],
 
-    # 🏥 Mabella (مثال)
-    "mabella": [
-        "consultation301",
-        "xray301",
-        "ultrasound301",
-        "reception"
-    ]
-}
+#     # 🏥 Mabella (مثال)
+#     "mabella": [
+#         "consultation301",
+#         "xray301",
+#         "ultrasound301",
+#         "reception"
+#     ]
+# }
 # ---------------- HOME ----------------
 @app.route('/')
 def home():
@@ -125,18 +125,18 @@ def feedback(location):
         return "Invalid Location", 404
 
     # 👇 لازم تحطه هنا (قبل GET/POST)
-    rooms = branch_rooms_map.get(location, [])
+    # rooms = branch_rooms_map.get(location, [])
 
     if request.method == 'POST':
         rating = request.form.get('rating')
         comment = request.form.get('comment')
-        branch = request.form.get("branch")
+        # branch = request.form.get("branch")
 
         if not rating:
             return "Rating required", 400
 
         collection.insert_one({
-            "branch": branch,
+            # "branch": branch,
             "location": location,
             "rating": int(rating),
             "comment": comment,
@@ -149,14 +149,14 @@ def feedback(location):
             room_name=room_names[location]
         )
 
-    branches = list(branch_rooms_map.keys())  # أو حطها ثابتة
+    # branches = list(branch_rooms_map.keys())  # أو حطها ثابتة
 
     return render_template(
         "feedback.html",
         location=location,
         room_name=room_names[location],
-        branches=branches,
-        rooms=rooms
+        # branches=branches,
+        # rooms=rooms
     )
 # ---------------- LOGIN ----------------
 @app.route('/login', methods=['GET','POST'])
@@ -194,14 +194,14 @@ def admin():
 
     stats = {}
 
-    for i in data:
-        branch = i.get("branch", "unknown")
+    # for i in data:
+    #     branch = i.get("branch", "unknown")
 
-        if branch not in stats:
-            stats[branch] = {"count": 0, "total": 0}
+    #     if branch not in stats:
+    #         stats[branch] = {"count": 0, "total": 0}
 
-        stats[branch]["count"] += 1
-        stats[branch]["total"] += i["rating"]
+    #     stats[branch]["count"] += 1
+    #     stats[branch]["total"] += i["rating"]
 
     stats_list = [
         {
@@ -218,7 +218,7 @@ def admin():
         total_feedback=total,
         avg_rating=avg,
         stats=stats_list,
-        branches=branches
+        # branches=branches
     )
 
 
@@ -232,9 +232,9 @@ def api_feedback():
 
     return {"data": data}
 
-@app.route('/get_rooms/<branch>')
-def get_rooms(branch):
-    return {"rooms": branch_rooms_map.get(branch, [])}
+# @app.route('/get_rooms/<branch>')
+# def get_rooms(branch):
+#     return {"rooms": branch_rooms_map.get(branch, [])}
 # ---------------- PDF ----------------
 @app.route('/download_pdf')
 def download_pdf():
@@ -388,14 +388,14 @@ def analytics():
 
     stats = {}
 
-    for i in data:
-        branch = i.get("branch", "unknown")
+    # for i in data:
+    #     branch = i.get("branch", "unknown")
 
-        if branch not in stats:
-            stats[branch] = {"count": 0, "total": 0}
+    #     if branch not in stats:
+    #         stats[branch] = {"count": 0, "total": 0}
 
-        stats[branch]["count"] += 1
-        stats[branch]["total"] += i["rating"]
+    #     stats[branch]["count"] += 1
+    #     stats[branch]["total"] += i["rating"]
 
     chart_data = [
         {
