@@ -36,11 +36,11 @@ users_collection = db["users"]
 #     "role": "admin"
 # })
 
-db.users.insert_one({
-    "username": "it_head",
-    "password": "1234",
-    "role": "it"
-})
+# db.users.insert_one({
+#     "username": "it_head",
+#     "password": "1234",
+#     "role": "it"
+# })
 # ---------------- BASE URL ----------------
 BASE_URL = "https://starcare-feedback-1.onrender.com/feedback/"
 
@@ -292,6 +292,11 @@ def download_pdf():
         return redirect('/login')
 
     data = list(collection.find())
+
+    role = session.get("role")
+
+    if role != "admin":
+        data = [d for d in data if d.get("location") == role]
 
     total = len(data)
     avg = round(
