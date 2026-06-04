@@ -125,11 +125,13 @@ def feedback(location):
         return "Invalid Location", 404
 
     if request.method == 'POST':
+
         rating = request.form.get('rating')
         comment = request.form.get('comment')
+        room = request.form.get('room')   # ⭐ هذا الناقص
 
-        if not rating:
-            return "Rating required", 400
+        if not rating or not room:
+            return "Missing rating or room", 400
 
         collection.insert_one({
             "location": location,
@@ -137,18 +139,19 @@ def feedback(location):
             "rating": int(rating),
             "comment": comment,
             "date": datetime.now()
-})
+        })
 
         return render_template(
             "thankyou.html",
             location=location,
-            room_name=room_names[location]
+            room_name=room  # ⭐ الأفضل بدل room_names
         )
 
     return render_template(
         "feedback.html",
         location=location,
-        room_name=room_names[location]
+        room_name=room_names[location],
+        rooms=branch_rooms_map.get(location, [])  # ⭐ مهم جداً
     )
 # ---------------- LOGIN ----------------
 @app.route('/login', methods=['GET','POST'])
