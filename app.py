@@ -208,14 +208,18 @@ def admin():
     if 'admin' not in session:
         return redirect('/login')
 
-    data = list(collection.find().sort("date", -1))
+    role = session.get("role")
+    username = session.get("username")
 
-    user = db.users.find_one({"username": session.get("username")})
+    user = db.users.find_one({"username": username})
 
-    allowed_locations = user.get("locations", [])
+    allowed_locations = user.get("locations", []) if user else []
 
-    if session.get("role") != "admin":
-        data = [d for d in data if d.get("location") in allowed_locations]
+    # 🔥 admin يشوف الكل
+    if role == "admin":
+        data = list(collection.find().sort("date", -1))
+    else:
+        data = list(collection.find({"location": {"$in": allowed_locations}}).sort("date", -1))
 
     total = len(data)
     avg = round(sum(i["rating"] for i in data) / total, 2) if total else 0
@@ -246,9 +250,8 @@ def admin():
         total_feedback=total,
         avg_rating=avg,
         stats=stats_list,
-        role=session.get("role")
+        role=role
     )
-
 
 #اضافه مستخدمين
 @app.route('/add_user', methods=['GET', 'POST'])
@@ -263,10 +266,14 @@ def add_user():
         password = request.form['password']
         role = request.form['role']
 
+        # ⭐ هذا الجديد
+        locations = request.form.getlist('locations')
+
         db.users.insert_one({
             "username": username,
             "password": password,
-            "role": role
+            "role": role,
+            "locations": locations
         })
 
         return redirect('/manage_users')

@@ -75,18 +75,31 @@
     <h2>Add New User</h2>
 
     <form method="POST">
-        <input name="username" placeholder="Username" required>
-        <input name="password" placeholder="Password" required>
 
-        <select name="role">
-            <option value="admin">Admin</option>
-            <option value="it">IT</option>
-            <option value="alhail">Al Hail</option>
-            <option value="mabella">Mabella</option>
-        </select>
+    <input name="username" placeholder="Username" required>
+    <input name="password" placeholder="Password" required>
 
-        <button type="submit">Add User</button>
-    </form>
+    <select name="role">
+        <option value="admin">Admin</option>
+        <option value="it">IT</option>
+        <option value="nurse">Nurse</option>
+        <option value="doctor">Doctor</option>
+        <option value="alhail">Al Hail</option>
+        <option value="mabella">Mabella</option>
+    </select>
+
+    <h3 style="margin-top:15px;">Select Allowed Locations</h3>
+
+    <label><input type="checkbox" name="locations" value="it"> IT</label><br>
+    <label><input type="checkbox" name="locations" value="nurse"> Nurse Station</label><br>
+    <label><input type="checkbox" name="locations" value="triage105"> Triage</label><br>
+    <label><input type="checkbox" name="locations" value="waiting_area"> Waiting Area</label><br>
+    <label><input type="checkbox" name="locations" value="consultation101"> Consultation 101</label><br>
+    <label><input type="checkbox" name="locations" value="xray108"> X-Ray</label><br>
+
+    <button type="submit">Add User</button>
+
+</form>
 
     <a href="/manage_users" class="back-link">Back to Users</a>
     <a href="/admin" class="back-link">Back to Dashboard</a>
