@@ -1,15 +1,83 @@
-<h2>Add User</h2>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add User</title>
 
-<form method="POST">
-    <input name="username" placeholder="Username">
-    <input name="password" placeholder="Password">
+    <style>
+        body{
+            font-family: Arial;
+            background:#f5f7fa;
+            margin:0;
+        }
 
-    <select name="role">
-        <option value="admin">Admin</option>
-        <option value="it">IT</option>
-        <option value="alhail">Al Hail</option>
-        <option value="mabella">Mabella</option>
-    </select>
+        .container{
+            width:400px;
+            margin:80px auto;
+            background:white;
+            padding:25px;
+            border-radius:12px;
+            box-shadow:0 0 10px rgba(0,0,0,0.1);
+            text-align:center;
+        }
 
-    <button type="submit">Add</button>
-</form>
+        h2{
+            color:#12b3ad;
+        }
+
+        input, select{
+            width:100%;
+            padding:10px;
+            margin:10px 0;
+            border:1px solid #ccc;
+            border-radius:8px;
+        }
+
+        button{
+            width:100%;
+            padding:10px;
+            background:#12b3ad;
+            color:white;
+            border:none;
+            border-radius:8px;
+            cursor:pointer;
+        }
+
+        button:hover{
+            background:#0e8f8a;
+        }
+
+        a{
+            display:block;
+            margin-top:10px;
+            color:#12b3ad;
+            text-decoration:none;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>➕ Add New User</h2>
+
+    <form method="POST">
+        <input name="username" placeholder="Username" required>
+        <input name="password" placeholder="Password" required>
+
+        <select name="role">
+            <option value="admin">Admin</option>
+            <option value="it">IT</option>
+            <option value="alhail">Al Hail</option>
+            <option value="mabella">Mabella</option>
+        </select>
+
+        <button type="submit">Add User</button>
+    </form>
+
+    <a href="/manage_users">⬅ Back to Users</a>
+
+</div>
+
+</body>
+</html>

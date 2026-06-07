@@ -1,21 +1,92 @@
-<h2>Manage Users</h2>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Manage Users</title>
 
-<a href="/add_user">➕ Add User</a>
+    <style>
+        body{
+            font-family: Arial;
+            background:#f5f7fa;
+            margin:0;
+        }
 
-<table border="1">
-    <tr>
-        <th>Username</th>
-        <th>Role</th>
-        <th>Action</th>
-    </tr>
+        .container{
+            width:80%;
+            margin:50px auto;
+        }
 
-    {% for user in users %}
-    <tr>
-        <td>{{ user.username }}</td>
-        <td>{{ user.role }}</td>
-        <td>
-            <a href="/delete_user/{{ user.username }}">Delete</a>
-        </td>
-    </tr>
-    {% endfor %}
-</table>
+        h2{
+            color:#12b3ad;
+        }
+
+        a.button{
+            display:inline-block;
+            padding:10px 15px;
+            background:#12b3ad;
+            color:white;
+            text-decoration:none;
+            border-radius:8px;
+            margin-bottom:15px;
+        }
+
+        table{
+            width:100%;
+            background:white;
+            border-collapse:collapse;
+            border-radius:10px;
+            overflow:hidden;
+        }
+
+        th{
+            background:#12b3ad;
+            color:white;
+            padding:10px;
+        }
+
+        td{
+            padding:10px;
+            text-align:center;
+            border-bottom:1px solid #eee;
+        }
+
+        .delete{
+            color:white;
+            background:red;
+            padding:5px 10px;
+            border-radius:6px;
+            text-decoration:none;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>👤 Manage Users</h2>
+
+    <a class="button" href="/add_user">➕ Add User</a>
+
+    <table>
+        <tr>
+            <th>Username</th>
+            <th>Role</th>
+            <th>Action</th>
+        </tr>
+
+        {% for user in users %}
+        <tr>
+            <td>{{ user.username }}</td>
+            <td>{{ user.role }}</td>
+            <td>
+                <a class="delete" href="/delete_user/{{ user.username }}">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+
+    </table>
+
+</div>
+
+</body>
+</html>
