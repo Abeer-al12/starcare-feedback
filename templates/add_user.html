@@ -1,68 +1,86 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Add User</title>
+    <title>Add User - StarCare</title>
 
     <style>
         body{
-            font-family: Arial;
-            background:#f5f7fa;
             margin:0;
+            font-family:Arial;
+            background:#f6fbfc;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            height:100vh;
         }
 
-        .container{
-            width:400px;
-            margin:80px auto;
+        .card{
+            width:420px;
             background:white;
-            padding:25px;
-            border-radius:12px;
-            box-shadow:0 0 10px rgba(0,0,0,0.1);
+            padding:30px;
+            border-radius:20px;
+            box-shadow:0 10px 30px rgba(0,0,0,0.1);
             text-align:center;
+        }
+
+        .logo{
+            width:140px;
+            margin-bottom:10px;
         }
 
         h2{
             color:#00A79B;
+            margin-bottom:20px;
         }
 
-        input, select{
+        input{
             width:100%;
-            padding:10px;
+            padding:12px;
             margin:10px 0;
-            border:1px solid #ccc;
-            border-radius:8px;
+            border:1px solid #ddd;
+            border-radius:12px;
+            outline:none;
+        }
+
+        select{
+            width:100%;
+            padding:12px;
+            margin:10px 0;
+            border:1px solid #ddd;
+            border-radius:12px;
+            outline:none;
+
+            /* 👇 هذا يخلي dropdown جميل */
+            background:#fff;
+            appearance:none;
+            cursor:pointer;
         }
 
         button{
             width:100%;
-            padding:10px;
+            padding:12px;
             background:#00A79B;
             color:white;
             border:none;
-            border-radius:8px;
+            border-radius:12px;
             cursor:pointer;
+            margin-top:10px;
+            font-weight:bold;
         }
 
         button:hover{
-            background:#00A79B;
+            background:#008f88;
         }
 
-        a{
+        .back{
             display:block;
-            margin-top:10px;
+            margin-top:15px;
             color:#00A79B;
             text-decoration:none;
         }
-        
-       .back-link{
-    display:block;
-    margin-top:10px;
-    color:#00A79B;
-    text-decoration:none;
-    font-weight:bold;
-        }
 
-        .back-link:hover{
-    text-decoration:underline;
+        .back:hover{
+            text-decoration:underline;
         }
 
     </style>
@@ -70,39 +88,34 @@
 
 <body>
 
-<div class="container">
+<div class="card">
+
+    <!-- Logo -->
+    <img src="{{ url_for('static', filename='logowhite.jpeg') }}" class="logo">
 
     <h2>Add New User</h2>
 
     <form method="POST">
 
-    <input name="username" placeholder="Username" required>
-    <input name="password" placeholder="Password" required>
+        <input name="username" placeholder="Username" required>
+        <input name="password" placeholder="Password" required>
 
-    <select name="role">
-        <option value="admin">Admin</option>
-        <option value="it">IT</option>
-        <option value="nurse">Nurse</option>
-        <option value="doctor">Doctor</option>
-        <option value="alhail">Al Hail</option>
-        <option value="mabella">Mabella</option>
-    </select>
+        <!-- Dropdown مرتب -->
+        <select name="role" required>
+            <option value="">Select Role</option>
+            <option value="admin">Admin</option>
+            <option value="it">IT Department</option>
+            <option value="nurse">Nurse</option>
+            <option value="doctor">Doctor</option>
+            <option value="alhail">Al Hail</option>
+            <option value="mabella">Mabella</option>
+        </select>
 
-    <h3 style="margin-top:15px;">Select Allowed Locations</h3>
+        <button type="submit">Add User</button>
 
-    <label><input type="checkbox" name="locations" value="it"> IT</label><br>
-    <label><input type="checkbox" name="locations" value="nurse"> Nurse Station</label><br>
-    <label><input type="checkbox" name="locations" value="triage105"> Triage</label><br>
-    <label><input type="checkbox" name="locations" value="waiting_area"> Waiting Area</label><br>
-    <label><input type="checkbox" name="locations" value="consultation101"> Consultation 101</label><br>
-    <label><input type="checkbox" name="locations" value="xray108"> X-Ray</label><br>
+    </form>
 
-    <button type="submit">Add User</button>
-
-</form>
-
-    <a href="/manage_users" class="back-link">Back to Users</a>
-    <a href="/admin" class="back-link">Back to Dashboard</a>
+    <a href="/manage_users" class="back">⬅ Back to Users</a>
 </div>
 
 </body>
