@@ -211,15 +211,24 @@ def admin():
     role = session.get("role")
     username = session.get("username")
 
+    selected_location = request.args.get("location")
+
     user = db.users.find_one({"username": username})
 
     allowed_locations = user.get("locations", []) if user else []
 
     # 🔥 admin يشوف الكل
-    if role == "admin":
-        data = list(collection.find().sort("date", -1))
-    else:
-        data = list(collection.find({"location": {"$in": allowed_locations}}).sort("date", -1))
+    query = {}
+
+# 🔐 فلترة حسب role
+    if role != "admin":
+        query["location"] = {"$in": allowed_locations}
+
+# 🎯 فلترة حسب اختيار الصفحة (dropdown)
+    if selected_location:
+        query["location"] = selected_location
+
+    data = list(collection.find(query).sort("date", -1))
 
     total = len(data)
     avg = round(sum(i["rating"] for i in data) / total, 2) if total else 0

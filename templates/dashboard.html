@@ -241,27 +241,26 @@
 
     <!-- Filter -->
     <!-- Filters Row -->
-<div style="display:flex; gap:10px; margin-bottom:20px;">
+<div style="display:flex; gap:10px; margin-bottom:20px; align-items:center;">
 
-    <!-- Branch Filter
-    <select id="branchFilter" onchange="applyFilters()">
-        <option value="all">All Branches</option>
+    <form method="GET" action="/admin">
 
-        <option value="alhail">Al Hail</option>
-        <option value="mabella">Mabella</option>
-        <option value="alamerat">Al Amerat</option>
-    </select> -->
+        <select name="location"
+                onchange="this.form.submit()"
+                style="padding:12px;border-radius:10px;border:1px solid #ddd;">
 
-    <!-- Location Filter -->
-    <select id="locationFilter" onchange="applyFilters()">
-       <option value="all">All Locations</option>
+            <option value="">All Locations</option>
 
-{% for s in stats %}
-    <option value="{{ s.location }}">
-        {{ s.location }}
-    </option>
-{% endfor %}
-    </select>
+            {% for s in stats %}
+                <option value="{{ s.location }}"
+                    {% if request.args.get('location') == s.location %}selected{% endif %}>
+                    {{ s.location }}
+                </option>
+            {% endfor %}
+
+        </select>
+
+    </form>
 
 </div>
 
@@ -311,71 +310,7 @@
 </table>
 </div>
 
-<script>
 
-function filterTable(value){
-
-    let rows = document.querySelectorAll(".row");
-
-    rows.forEach(row => {
-
-        let loc = row.querySelector(".loc").getAttribute("data-loc");
-
-        if(value === "all"){
-            row.style.display = "table-row";
-        }
-        else{
-            row.style.display = (loc === value) ? "table-row" : "none";
-        }
-
-    });
-
-}
-
-window.onload = function(){
-    let lang = localStorage.getItem("lang") || "en";
-    setLang(lang);
-}
-// Language switch (FIXED)
-function setLang(lang){
-
-    localStorage.setItem("lang", lang);
-
-    document.body.dir = (lang === "ar") ? "rtl" : "ltr";
-
-    document.querySelector("h1").innerText =
-        (lang === "ar") ? "لوحة التحكم" : "Admin Dashboard";
-
-    let cards = document.querySelectorAll(".card h3");
-
-    cards[0].innerText = (lang === "ar") ? "إجمالي التقييمات" : "Total Feedback";
-    cards[1].innerText = (lang === "ar") ? "متوسط التقييم" : "Average Rating";
-
-}
-
-// function applyFilters(){
-
-//     let branch = document.getElementById("branchFilter").value;
-//     let location = document.getElementById("locationFilter").value;
-
-//     let rows = document.querySelectorAll(".row");
-
-//     rows.forEach(row => {
-
-//         let loc = row.querySelector(".loc").getAttribute("data-loc");
-
-//         let matchBranch = (branch === "all" || loc.includes(branch));
-//         let matchLocation = (location === "all" || loc === location);
-
-//         if(matchBranch && matchLocation){
-//             row.style.display = "table-row";
-//         } else {
-//             row.style.display = "none";
-//         }
-
-//     });
-// }
-</script>
 
 </body>
 </html>
