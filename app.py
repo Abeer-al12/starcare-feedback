@@ -250,7 +250,7 @@ def admin():
 
 
 
-#اضاضه مستخدمين
+#اضافه مستخدمين
 @app.route('/add_user', methods=['GET', 'POST'])
 def add_user():
 
@@ -269,10 +269,32 @@ def add_user():
             "role": role
         })
 
-        return redirect('/admin')
+        return redirect('/manage_users')
 
     return render_template("add_user.html")
 
+#حذف مستخدمين 
+@app.route('/delete_user/<username>')
+def delete_user(username):
+
+    if session.get("role") != "admin":
+        return "Forbidden", 403
+
+    db.users.delete_one({"username": username})
+
+    return redirect('/manage_users')
+
+    #عرض مستخدمين 
+    @app.route('/manage_users')
+def manage_users():
+
+    if session.get("role") != "admin":
+        return "Forbidden", 403
+
+    users = list(db.users.find())
+
+    return render_template("manage_users.html", users=users)
+    
 
 @app.route('/api/feedback')
 def api_feedback():
