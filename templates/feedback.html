@@ -25,17 +25,10 @@
         }
 
         .logo{
-            width:85px;
-            height:85px;
-            background:#00A79B;
-            border-radius:50%;
-            display:flex;
-            justify-content:center;
-            align-items:center;
-            margin:auto;
-            font-size:40px;
-            color:white;
-            box-shadow:0 4px 15px rgba(89,227,236,.45);
+    width: 200px;
+    height:auto;
+    display:block;
+    margin:0 auto 20px;
         }
 
         h1{
@@ -151,9 +144,9 @@
 
 <div class="card">
 
-    <div class="logo">❤</div>
+    <img src="{{ url_for('static', filename='LOGO.webp') }}" class="logo">
 
-    <h1>StarCare Hospital</h1>
+    
 
     <div class="lang-switch">
         <button type="button" onclick="setLang('en')">
