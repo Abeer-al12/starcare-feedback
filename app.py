@@ -208,18 +208,21 @@ def admin():
     if 'admin' not in session:
         return redirect('/login')
 
-    role = session.get("role")
-
     data = list(collection.find().sort("date", -1))
 
     # 🔥 فلترة حسب الدور
+    role = session.get("role")
+
     if role != "admin":
         role_data = db.roles.find_one({"role": role})
 
-        allowed_locations = role_data["locations"] if role_data else []
+        if not role_data:
+            allowed_locations = []
+        else:
+            allowed_locations = role_data.get("locations", [])
 
-        data = [d for d in data if d.get("location") in allowed_locations]
-        
+    data = [d for d in data if d.get("location") in allowed_locations]
+
     total = len(data)
     avg = round(sum(i["rating"] for i in data) / total, 2) if total else 0
 
