@@ -53,19 +53,18 @@
             text-decoration:none;
         }
         
-        .back-btn{
-    display:inline-block;
-    padding:10px 15px;
-    background:#00A79B;
-    color:white;
-    text-decoration:none;
-    border-radius:8px;
+       .back-link{
+    display:block;
     margin-top:10px;
-}
+    color:#00A79B;
+    text-decoration:none;
+    font-weight:bold;
+        }
 
-.back-btn:hover{
-    background:#00A79B;
-}
+        .back-link:hover{
+    text-decoration:underline;
+        }
+
     </style>
 </head>
 
@@ -89,8 +88,8 @@
         <button type="submit">Add User</button>
     </form>
 
-    <a href="/manage_users">⬅ Back to Users</a>
-    <a href="/admin" class="back-btn">Back to Dashboard</a>
+    <a href="/manage_users" class="back-link">Back to Users</a>
+    <a href="/admin" class="back-link">Back to Dashboard</a>
 </div>
 
 </body>

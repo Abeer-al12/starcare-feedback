@@ -56,6 +56,23 @@
             border-radius:6px;
             text-decoration:none;
         }
+        .center-link{
+    text-align:center;
+    margin-top:20px;
+        }
+
+.back-btn{
+    display:inline-block;
+    padding:10px 15px;
+    color:#00A79B;
+    text-decoration:none;
+    border-radius:8px;
+    font-weight:bold;
+        }
+
+.back-btn:hover{
+    text-decoration:underline;
+        }
     </style>
 </head>
 
@@ -85,7 +102,9 @@
         {% endfor %}
 
     </table>
-        <a href="/admin" class="home-btn">Back to Dashboard</a>
+<div class="center-link">
+    <a href="/admin" class="back-btn">🏠 Back to Dashboard</a>
+</div>
 
 
 </div>
