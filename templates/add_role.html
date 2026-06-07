@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Role</title>
+
+    <style>
+        body{
+            font-family: Arial;
+            background:#f5f7fa;
+        }
+
+        .container{
+            width:400px;
+            margin:80px auto;
+            background:white;
+            padding:25px;
+            border-radius:12px;
+            box-shadow:0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h2{
+            color:#00A79B;
+            text-align:center;
+        }
+
+        input{
+            width:100%;
+            padding:10px;
+            margin:10px 0;
+            border-radius:8px;
+            border:1px solid #ccc;
+        }
+
+        .box{
+            margin:10px 0;
+        }
+
+        button{
+            width:100%;
+            padding:10px;
+            background:#00A79B;
+            color:white;
+            border:none;
+            border-radius:8px;
+        }
+
+        label{
+            display:block;
+            margin:5px 0;
+        }
+
+        a{
+            display:block;
+            text-align:center;
+            margin-top:10px;
+            color:#00A79B;
+            text-decoration:none;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>Add Role</h2>
+
+    <form method="POST">
+
+        <input name="role" placeholder="Role name (nurse, doctor)" required>
+
+        <div class="box">
+            <label><input type="checkbox" name="locations" value="nurse"> Nurse Station</label>
+            <label><input type="checkbox" name="locations" value="triage105"> Triage</label>
+            <label><input type="checkbox" name="locations" value="waiting_area"> Waiting Area</label>
+            <label><input type="checkbox" name="locations" value="consultation101"> Consultation 101</label>
+            <label><input type="checkbox" name="locations" value="consultation102"> Consultation 102</label>
+            <label><input type="checkbox" name="locations" value="xray108"> X-Ray</label>
+            <label><input type="checkbox" name="locations" value="it"> IT</label>
+        </div>
+
+        <button type="submit">Save Role</button>
+
+    </form>
+
+    <a href="/admin">Back</a>
+
+</div>
+
+</body>
+</html>

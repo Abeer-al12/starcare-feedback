@@ -214,8 +214,11 @@ def admin():
 
     # 🔥 فلترة حسب الدور
     if role != "admin":
-        data = [d for d in data if d.get("location") == role]
+    role_data = db.roles.find_one({"role": role})
 
+    allowed_locations = role_data["locations"] if role_data else []
+
+    data = [d for d in data if d.get("location") in allowed_locations]
     total = len(data)
     avg = round(sum(i["rating"] for i in data) / total, 2) if total else 0
 
@@ -295,6 +298,25 @@ def manage_users():
 
     return render_template("manage_users.html", users=users)
 
+@app.route('/add_role', methods=['GET', 'POST'])
+def add_role():
+
+    if session.get("role") != "admin":
+        return "Forbidden", 403
+
+    if request.method == 'POST':
+
+        role = request.form['role']
+        locations = request.form.getlist('locations')
+
+        db.roles.insert_one({
+            "role": role,
+            "locations": locations
+        })
+
+        return redirect('/admin')
+
+    return render_template("add_role.html")
 
 @app.route('/api/feedback')
 def api_feedback():
