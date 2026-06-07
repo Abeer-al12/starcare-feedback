@@ -85,6 +85,12 @@
             text-decoration:underline;
         }
 
+        .logo{
+    width: 200px;
+    height:auto;
+    display:block;
+    margin:0 auto 20px;
+        }
     </style>
 </head>
 
@@ -92,6 +98,8 @@
 
 <div class="card">
 
+    <!-- Logo -->
+    <img src="{{ url_for('static', filename='logowhite.jpeg') }}" class="logo">
     <h2>Manage Users</h2>
 
     <a href="/add_user" class="add-btn">Add User</a>
