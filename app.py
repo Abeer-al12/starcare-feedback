@@ -2,9 +2,6 @@ from flask import Flask, render_template, request, redirect, session
 from pymongo import MongoClient
 from datetime import datetime
 import os
-from dotenv import load_dotenv
-
-load_dotenv()
 import qrcode
 from reportlab.platypus import (
     SimpleDocTemplate,
