@@ -23,18 +23,11 @@
             box-shadow:0 8px 25px rgba(0,0,0,.10);
         }
 
-        .icon{
-            width:90px;
-            height:90px;
-            background:#00A79B;
-            border-radius:50%;
-            display:flex;
-            justify-content:center;
-            align-items:center;
-            margin:auto;
-            font-size:42px;
-            color:white;
-            box-shadow:0 4px 15px rgba(89,227,236,.45);
+        .logo{
+    width: 200px;
+    height:auto;
+    display:block;
+    margin:0 auto 20px;
         }
 
         h1{
@@ -76,7 +69,7 @@
 
 <div class="card">
 
-    <div class="icon">❤</div>
+    <img src="{{ url_for('static', filename='LOGO.webp') }}" class="logo">
 
     <h1>Thank You!</h1>
 
