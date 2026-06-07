@@ -1,88 +1,100 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Manage Users</title>
+    <title>Manage Users - StarCare</title>
 
     <style>
         body{
-            font-family: Arial;
-            background:#f5f7fa;
             margin:0;
+            font-family:Arial;
+            background:#f6fbfc;
+            display:flex;
+            justify-content:center;
+            align-items:flex-start;
+            padding-top:60px;
         }
 
-        .container{
-            width:80%;
-            margin:50px auto;
+        .card{
+            width:800px;
+            background:white;
+            padding:30px;
+            border-radius:20px;
+            box-shadow:0 10px 30px rgba(0,0,0,0.1);
+            text-align:center;
         }
 
         h2{
             color:#00A79B;
-        }
-
-        a.button{
-            display:inline-block;
-            padding:10px 15px;
-            background:#00A79B;
-            color:white;
-            text-decoration:none;
-            border-radius:8px;
-            margin-bottom:15px;
+            margin-bottom:20px;
         }
 
         table{
             width:100%;
-            background:white;
             border-collapse:collapse;
-            border-radius:10px;
+            border-radius:15px;
             overflow:hidden;
         }
 
         th{
             background:#00A79B;
             color:white;
-            padding:10px;
+            padding:12px;
         }
 
         td{
-            padding:10px;
-            text-align:center;
+            padding:12px;
             border-bottom:1px solid #eee;
         }
 
+        tr:hover{
+            background:#f6fbfb;
+        }
+
         .delete{
+            background:#ff4d4d;
             color:white;
-            background:red;
-            padding:5px 10px;
-            border-radius:6px;
+            padding:6px 12px;
+            border-radius:8px;
+            text-decoration:none;
+            font-size:13px;
+        }
+
+        .add-btn{
+            display:inline-block;
+            margin-bottom:15px;
+            padding:10px 15px;
+            background:#00A79B;
+            color:white;
+            border-radius:10px;
+            text-decoration:none;
+            font-weight:bold;
+        }
+
+        .add-btn:hover{
+            background:#008f88;
+        }
+
+        .back{
+            display:block;
+            margin-top:15px;
+            color:#00A79B;
             text-decoration:none;
         }
-        .center-link{
-    text-align:center;
-    margin-top:20px;
+
+        .back:hover{
+            text-decoration:underline;
         }
 
-.back-btn{
-    display:inline-block;
-    padding:10px 15px;
-    color:#00A79B;
-    text-decoration:none;
-    border-radius:8px;
-    font-weight:bold;
-        }
-
-.back-btn:hover{
-    text-decoration:underline;
-        }
     </style>
 </head>
 
 <body>
 
-<div class="container">
+<div class="card">
 
     <h2>Manage Users</h2>
 
-    <a class="button" href="/add_user">Add User</a>
+    <a href="/add_user" class="add-btn">Add User</a>
 
     <table>
         <tr>
@@ -96,16 +108,14 @@
             <td>{{ user.username }}</td>
             <td>{{ user.role }}</td>
             <td>
-                <a class="delete" href="/delete_user/{{ user.username }}">Delete</a>
+                <a href="/delete_user/{{ user.username }}" class="delete">Delete</a>
             </td>
         </tr>
         {% endfor %}
 
     </table>
-<div class="center-link">
-    <a href="/admin" class="back-btn">Back to Dashboard</a>
-</div>
 
+    <a href="/admin" class="back">Back to Dashboard</a>
 
 </div>
 
