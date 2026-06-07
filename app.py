@@ -214,11 +214,12 @@ def admin():
 
     # 🔥 فلترة حسب الدور
     if role != "admin":
-    role_data = db.roles.find_one({"role": role})
+        role_data = db.roles.find_one({"role": role})
 
-    allowed_locations = role_data["locations"] if role_data else []
+        allowed_locations = role_data["locations"] if role_data else []
 
-    data = [d for d in data if d.get("location") in allowed_locations]
+        data = [d for d in data if d.get("location") in allowed_locations]
+        
     total = len(data)
     avg = round(sum(i["rating"] for i in data) / total, 2) if total else 0
 
