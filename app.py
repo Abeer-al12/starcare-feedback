@@ -210,18 +210,12 @@ def admin():
 
     data = list(collection.find().sort("date", -1))
 
-    # 🔥 فلترة حسب الدور
-    role = session.get("role")
+    user = db.users.find_one({"username": session.get("username")})
 
-    if role != "admin":
-        role_data = db.roles.find_one({"role": role})
+    allowed_locations = user.get("locations", [])
 
-        if not role_data:
-            allowed_locations = []
-        else:
-            allowed_locations = role_data.get("locations", [])
-
-    data = [d for d in data if d.get("location") in allowed_locations]
+    if session.get("role") != "admin":
+        data = [d for d in data if d.get("location") in allowed_locations]
 
     total = len(data)
     avg = round(sum(i["rating"] for i in data) / total, 2) if total else 0
@@ -252,9 +246,8 @@ def admin():
         total_feedback=total,
         avg_rating=avg,
         stats=stats_list,
-        role=role
+        role=session.get("role")
     )
-
 
 
 #اضافه مستخدمين
