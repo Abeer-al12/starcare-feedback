@@ -148,18 +148,11 @@ def feedback(location):
 
     if request.method == 'POST':
 
-        rating = int(request.form.get('rating'))
-        comment = request.form.get('comment')
+    rating = int(request.form.get('rating'))
+    comment = request.form.get('comment')
 
-        # ⭐ 3 أو أقل → نطلب رقم
-        if rating <= 3:
-            return {
-                "need_phone": True,
-                "rating": rating,
-                "comment": comment
-            }
-
-        # ⭐ 4 أو 5 → نحفظ مباشرة
+    # ⭐ 4 و 5 → حفظ مباشر
+    if rating >= 4:
         collection.insert_one({
             "location": location,
             "rating": rating,
@@ -168,9 +161,15 @@ def feedback(location):
             "date": datetime.now()
         })
 
-        return {
-            "need_phone": False
-        }
+        return {"need_phone": False}
+
+    # ⭐ 1 - 3 → نطلب رقم
+    return {
+        "need_phone": True,
+        "rating": rating,
+        "comment": comment,
+        "location": location
+    }
 
     return render_template(
         "feedback.html",
@@ -185,7 +184,7 @@ def save_low_rating():
 
     collection.insert_one({
         "location": data["location"],
-        "rating": data["rating"],
+        "rating": int(data["rating"]),
         "comment": data["comment"],
         "phone": data["phone"],
         "date": datetime.now()
@@ -193,35 +192,8 @@ def save_low_rating():
 
     return {"success": True}
 
-@app.route('/add_phone', methods=['GET', 'POST'])
-def add_phone():
 
-    if request.method == 'POST':
 
-        phone = request.form.get('phone')
-
-        data = session.get('temp_feedback')
-
-        if not data:
-            return redirect('/')
-
-        collection.insert_one({
-            "location": data["location"],
-            "rating": data["rating"],
-            "comment": data["comment"],
-            "phone": phone,
-            "date": datetime.now()
-        })
-
-        session.pop('temp_feedback', None)
-
-        return render_template(
-            "thankyou.html",
-            location=data["location"],
-            room_name=room_names[data["location"]]
-        )
-
-    return render_template("phone.html")
 # ---------------- LOGIN ----------------
 @app.route('/login', methods=['GET','POST'])
 def login():

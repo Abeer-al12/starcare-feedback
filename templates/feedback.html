@@ -166,7 +166,7 @@
         {{ room_name }}
     </div>
 
-        <form method="POST" action="/feedback/{{ location }}">
+        <form id="feedbackForm">
             
 
         <div class="stars">
@@ -234,32 +234,7 @@ function setLang(lang){
     }
     
 }
-let needPhone = {{ 'true' if need_phone else 'false' }};
-let oldRating = "{{ old_rating if old_rating else '' }}";
-let oldComment = "{{ old_comment if old_comment else '' }}";
 
-window.onload = function(){
-
-    if(needPhone){
-        document.getElementById("phonePopup").style.display = "flex";
-    }
-}
-
-function submitLowRating(){
-
-    let phone = document.getElementById("popupPhone").value;
-
-    fetch("/feedback/{{ location }}", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-        },
-        body: `rating=${oldRating}&comment=${oldComment}&phone=${phone}`
-    })
-    .then(() => {
-        window.location.href = "/thankyou/{{ location }}";
-    });
-}
 
 
 </script>
@@ -279,5 +254,75 @@ justify-content:center; align-items:center;">
         </button>
     </div>
 </div>
+</div>
+<script>
+
+let tempRating = 0;
+let tempComment = "";
+
+document.getElementById("feedbackForm").addEventListener("submit", function(e){
+    e.preventDefault();
+
+    let ratingEl = document.querySelector('input[name="rating"]:checked');
+
+    if(!ratingEl){
+        alert("Please select rating");
+        return;
+    }
+
+    let rating = parseInt(ratingEl.value);
+    let comment = document.getElementById("commentBox").value;
+
+    fetch("/feedback/{{ location }}", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: `rating=${rating}&comment=${comment}`
+    })
+    .then(res => res.json())
+    .then(data => {
+
+        if(data.need_phone){
+            tempRating = data.rating;
+            tempComment = data.comment;
+
+            document.getElementById("phonePopup").style.display = "flex";
+        }
+        else{
+            window.location.href = "/thankyou/{{ location }}";
+        }
+    });
+});
+
+
+function submitLowRating(){
+
+    let phone = document.getElementById("popupPhone").value;
+
+    if(phone.length !== 8 || isNaN(phone)){
+        alert("Phone must be 8 digits");
+        return;
+    }
+
+    fetch("/save_low_rating", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            location: "{{ location }}",
+            rating: tempRating,
+            comment: tempComment,
+            phone: phone
+        })
+    })
+    .then(() => {
+        window.location.href = "/thankyou/{{ location }}";
+    });
+}
+
+</script>
+
 </body>
 </html>
