@@ -179,7 +179,7 @@ def feedback(location):
     return render_template(
         "feedback.html",
         location=location,
-        room_name=room_names[location]
+        room_name=room_names.get(location)
     )
 
 @app.route('/save_low_rating', methods=['POST'])
