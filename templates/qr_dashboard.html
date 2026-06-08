@@ -78,6 +78,29 @@
     display:block;
     margin:0 auto 20px;
         }
+
+    .lang-switch{
+    display:flex;
+    justify-content:flex-end;
+    gap:10px;
+    margin-bottom:20px;
+    }
+
+    .lang-switch button{
+    background:white;
+    color:#00A79B;
+    border:2px solid #00A79B;
+    padding:10px 18px;
+    border-radius:25px;
+    cursor:pointer;
+    font-weight:bold;
+    transition:.3s;
+}
+
+    .lang-switch button:hover{
+    background:#00A79B;
+    color:white;
+}
     </style>
 </head>
 
@@ -87,6 +110,11 @@
 <img src="{{ url_for('static', filename='logowhite.jpeg') }}" class="logo"></div>
 
 <div class="main">
+
+    <div class="lang-switch">
+    <button onclick="setLang('en')">English</button>
+    <button onclick="setLang('ar')">عربي</button>
+</div>
 
     <h1>QR Dashboard</h1>
 
