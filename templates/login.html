@@ -94,41 +94,89 @@
 <body>
 
 <div class="card">
+    <div style="text-align:right; margin-bottom:10px;">
+    <button onclick="setLang('en')" type="button">English</button>
+    <button onclick="setLang('ar')" type="button">عربي</button>
+</div>
 
     <img src="{{ url_for('static', filename='LOGO.webp') }}" class="logo">
 
 
-    <div class="subtitle">
-        Secure Dashboard Access
-    </div>
+<div class="subtitle"
+     data-en="Secure Dashboard Access"
+     data-ar="تسجيل الدخول إلى لوحة التحكم">
+    Secure Dashboard Access
+</div>
 
     <form method="POST">
 
         <input
-            type="text"
-            name="username"
-            placeholder="Username"
-            required>
+        id="username"
+        type="text"
+        name="username"
+        placeholder="Username"
+        required>
 
         <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            required>
+        id="password"
+        type="password"
+        name="password"
+        placeholder="Password"
+        required>
 
         <button
-            class="login-btn"
-            type="submit">
-            Login
+        id="loginBtn"
+        class="login-btn"
+        type="submit">
+        Login
         </button>
 
     </form>
 
-    <div class="footer">
-        StarCare Hospital System
+    <div class="footer"
+     data-en="StarCare Hospital System"
+     data-ar="نظام مستشفى ستاركير">
+    StarCare Hospital System
     </div>
 
 </div>
+<script>
+function setLang(lang){
 
+    localStorage.setItem("lang", lang);
+
+    document.body.dir = (lang === "ar") ? "rtl" : "ltr";
+
+    document.querySelector(".subtitle").innerText =
+        (lang === "ar")
+        ? "تسجيل الدخول إلى لوحة التحكم"
+        : "Secure Dashboard Access";
+
+    document.getElementById("username").placeholder =
+        (lang === "ar")
+        ? "اسم المستخدم"
+        : "Username";
+
+    document.getElementById("password").placeholder =
+        (lang === "ar")
+        ? "كلمة المرور"
+        : "Password";
+
+    document.getElementById("loginBtn").innerText =
+        (lang === "ar")
+        ? "تسجيل الدخول"
+        : "Login";
+
+    document.querySelector(".footer").innerText =
+        (lang === "ar")
+        ? "نظام مستشفى ستاركير"
+        : "StarCare Hospital System";
+}
+
+window.onload = function(){
+    let lang = localStorage.getItem("lang") || "en";
+    setLang(lang);
+}
+</script>
 </body>
 </html>

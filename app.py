@@ -10,7 +10,9 @@ from reportlab.platypus import (
     Paragraph,
     Spacer
 )
+from dotenv import load_dotenv
 
+load_dotenv()
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet
 from io import BytesIO
