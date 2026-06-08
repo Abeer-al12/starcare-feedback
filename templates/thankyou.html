@@ -24,21 +24,18 @@
         }
 
         .logo{
-    width: 200px;
-    height:auto;
-    display:block;
-    margin:0 auto 20px;
+            width:200px;
+            margin:0 auto 20px;
+            display:block;
         }
 
         h1{
             color:#1b2a41;
-            margin:20px 0 10px;
         }
 
         p{
             color:#666;
             font-size:17px;
-            line-height:1.5;
         }
 
         .location{
@@ -46,6 +43,30 @@
             color:#00A79B;
             font-weight:bold;
             font-size:19px;
+        }
+
+        /* زر اللغة نفس ستايلك */
+        .lang-switch{
+            display:flex;
+            justify-content:center;
+            gap:10px;
+            margin-bottom:15px;
+        }
+
+        .lang-switch button{
+            background:#eafcfd;
+            color:#00A79B;
+            border:1px solid #00A79B;
+            padding:8px 18px;
+            border-radius:12px;
+            cursor:pointer;
+            font-size:14px;
+            transition:.3s;
+        }
+
+        .lang-switch button:hover{
+            background:#00A79B;
+            color:white;
         }
 
         .btn{
@@ -56,35 +77,58 @@
             color:white;
             padding:14px 28px;
             border-radius:18px;
-            transition:.3s;
             font-weight:bold;
-        }
-
-        .btn:hover{
-            background:#00A79B;
         }
     </style>
 </head>
+
 <body>
 
 <div class="card">
 
     <img src="{{ url_for('static', filename='LOGO.webp') }}" class="logo">
 
-    <h1>Thank You!</h1>
+    <!-- Language buttons -->
+    <div class="lang-switch">
+        <button onclick="setLang('en')">English</button>
+        <button onclick="setLang('ar')">عربي</button>
+    </div>
 
-    <p>
+    <h1 id="title">Thank You!</h1>
+
+    <p id="desc">
         Your feedback helps us improve and provide better care.
     </p>
 
-    <div class="location">
-    {{ room_name }}    
-</div>
-
-   
+    <div class="location" id="room">
+        {{ room_name }}
+    </div>
 
 </div>
+
+<script>
+
+function setLang(lang){
+
+    localStorage.setItem("lang", lang);
+
+    document.documentElement.dir = (lang === "ar") ? "rtl" : "ltr";
+
+    document.getElementById("title").innerText =
+        (lang === "ar") ? "شكراً لك!" : "Thank You!";
+
+    document.getElementById("desc").innerText =
+        (lang === "ar")
+        ? "ملاحظاتك تساعدنا على تحسين الخدمة وتقديم رعاية أفضل."
+        : "Your feedback helps us improve and provide better care.";
+}
+
+window.onload = function(){
+    let lang = localStorage.getItem("lang") || "en";
+    setLang(lang);
+}
+
+</script>
 
 </body>
-
 </html>
