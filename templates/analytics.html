@@ -196,27 +196,27 @@ canvas{
     <div class="cards">
 
     <div class="card">
-        <h3>Total Locations</h3>
+        <h3 id="card1">Total Locations</h3>
         <h2>{{ data|length }}</h2>
     </div>
 
     <div class="card">
-        <h3>Total Feedback</h3>
+        <h3 id="card2">Total Feedback</h3>
         <h2>{{ data | sum(attribute='count') }}</h2>
     </div>
 
     <div class="card">
-        <h3>Best Room</h3>
+        <h3 id="card3">Best Room</h3>
         <h2 id="bestRoom">-</h2>
     </div>
 
     <div class="card">
-        <h3>Needs Attention</h3>
+        <h3 id="card4">Needs Attention</h3>
         <h2 id="worstRoom">-</h2>
     </div>
 
     <div class="card">
-    <h3>Overall Status</h3>
+    <h3 id="card5">Overall Status</h3>
     <h2 id="overallStatus">-</h2>
 </div>
 
@@ -238,7 +238,7 @@ canvas{
 </div>
 <div class="card" style="margin-top:20px;">
 
-    <h3>Rooms Requiring Attention 🚨</h3>
+    <h3 id="alertTitle">Rooms Requiring Attention 🚨</h3>
 
     <ul id="alerts"></ul>
 
@@ -339,6 +339,26 @@ function setLang(lang){
 
     document.getElementById("menuLogout").innerText =
         (lang === "ar") ? "تسجيل الخروج" : "Logout";
+
+    document.getElementById("card1").innerText =
+    (lang === "ar") ? "إجمالي الأقسام" : "Total Locations";
+
+    document.getElementById("card2").innerText =
+    (lang === "ar") ? "إجمالي التقييمات" : "Total Feedback";
+
+    document.getElementById("card3").innerText =
+    (lang === "ar") ? "أفضل قسم" : "Best Room";
+
+    document.getElementById("card4").innerText =
+    (lang === "ar") ? "يحتاج متابعة" : "Needs Attention";
+
+    document.getElementById("card5").innerText =
+    (lang === "ar") ? "الحالة العامة" : "Overall Status";
+
+    document.getElementById("alertTitle").innerText =
+    (lang === "ar")
+    ? "الأقسام التي تحتاج متابعة 🚨"
+    : "Rooms Requiring Attention 🚨";
 }
 
 window.onload = function(){
