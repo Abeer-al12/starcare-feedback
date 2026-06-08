@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Phone</title>
+
+    <style>
+        body{
+            margin:0;
+            font-family:Arial;
+            background:#f6fbfc;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            height:100vh;
+        }
+
+        .card{
+            background:white;
+            padding:30px;
+            border-radius:20px;
+            width:350px;
+            text-align:center;
+            box-shadow:0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        h2{
+            color:#1b2a41;
+        }
+
+        input{
+            width:100%;
+            padding:12px;
+            margin-top:15px;
+            border:1px solid #ddd;
+            border-radius:10px;
+            outline:none;
+        }
+
+        button{
+            margin-top:15px;
+            padding:12px;
+            width:100%;
+            background:#00A79B;
+            color:white;
+            border:none;
+            border-radius:10px;
+            cursor:pointer;
+        }
+
+        .lang-switch{
+            display:flex;
+            justify-content:center;
+            gap:10px;
+            margin-bottom:15px;
+        }
+
+        .lang-switch button{
+            background:#eafcfd;
+            border:1px solid #00A79B;
+            color:#00A79B;
+            padding:6px 12px;
+            border-radius:10px;
+            cursor:pointer;
+        }
+
+        .lang-switch button:hover{
+            background:#00A79B;
+            color:white;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="card">
+
+    <div class="lang-switch">
+        <button onclick="setLang('en')">English</button>
+        <button onclick="setLang('ar')">عربي</button>
+    </div>
+
+    <h2 id="title">Enter your phone number</h2>
+
+    <form method="POST">
+
+        <input type="text" name="phone" id="phoneInput" placeholder="Phone number" required>
+
+        <button type="submit" id="btn">Submit</button>
+
+    </form>
+
+</div>
+
+<script>
+
+function setLang(lang){
+
+    localStorage.setItem("lang", lang);
+
+    if(lang === "ar"){
+
+        document.documentElement.dir = "rtl";
+
+        document.getElementById("title").innerText = "أدخل رقمك";
+        document.getElementById("phoneInput").placeholder = "رقم الهاتف";
+        document.getElementById("btn").innerText = "إرسال";
+    }
+    else{
+
+        document.documentElement.dir = "ltr";
+
+        document.getElementById("title").innerText = "Enter your phone number";
+        document.getElementById("phoneInput").placeholder = "Phone number";
+        document.getElementById("btn").innerText = "Submit";
+    }
+}
+
+window.onload = function(){
+    let lang = localStorage.getItem("lang") || "en";
+    setLang(lang);
+}
+
+</script>
+
+</body>
+</html>
