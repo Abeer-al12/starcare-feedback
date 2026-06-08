@@ -140,6 +140,29 @@ canvas{
     width:100% !important;
     height:320px !important;
 }
+
+.lang-switch{
+    display:flex;
+    justify-content:flex-end;
+    gap:10px;
+    margin-bottom:20px;
+}
+
+.lang-switch button{
+    background:white;
+    color:#00A79B;
+    border:2px solid #00A79B;
+    padding:10px 18px;
+    border-radius:25px;
+    cursor:pointer;
+    font-weight:bold;
+    transition:.3s;
+}
+
+.lang-switch button:hover{
+    background:#00A79B;
+    color:white;
+}
     </style>
 </head>
 
@@ -151,16 +174,21 @@ canvas{
     <img src="{{ url_for('static', filename='logowhite.jpeg') }}" class="logo">
 
     <div class="menu">
-        <a href="/admin">Dashboard</a>
-        <a href="/analytics">Analytics</a>
-        <a href="/qr_dashboard">QR Dashboard</a>
-        <a href="/logout">Logout</a>
-    </div>
+    <a id="menuDashboard" href="/admin">Dashboard</a>
+    <a id="menuAnalytics" href="/analytics">Analytics</a>
+    <a id="menuQR" href="/qr_dashboard">QR Dashboard</a>
+    <a id="menuLogout" href="/logout">Logout</a>
+</div>
 
 </div>
 
 <!-- Main -->
 <div class="main">
+
+    <div class="lang-switch">
+    <button onclick="setLang('en')">English</button>
+    <button onclick="setLang('ar')">عربي</button>
+</div>
 
     <h1>Analytics Dashboard</h1>
 
@@ -299,6 +327,18 @@ function setLang(lang){
 
     document.querySelector("h1").innerText =
         (lang === "ar") ? "التحليلات" : "Analytics Dashboard";
+
+    document.getElementById("menuDashboard").innerText =
+        (lang === "ar") ? "لوحة التحكم" : "Dashboard";
+
+    document.getElementById("menuAnalytics").innerText =
+        (lang === "ar") ? "التحليلات" : "Analytics";
+
+    document.getElementById("menuQR").innerText =
+        (lang === "ar") ? "لوحة QR" : "QR Dashboard";
+
+    document.getElementById("menuLogout").innerText =
+        (lang === "ar") ? "تسجيل الخروج" : "Logout";
 }
 
 window.onload = function(){
