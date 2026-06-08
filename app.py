@@ -148,46 +148,65 @@ def feedback(location):
 
     if request.method == 'POST':
 
-        rating = request.form.get('rating')
+        rating = int(request.form.get('rating'))
         comment = request.form.get('comment')
-        phone = request.form.get('phone')
+        phone = request.form.get('phone')  # ممكن يكون فاضي
 
-        if not rating:
-            return "Rating required", 400
+        # ⭐ 4 و 5 = حفظ مباشر
+        if rating >= 4:
+            collection.insert_one({
+                "location": location,
+                "rating": rating,
+                "comment": comment,
+                "phone": None,
+                "date": datetime.now()
+            })
 
-        rating = int(rating)
+            return redirect(f"/thankyou/{location}")
 
-        collection.insert_one({
-            "location": location,
-            "rating": rating,
-            "comment": comment,
-            "phone": phone,
-            "date": datetime.now()
-        })
-
-        # 🔥 إذا التقييم 3 أو أقل
-        if rating <= 3:
-            return render_template(
-                "thankyou.html",
-                location=location,
-                room_name=room_names[location],
-                show_phone=True
-            )
-
+        # ⭐ 3 أو أقل = نرجع الصفحة ونقول له يحتاج رقم
         return render_template(
-            "thankyou.html",
+            "feedback.html",
             location=location,
             room_name=room_names[location],
-            show_phone=False
+            need_phone=True,
+            old_rating=rating,
+            old_comment=comment
         )
 
     return render_template(
         "feedback.html",
         location=location,
+        room_name=room_names[location],
+        need_phone=False
+    )
+
+@app.route('/thankyou/<location>')
+def thankyou(location):
+    return render_template(
+        "thankyou.html",
+        location=location,
         room_name=room_names[location]
     )
 
-    @app.route('/add_phone', methods=['GET', 'POST'])
+    
+@app.route('/save_low_rating', methods=['POST'])
+def save_low_rating():
+
+    data = request.json
+
+    collection.insert_one({
+        "location": data["location"],
+        "rating": int(data["rating"]),
+        "comment": data["comment"],
+        "phone": data["phone"],
+        "date": datetime.now()
+    })
+
+    return {"location": data["location"]}
+
+
+@app.route('/add_phone', methods=['GET', 'POST'])
 def add_phone():
 
     if request.method == 'POST':
@@ -209,7 +228,8 @@ def add_phone():
 
         session.pop('temp_feedback', None)
 
-        return render_template("thankyou.html",
+        return render_template(
+            "thankyou.html",
             location=data["location"],
             room_name=room_names[data["location"]]
         )
