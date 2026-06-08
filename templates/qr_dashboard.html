@@ -116,7 +116,7 @@
     <button onclick="setLang('ar')">عربي</button>
 </div>
 
-    <h1>QR Dashboard</h1>
+    <h1 id="title">QR Dashboard</h1>
 
     <div class="grid">
 
@@ -129,13 +129,14 @@
             </div>
 
             <div class="count">
-                Feedback: {{ room.count }}
+            <span class="label">Feedback:</span>
+            <span class="value">{{ room.count }}</span>
             </div>
 
             <div class="qr" id="qr{{ loop.index }}"></div>
 
-            <button onclick="downloadQR('qr{{ loop.index }}','{{ room.name }}')">
-                Download QR
+            <button class="downloadBtn" onclick="downloadQR('qr{{ loop.index }}','{{ room.name }}')">
+            Download QR
             </button>
 
         </div>
@@ -172,7 +173,35 @@ function downloadQR(id,name){
 
     link.click();
 }
+function setLang(lang){
 
+    localStorage.setItem("lang", lang);
+
+    document.body.dir = (lang === "ar") ? "rtl" : "ltr";
+
+    // title
+    document.getElementById("title").innerText =
+        (lang === "ar") ? "لوحة QR" : "QR Dashboard";
+
+    // buttons
+    document.querySelectorAll(".downloadBtn").forEach(btn => {
+        btn.innerText = (lang === "ar") ? "تحميل QR" : "Download QR";
+    });
+
+    // feedback label فقط (بدون لمس الرقم)
+    document.querySelectorAll(".count").forEach(el => {
+
+        let label = el.querySelector(".label");
+        let value = el.querySelector(".value");
+
+        label.innerText = (lang === "ar") ? "التقييمات:" : "Feedback:";
+    });
+}
+
+window.onload = function(){
+    let lang = localStorage.getItem("lang") || "en";
+    setLang(lang);
+}
 </script>
 
 </body>
