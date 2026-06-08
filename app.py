@@ -151,35 +151,36 @@ def feedback(location):
         rating = request.form.get('rating')
         comment = request.form.get('comment')
 
-    if not rating:
-        return {"error": "missing rating"}
+        if not rating:
+            return {"error": "missing rating"}
 
         rating = int(rating)
 
-    # ⭐ 4 و 5 → حفظ مباشر
-    if rating >= 4:
-        collection.insert_one({
-            "location": location,
+        # ⭐ 4 و 5 → حفظ مباشر
+        if rating >= 4:
+            collection.insert_one({
+                "location": location,
+                "rating": rating,
+                "comment": comment,
+                "phone": None,
+                "date": datetime.now()
+            })
+
+            return {"need_phone": False}
+
+        # ⭐ 1 - 3 → نطلب رقم
+        return {
+            "need_phone": True,
             "rating": rating,
             "comment": comment,
-            "phone": None,
-            "date": datetime.now()
-        })
-
-        return {"need_phone": False}
-
-    # ⭐ 1 - 3 → نطلب رقم
-    return {
-        "need_phone": True,
-        "rating": rating,
-        "comment": comment,
-        "location": location
-    }
+            "location": location
+        }
 
     return render_template(
         "feedback.html",
         location=location,
-        room_name=room_names.get(location)
+        room_name=room_names.get(location, "Unknown Room"),
+        need_phone=False
     )
 
 @app.route('/save_low_rating', methods=['POST'])
