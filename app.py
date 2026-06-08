@@ -150,46 +150,34 @@ def feedback(location):
 
         rating = int(request.form.get('rating'))
         comment = request.form.get('comment')
-        phone = request.form.get('phone')  # ممكن يكون فاضي
 
-        # ⭐ 4 و 5 = حفظ مباشر
-        if rating >= 4:
-            collection.insert_one({
-                "location": location,
+        # ⭐ 3 أو أقل → نطلب رقم
+        if rating <= 3:
+            return {
+                "need_phone": True,
                 "rating": rating,
-                "comment": comment,
-                "phone": None,
-                "date": datetime.now()
-            })
+                "comment": comment
+            }
 
-            return redirect(f"/thankyou/{location}")
+        # ⭐ 4 أو 5 → نحفظ مباشرة
+        collection.insert_one({
+            "location": location,
+            "rating": rating,
+            "comment": comment,
+            "phone": None,
+            "date": datetime.now()
+        })
 
-        # ⭐ 3 أو أقل = نرجع الصفحة ونقول له يحتاج رقم
-        return render_template(
-            "feedback.html",
-            location=location,
-            room_name=room_names[location],
-            need_phone=True,
-            old_rating=rating,
-            old_comment=comment
-        )
+        return {
+            "need_phone": False
+        }
 
     return render_template(
         "feedback.html",
         location=location,
-        room_name=room_names[location],
-        need_phone=False
-    )
-
-@app.route('/thankyou/<location>')
-def thankyou(location):
-    return render_template(
-        "thankyou.html",
-        location=location,
         room_name=room_names[location]
     )
 
-    
 @app.route('/save_low_rating', methods=['POST'])
 def save_low_rating():
 
@@ -197,14 +185,13 @@ def save_low_rating():
 
     collection.insert_one({
         "location": data["location"],
-        "rating": int(data["rating"]),
+        "rating": data["rating"],
         "comment": data["comment"],
         "phone": data["phone"],
         "date": datetime.now()
     })
 
-    return {"location": data["location"]}
-
+    return {"success": True}
 
 @app.route('/add_phone', methods=['GET', 'POST'])
 def add_phone():
