@@ -148,8 +148,8 @@ def feedback(location):
 
     if request.method == 'POST':
 
-    rating = int(request.form.get('rating'))
-    comment = request.form.get('comment')
+        rating = int(request.form.get('rating'))
+        comment = request.form.get('comment')
 
     # ⭐ 4 و 5 → حفظ مباشر
     if rating >= 4:
