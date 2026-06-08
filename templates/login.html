@@ -112,16 +112,36 @@
             transform:translateY(-2px);
         }
 
+        .lang-switch-page{
+            position:absolute;
+            top:25px;
+            right:25px;
+            display:flex;
+            gap:10px;
+        }
+
+        .lang-switch-page button{
+            background:white;
+            color:#00A79B;
+            border:none;
+            padding:10px 18px;
+            border-radius:25px;
+            font-weight:bold;
+            cursor:pointer;
+            box-shadow:0 4px 10px rgba(0,0,0,.1);
+        }
     </style>
 </head>
 
 <body>
 
-<div class="card">
-    <div class="lang-switch">
-    <button onclick="setLang('en')" type="button">English</button>
-    <button onclick="setLang('ar')" type="button">عربي</button>
+<div class="lang-switch-page">
+    <button onclick="setLang('en')" type="button">🇬🇧 English</button>
+    <button onclick="setLang('ar')" type="button">🇴🇲 عربي</button>
 </div>
+
+<div class="card">
+
 
     <img src="{{ url_for('static', filename='LOGO.webp') }}" class="logo">
 
