@@ -88,13 +88,37 @@
             font-size:13px;
         }
 
+        .lang-switch{
+            display:flex;
+            justify-content:flex-end;
+            gap:8px;
+            margin-bottom:15px;
+        }
+
+        .lang-switch button{
+            background:white;
+            color:#00A79B;
+            border:2px solid #00A79B;
+            padding:8px 16px;
+            border-radius:20px;
+            cursor:pointer;
+            font-weight:bold;
+            transition:.3s;
+        }
+
+        .lang-switch button:hover{
+            background:#00A79B;
+            color:white;
+            transform:translateY(-2px);
+        }
+
     </style>
 </head>
 
 <body>
 
 <div class="card">
-    <div style="text-align:right; margin-bottom:10px;">
+    <div class="lang-switch">
     <button onclick="setLang('en')" type="button">English</button>
     <button onclick="setLang('ar')" type="button">عربي</button>
 </div>
