@@ -217,12 +217,12 @@
 
 
     <div class="menu">
-        <a href="/admin">Dashboard</a>
-        <a href="/analytics">Analytics</a>
-        <a href="/qr_dashboard">QR Dashboard</a>
-        <a href="/manage_users">Manage Users</a>
-        <a href="/logout">Logout</a>
-    </div>
+    <a id="menuDashboard" href="/admin">Dashboard</a>
+    <a id="menuAnalytics" href="/analytics">Analytics</a>
+    <a id="menuQR" href="/qr_dashboard">QR Dashboard</a>
+    <a id="menuUsers" href="/manage_users">Manage Users</a>
+    <a id="menuLogout" href="/logout">Logout</a>
+</div>
 
 </div>
 
@@ -351,6 +351,21 @@ function setLang(lang){
         (lang === "ar")
         ? "⬇ تحميل التقرير PDF"
         : "⬇ Download PDF Report";
+
+    document.getElementById("menuDashboard").innerText =
+    (lang === "ar") ? "لوحة التحكم" : "Dashboard";
+
+    document.getElementById("menuAnalytics").innerText =
+    (lang === "ar") ? "التحليلات" : "Analytics";
+
+    document.getElementById("menuQR").innerText =
+    (lang === "ar") ? "لوحة QR" : "QR Dashboard";
+
+    document.getElementById("menuUsers").innerText =
+    (lang === "ar") ? "إدارة المستخدمين" : "Manage Users";
+
+    document.getElementById("menuLogout").innerText =
+    (lang === "ar") ? "تسجيل الخروج" : "Logout";
 }
 
 window.onload = function(){
