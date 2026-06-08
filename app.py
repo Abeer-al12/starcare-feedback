@@ -148,8 +148,13 @@ def feedback(location):
 
     if request.method == 'POST':
 
-        rating = int(request.form.get('rating'))
+        rating = request.form.get('rating')
         comment = request.form.get('comment')
+
+    if not rating:
+        return {"error": "missing rating"}
+
+        rating = int(rating)
 
     # ⭐ 4 و 5 → حفظ مباشر
     if rating >= 4:
@@ -193,7 +198,16 @@ def save_low_rating():
     return {"success": True}
 
 
+@app.route('/thankyou/<location>')
+def thankyou(location):
 
+    name = room_names.get(location, "Unknown Room")
+
+    return render_template(
+        "thankyou.html",
+        location=location,
+        room_name=name
+    )
 # ---------------- LOGIN ----------------
 @app.route('/login', methods=['GET','POST'])
 def login():
