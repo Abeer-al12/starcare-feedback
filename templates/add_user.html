@@ -24,17 +24,17 @@
         }
 
         .logo{
-    width: 200px;
-    height:auto;
-    display:block;
-    margin:0 auto 20px;
+            width:200px;
+            margin:0 auto 20px;
+            display:block;
         }
+
         h2{
             color:#00A79B;
             margin-bottom:20px;
         }
 
-        input{
+        input, select{
             width:100%;
             padding:12px;
             margin:10px 0;
@@ -44,16 +44,8 @@
         }
 
         select{
-            width:100%;
-            padding:12px;
-            margin:10px 0;
-            border:1px solid #ddd;
-            border-radius:12px;
-            outline:none;
-
-            /* 👇 هذا يخلي dropdown جميل */
-            background:#fff;
             appearance:none;
+            background:#fff;
             cursor:pointer;
         }
 
@@ -84,6 +76,28 @@
             text-decoration:underline;
         }
 
+        /* language buttons */
+        .lang-switch{
+            display:flex;
+            justify-content:center;
+            gap:10px;
+            margin-bottom:15px;
+        }
+
+        .lang-switch button{
+            background:#eafcfd;
+            color:#00A79B;
+            border:1px solid #00A79B;
+            padding:8px 18px;
+            border-radius:12px;
+            cursor:pointer;
+            transition:.3s;
+        }
+
+        .lang-switch button:hover{
+            background:#00A79B;
+            color:white;
+        }
     </style>
 </head>
 
@@ -91,18 +105,22 @@
 
 <div class="card">
 
-    <!-- Logo -->
     <img src="{{ url_for('static', filename='logowhite.jpeg') }}" class="logo">
 
-    <h2>Add New User</h2>
+    <!-- Language -->
+    <div class="lang-switch">
+        <button onclick="setLang('en')">English</button>
+        <button onclick="setLang('ar')">عربي</button>
+    </div>
+
+    <h2 id="title">Add New User</h2>
 
     <form method="POST">
 
-        <input name="username" placeholder="Username" required>
-        <input name="password" placeholder="Password" required>
+        <input id="username" name="username" placeholder="Username" required>
+        <input id="password" name="password" placeholder="Password" required>
 
-        <!-- Dropdown مرتب -->
-        <select name="role" required>
+        <select id="role" name="role" required>
             <option value="">Select Role</option>
             <option value="admin">Admin</option>
             <option value="it">IT Department</option>
@@ -112,12 +130,47 @@
             <option value="mabella">Mabella</option>
         </select>
 
-        <button type="submit">Add User</button>
+        <button id="btn" type="submit">Add User</button>
 
     </form>
 
-    <a href="/manage_users" class="back">⬅ Back to Users</a>
+    <a id="back" href="/manage_users" class="back">⬅ Back to Users</a>
+
 </div>
+
+<script>
+
+function setLang(lang){
+
+    localStorage.setItem("lang", lang);
+
+    document.documentElement.dir = (lang === "ar") ? "rtl" : "ltr";
+
+    document.getElementById("title").innerText =
+        (lang === "ar") ? "إضافة مستخدم جديد" : "Add New User";
+
+    document.getElementById("username").placeholder =
+        (lang === "ar") ? "اسم المستخدم" : "Username";
+
+    document.getElementById("password").placeholder =
+        (lang === "ar") ? "كلمة المرور" : "Password";
+
+    document.getElementById("role").options[0].text =
+        (lang === "ar") ? "اختر الدور" : "Select Role";
+
+    document.getElementById("btn").innerText =
+        (lang === "ar") ? "إضافة المستخدم" : "Add User";
+
+    document.getElementById("back").innerText =
+        (lang === "ar") ? "رجوع للمستخدمين" : "⬅ Back to Users";
+}
+
+window.onload = function(){
+    let lang = localStorage.getItem("lang") || "en";
+    setLang(lang);
+}
+
+</script>
 
 </body>
 </html>

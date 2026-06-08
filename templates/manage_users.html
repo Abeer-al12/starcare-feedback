@@ -70,10 +70,6 @@
             font-weight:bold;
         }
 
-        .add-btn:hover{
-            background:#008f88;
-        }
-
         .back{
             display:block;
             margin-top:15px;
@@ -81,15 +77,33 @@
             text-decoration:none;
         }
 
-        .back:hover{
-            text-decoration:underline;
+        .logo{
+            width:200px;
+            margin:0 auto 20px;
+            display:block;
         }
 
-        .logo{
-    width: 200px;
-    height:auto;
-    display:block;
-    margin:0 auto 20px;
+        /* language buttons */
+        .lang-switch{
+            display:flex;
+            justify-content:center;
+            gap:10px;
+            margin-bottom:15px;
+        }
+
+        .lang-switch button{
+            background:#eafcfd;
+            color:#00A79B;
+            border:1px solid #00A79B;
+            padding:8px 18px;
+            border-radius:12px;
+            cursor:pointer;
+            transition:.3s;
+        }
+
+        .lang-switch button:hover{
+            background:#00A79B;
+            color:white;
         }
     </style>
 </head>
@@ -98,17 +112,23 @@
 
 <div class="card">
 
-    <!-- Logo -->
     <img src="{{ url_for('static', filename='logowhite.jpeg') }}" class="logo">
-    <h2>Manage Users</h2>
 
-    <a href="/add_user" class="add-btn">Add User</a>
+    <!-- Language -->
+    <div class="lang-switch">
+        <button onclick="setLang('en')">English</button>
+        <button onclick="setLang('ar')">عربي</button>
+    </div>
+
+    <h2 id="title">Manage Users</h2>
+
+    <a href="/add_user" class="add-btn" id="addBtn">Add User</a>
 
     <table>
         <tr>
-            <th>Username</th>
-            <th>Role</th>
-            <th>Action</th>
+            <th id="thUser">Username</th>
+            <th id="thRole">Role</th>
+            <th id="thAction">Action</th>
         </tr>
 
         {% for user in users %}
@@ -116,16 +136,54 @@
             <td>{{ user.username }}</td>
             <td>{{ user.role }}</td>
             <td>
-                <a href="/delete_user/{{ user.username }}" class="delete">Delete</a>
+                <a href="/delete_user/{{ user.username }}" class="delete" id="deleteBtn">Delete</a>
             </td>
         </tr>
         {% endfor %}
 
     </table>
 
-    <a href="/admin" class="back">Back to Dashboard</a>
+    <a href="/admin" class="back" id="backBtn">Back to Dashboard</a>
 
 </div>
+
+<script>
+
+function setLang(lang){
+
+    localStorage.setItem("lang", lang);
+
+    document.documentElement.dir = (lang === "ar") ? "rtl" : "ltr";
+
+    document.getElementById("title").innerText =
+        (lang === "ar") ? "إدارة المستخدمين" : "Manage Users";
+
+    document.getElementById("addBtn").innerText =
+        (lang === "ar") ? "إضافة مستخدم" : "Add User";
+
+    document.getElementById("thUser").innerText =
+        (lang === "ar") ? "اسم المستخدم" : "Username";
+
+    document.getElementById("thRole").innerText =
+        (lang === "ar") ? "الدور" : "Role";
+
+    document.getElementById("thAction").innerText =
+        (lang === "ar") ? "الإجراء" : "Action";
+
+    document.querySelectorAll(".delete").forEach(btn=>{
+        btn.innerText = (lang === "ar") ? "حذف" : "Delete";
+    });
+
+    document.getElementById("backBtn").innerText =
+        (lang === "ar") ? "رجوع للوحة التحكم" : "Back to Dashboard";
+}
+
+window.onload = function(){
+    let lang = localStorage.getItem("lang") || "en";
+    setLang(lang);
+}
+
+</script>
 
 </body>
 </html>
