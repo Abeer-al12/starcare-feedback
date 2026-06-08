@@ -148,35 +148,38 @@ def feedback(location):
 
     if request.method == 'POST':
 
-    rating = int(request.form.get('rating'))
-    comment = request.form.get('comment')
+        rating = request.form.get('rating')
+        comment = request.form.get('comment')
+        phone = request.form.get('phone')
 
-    # نحفظ مؤقت (بدون phone الآن)
-    session['temp_feedback'] = {
-        "location": location,
-        "rating": rating,
-        "comment": comment
-    }
+        if not rating:
+            return "Rating required", 400
 
-    # 🔥 إذا التقييم ضعيف
-    if rating <= 3:
-        return redirect('/add_phone')
+        rating = int(rating)
 
-    # إذا جيد مباشرة شكراً
-    collection.insert_one({
-        "location": location,
-        "rating": rating,
-        "comment": comment,
-        "phone": None,
-        "date": datetime.now()
-    })
+        collection.insert_one({
+            "location": location,
+            "rating": rating,
+            "comment": comment,
+            "phone": phone,
+            "date": datetime.now()
+        })
 
-    return render_template(
-        "thankyou.html",
-        location=location,
-        room_name=room_names[location]
-    )
+        # 🔥 إذا التقييم 3 أو أقل
+        if rating <= 3:
+            return render_template(
+                "thankyou.html",
+                location=location,
+                room_name=room_names[location],
+                show_phone=True
+            )
 
+        return render_template(
+            "thankyou.html",
+            location=location,
+            room_name=room_names[location],
+            show_phone=False
+        )
 
     return render_template(
         "feedback.html",
