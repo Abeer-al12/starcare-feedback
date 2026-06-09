@@ -281,43 +281,7 @@
         </div>
 
         
-        <h2 style="color:#00A79B; margin-top:20px;">
-            ⚠ Low Rating Alerts
-        </h2>
-        <table style="margin-bottom:30px;">
-
-            <tr>
-                <th>Location</th>
-                <th>Rating</th>
-                <th>Phone</th>
-                <th>Comment</th>
-            </tr>
-
-            {% for item in low_ratings %}
-
-            <tr>
-
-                <td>
-                    {{ item.location.replace('_',' ').title() }}
-                </td>
-
-                <td>
-                    {{ item.rating }} ⭐
-                </td>
-
-                <td>
-                    {{ item.phone if item.phone else "-" }}
-                </td>
-
-                <td>
-                    {{ item.comment }}
-                </td>
-
-            </tr>
-
-            {% endfor %}
-
-        </table>
+    
         <!-- Table -->
         <table>
 
