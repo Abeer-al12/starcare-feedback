@@ -157,35 +157,35 @@ def feedback(location):
 
     if request.method == 'POST':
 
-    rating = request.form.get('rating')
-    comment = request.form.get('comment')
+        rating = request.form.get('rating')
+        comment = request.form.get('comment')
 
-    if not rating:
-        return {"error": "missing rating"}
+        if not rating:
+            return {"error": "missing rating"}
 
-    rating = int(rating)
+        rating = int(rating)
 
     # ⭐ 4 و 5 → حفظ مباشر
-    if rating >= 4:
+        if rating >= 4:
 
-        collection.insert_one({
-            "location": location,
-            "branch": get_branch_from_location(location),  # ✔ مهم
-            "rating": rating,
-            "comment": comment,
-            "phone": None,
-            "date": datetime.now()
-        })
+            collection.insert_one({
+                "location": location,
+                "branch": get_branch_from_location(location),  # ✔ مهم
+                "rating": rating,
+                "comment": comment,
+                "phone": None,
+                "date": datetime.now()
+            })
 
-        return {"need_phone": False}
+            return {"need_phone": False}
 
     # ⭐ 1 - 3 → نطلب رقم
-    return {
-        "need_phone": True,
-        "rating": rating,
-        "comment": comment,
-        "location": location
-    }
+        return {
+            "need_phone": True,
+            "rating": rating,
+            "comment": comment,
+            "location": location
+        }
 
     return render_template(
         "feedback.html",
