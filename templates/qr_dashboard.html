@@ -1,208 +1,209 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>QR Dashboard</title>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
     <style>
-
-        body{
-            margin:0;
-            font-family:Arial;
-            background:#f6fbfc;
+        body {
+            margin: 0;
+            font-family: Arial;
+            background: #f6fbfc;
         }
 
-        .sidebar{
-            position:fixed;
-            left:0;
-            top:0;
-            width:240px;
-            height:100%;
-            background:#00A79B;
-            color:white;
-            padding-top:30px;
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 240px;
+            height: 100%;
+            background: #00A79B;
+            color: white;
+            padding-top: 30px;
         }
 
-        .main{
-            margin-left:240px;
-            padding:30px;
+        .main {
+            margin-left: 240px;
+            padding: 30px;
         }
 
-        h1{
-            color:#1b2a41;
+        h1 {
+            color: #1b2a41;
         }
 
-        .grid{
-            display:grid;
-            grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-            gap:20px;
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
         }
 
-        .card{
-            background:white;
-            padding:20px;
-            border-radius:20px;
-            box-shadow:0 5px 18px rgba(0,0,0,.08);
-            text-align:center;
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 5px 18px rgba(0, 0, 0, .08);
+            text-align: center;
         }
 
-        .room{
-            font-weight:bold;
-            margin-bottom:10px;
-            color:#1b2a41;
+        .room {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #1b2a41;
         }
 
-        .count{
-            color:#777;
-            margin-bottom:10px;
+        .count {
+            color: #777;
+            margin-bottom: 10px;
         }
 
-        .qr{
-            margin:10px auto;
+        .qr {
+            margin: 10px auto;
         }
 
-        button{
-            margin-top:10px;
-            padding:10px;
-            border:none;
-            background:#00A79B;
-            color:white;
-            border-radius:10px;
-            cursor:pointer;
+        button {
+            margin-top: 10px;
+            padding: 10px;
+            border: none;
+            background: #00A79B;
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
         }
 
-        .logo{
-    width: 200px;
-    height:auto;
-    display:block;
-    margin:0 auto 20px;
+        .logo {
+            width: 200px;
+            height: auto;
+            display: block;
+            margin: 0 auto 20px;
         }
 
-    .lang-switch{
-    display:flex;
-    justify-content:flex-end;
-    gap:10px;
-    margin-bottom:20px;
-    }
+        .lang-switch {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
 
-    .lang-switch button{
-    background:white;
-    color:#00A79B;
-    border:2px solid #00A79B;
-    padding:10px 18px;
-    border-radius:25px;
-    cursor:pointer;
-    font-weight:bold;
-    transition:.3s;
-}
+        .lang-switch button {
+            background: white;
+            color: #00A79B;
+            border: 2px solid #00A79B;
+            padding: 10px 18px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: .3s;
+        }
 
-    .lang-switch button:hover{
-    background:#00A79B;
-    color:white;
-}
+        .lang-switch button:hover {
+            background: #00A79B;
+            color: white;
+        }
     </style>
 </head>
 
 <body>
 
-<div class="sidebar">
-<img src="{{ url_for('static', filename='logowhite.jpeg') }}" class="logo"></div>
+    <div class="sidebar">
+        <img src="{{ url_for('static', filename='logowhite.jpeg') }}" class="logo">
+    </div>
 
-<div class="main">
+    <div class="main">
 
-    <div class="lang-switch">
-    <button onclick="setLang('en')">English</button>
-    <button onclick="setLang('ar')">عربي</button>
-</div>
+        <div class="lang-switch">
+            <button onclick="setLang('en')">English</button>
+            <button onclick="setLang('ar')">عربي</button>
+        </div>
 
-    <h1 id="title">QR Dashboard</h1>
+        <h1 id="title">QR Dashboard</h1>
 
-    <div class="grid">
+        <div class="grid">
 
-        {% for room in rooms %}
+            {% for room in rooms %}
 
-        <div class="card">
+            <div class="card">
 
-            <div class="room">
-                {{ room.name.replace('_',' ').title() }}
+                <div class="room">
+                    {{ room.room }}
+                </div>
+
+                <div class="count">
+                    <span class="label">Feedback:</span>
+                    <span class="value">{{ room.count }}</span>
+                </div>
+
+                <div class="qr" id="qr{{ loop.index }}"></div>
+
+                <button class="downloadBtn" onclick="downloadQR('qr{{ loop.index }}','{{ room.room }}')">
+                    Download QR
+                </button>
+
             </div>
 
-            <div class="count">
-            <span class="label">Feedback:</span>
-            <span class="value">{{ room.count }}</span>
-            </div>
-
-            <div class="qr" id="qr{{ loop.index }}"></div>
-
-            <button class="downloadBtn" onclick="downloadQR('qr{{ loop.index }}','{{ room.name }}')">
-            Download QR
-            </button>
+            {% endfor %}
 
         </div>
 
-        {% endfor %}
-
     </div>
 
-</div>
+    <script>
 
-<script>
+        let rooms = {{ rooms | tojson }};
 
-let rooms = {{ rooms | tojson }};
+        // generate QR
+        rooms.forEach((r, i) => {
 
-// generate QR
-rooms.forEach((r, i) => {
+            new QRCode(document.getElementById("qr" + (i + 1)), {
+                text: r.qr,
+                width: 120,
+                height: 120
+            });
 
-    new QRCode(document.getElementById("qr"+(i+1)), {
-        text: r.qr,
-        width: 120,
-        height: 120
-    });
+        });
 
-});
+        function downloadQR(id, name) {
 
-function downloadQR(id,name){
+            let canvas = document.querySelector("#" + id + " canvas");
 
-    let canvas = document.querySelector("#"+id+" canvas");
+            let link = document.createElement("a");
 
-    let link = document.createElement("a");
+            link.download = name + ".png";
+            link.href = canvas.toDataURL();
 
-    link.download = name + ".png";
-    link.href = canvas.toDataURL();
+            link.click();
+        }
+        function setLang(lang) {
 
-    link.click();
-}
-function setLang(lang){
+            localStorage.setItem("lang", lang);
 
-    localStorage.setItem("lang", lang);
+            document.body.dir = (lang === "ar") ? "rtl" : "ltr";
 
-    document.body.dir = (lang === "ar") ? "rtl" : "ltr";
+            // title
+            document.getElementById("title").innerText =
+                (lang === "ar") ? "لوحة QR" : "QR Dashboard";
 
-    // title
-    document.getElementById("title").innerText =
-        (lang === "ar") ? "لوحة QR" : "QR Dashboard";
+            // buttons
+            document.querySelectorAll(".downloadBtn").forEach(btn => {
+                btn.innerText = (lang === "ar") ? "تحميل QR" : "Download QR";
+            });
 
-    // buttons
-    document.querySelectorAll(".downloadBtn").forEach(btn => {
-        btn.innerText = (lang === "ar") ? "تحميل QR" : "Download QR";
-    });
+            // feedback label فقط (بدون لمس الرقم)
+            document.querySelectorAll(".count").forEach(el => {
 
-    // feedback label فقط (بدون لمس الرقم)
-    document.querySelectorAll(".count").forEach(el => {
+                let label = el.querySelector(".label");
+                let value = el.querySelector(".value");
 
-        let label = el.querySelector(".label");
-        let value = el.querySelector(".value");
+                label.innerText = (lang === "ar") ? "التقييمات:" : "Feedback:";
+            });
+        }
 
-        label.innerText = (lang === "ar") ? "التقييمات:" : "Feedback:";
-    });
-}
-
-window.onload = function(){
-    let lang = localStorage.getItem("lang") || "en";
-    setLang(lang);
-}
-</script>
+        window.onload = function () {
+            let lang = localStorage.getItem("lang") || "en";
+            setLang(lang);
+        }
+    </script>
 
 </body>
 
