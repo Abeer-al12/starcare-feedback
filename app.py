@@ -194,6 +194,51 @@ def feedback(location):
         need_phone=False
     )
 
+
+@app.route('/feedback/<branch>/<room>', methods=['GET', 'POST'])
+def feedback_room(branch, room):
+
+    if request.method == 'POST':
+
+        rating = request.form.get('rating')
+        comment = request.form.get('comment')
+
+        if not rating:
+            return {"error": "missing rating"}
+
+        rating = int(rating)
+
+        # ⭐ حفظ مباشر
+        if rating >= 4:
+
+            collection.insert_one({
+                "branch": branch,
+                "location": room,
+                "rating": rating,
+                "comment": comment,
+                "phone": None,
+                "date": datetime.now()
+            })
+
+            return {"need_phone": False}
+
+        # ⭐ طلب رقم
+        return {
+            "need_phone": True,
+            "rating": rating,
+            "comment": comment,
+            "location": room
+        }
+
+    return render_template(
+        "feedback.html",
+        location=room,
+        branch=branch,
+        room_name=room_names.get(room, "Unknown Room"),
+        need_phone=False
+    )
+
+    
 @app.route('/save_low_rating', methods=['POST'])
 def save_low_rating():
 
@@ -613,27 +658,33 @@ def generate_qr():
 @app.route('/qr_dashboard')
 def qr_dashboard():
 
-    # 🔥 كل الفروع (ثابتة أو من DB لاحقًا)
-    branches = ["alhail", "mabella", "alamerat", "pharmacy"]
+    # 🔥 خذ كل الفروع من الداتا
+    branches = collection.distinct("branch")
 
     rooms_data = []
 
     for branch in branches:
 
-        qr_url = f"https://yourapp.onrender.com/feedback/{branch}"
+        # 🔥 نجيب كل الغرف داخل الفرع
+        rooms = collection.distinct("location", {"branch": branch})
 
-        count = collection.count_documents({"branch": branch})
+        for room in rooms:
 
-        rooms_data.append({
-            "name": branch,
-            "count": count,
-            "qr": qr_url
-        })
+            qr_url = f"https://yourapp.onrender.com/feedback/{branch}/{room}"
 
-    return render_template(
-        "qr_dashboard.html",
-        rooms=rooms_data
-    )
+            count = collection.count_documents({
+                "branch": branch,
+                "location": room
+            })
+
+            rooms_data.append({
+                "branch": branch,
+                "room": room,
+                "count": count,
+                "qr": qr_url
+            })
+
+    return render_template("qr_dashboard.html", rooms=rooms_data)
 
 # @app.route('/fix_branch')
 # def fix_branch():
