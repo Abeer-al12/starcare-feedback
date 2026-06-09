@@ -337,7 +337,7 @@
                         document.getElementById("phonePopup").style.display = "flex";
                     }
                     else {
-                        window.location.href = "/thankyou";
+                        window.location.href = "/thankyou/{{ room }}";
                     }
                 });
         });
@@ -374,7 +374,7 @@
                 .then(data => {
 
                     if (data.success) {
-                        window.location.href = "/thankyou";
+                        window.location.href = "/thankyou/{{ room }}";
                     } else {
 
                         if (currentLang == "ar") {
