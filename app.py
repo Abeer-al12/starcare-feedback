@@ -264,8 +264,12 @@ def admin():
     username = session.get("username")
 
     selected_location = request.args.get("location")
-    active_branch = request.args.get("branch") or session.get("active_branch")
-    session["active_branch"] = active_branch
+    active_branch = request.args.get("branch")
+
+    if active_branch:
+        session["active_branch"] = active_branch
+    else:
+        active_branch = session.get("active_branch")
 
     user = db.users.find_one({"username": username})
     allowed_locations = user.get("locations", []) if user else []
@@ -275,16 +279,16 @@ def admin():
     # =========================
     query = {}
 
-# 🔐 صلاحيات المستخدم
+# 🔐 صلاحيات
     if role != "admin":
         query["location"] = {"$in": allowed_locations}
 
-# 🌟 فلترة الفرع (أهم شيء)
+# 🌟 branch filter (أقوى من location)
     if active_branch:
         query["branch"] = active_branch
 
-# 🌟 فلترة الموقع (فقط إذا ما فيه branch مختار)
-    if selected_location and not active_branch:
+# 🌟 location فقط إذا ما فيه branch ولا role restriction
+    elif selected_location:
         query["location"] = selected_location
 
 
@@ -441,14 +445,26 @@ def download_pdf():
     if 'admin' not in session:
         return redirect('/login')
 
-    data = list(collection.find())
-
     role = session.get("role")
 
-    if role != "admin":
-        data = [d for d in data if d.get("location") == role]
+    # 🌿 هنا تحط الفرع
+    branch = session.get("active_branch")
 
+    query = {}
+
+    # 🌿 فلترة الفرع (هذا هو التعديل المهم)
+    if branch:
+        query["branch"] = branch
+
+    # 📦 جلب البيانات
+    data = list(collection.find(query))
+
+    # (حذفنا هذا الغلط القديم)
+    # data = list(collection.find()) ❌
+
+    # 🔢 الحسابات
     total = len(data)
+
     avg = round(
         sum(i["rating"] for i in data) / total,
         2
@@ -469,40 +485,26 @@ def download_pdf():
         stats[loc]["count"] += 1
         stats[loc]["total"] += i["rating"]
 
+    # 📄 PDF generation
     buffer = BytesIO()
-
     doc = SimpleDocTemplate(buffer)
-
     styles = getSampleStyleSheet()
-
     elements = []
 
     elements.append(
-        Paragraph(
-            "StarCare Hospital Feedback Report",
-            styles['Title']
-        )
+        Paragraph("StarCare Hospital Feedback Report", styles['Title'])
     )
 
     elements.append(
-        Paragraph(
-            f"Date: {datetime.now().strftime('%Y-%m-%d')}",
-            styles['Normal']
-        )
+        Paragraph(f"Date: {datetime.now().strftime('%Y-%m-%d')}", styles['Normal'])
     )
 
     elements.append(
-        Paragraph(
-            f"Total Feedback: {total}",
-            styles['Normal']
-        )
+        Paragraph(f"Total Feedback: {total}", styles['Normal'])
     )
 
     elements.append(
-        Paragraph(
-            f"Overall Rating: {avg} ⭐",
-            styles['Normal']
-        )
+        Paragraph(f"Overall Rating: {avg} ⭐", styles['Normal'])
     )
 
     elements.append(Spacer(1, 20))
@@ -511,10 +513,7 @@ def download_pdf():
 
     for loc, v in stats.items():
 
-        avg_loc = round(
-            v["total"] / v["count"],
-            2
-        )
+        avg_loc = round(v["total"] / v["count"], 2)
 
         if avg_loc <= 2:
             status = "CRITICAL"
@@ -542,43 +541,16 @@ def download_pdf():
 
     elements.append(table)
 
-    elements.append(Spacer(1, 20))
-
-    elements.append(
-        Paragraph(
-            "Rooms Requiring Attention",
-            styles['Heading2']
-        )
-    )
-
-    for loc, v in stats.items():
-
-        avg_loc = round(
-            v["total"] / v["count"],
-            2
-        )
-
-        if avg_loc <= 3:
-
-            elements.append(
-                Paragraph(
-                    f"• {room_names.get(loc, loc)} → Average Rating: {avg_loc}",
-                    styles['Normal']
-                )
-            )
-
     doc.build(elements)
 
     pdf = buffer.getvalue()
-
     buffer.close()
 
     return Response(
         pdf,
         mimetype='application/pdf',
         headers={
-            'Content-Disposition':
-            'attachment; filename=starcare_report.pdf'
+            'Content-Disposition': 'attachment; filename=starcare_report.pdf'
         }
     )
 # ---------------- ANALYTICS ----------------
@@ -588,9 +560,19 @@ def analytics():
     if 'admin' not in session:
         return redirect('/login')
 
-    data = list(collection.find())
+    # 🌿 الفرع الحالي
+    branch = session.get("active_branch")
 
-    # 📊 هنا يبدأ stats
+    # 📦 query
+    query = {}
+
+    if branch:
+        query["branch"] = branch
+
+    # 📊 جلب البيانات
+    data = list(collection.find(query))
+
+    # 📈 stats
     stats = {}
 
     for i in data:
@@ -631,24 +613,27 @@ def generate_qr():
 @app.route('/qr_dashboard')
 def qr_dashboard():
 
-    branch = session.get("active_branch")
+    # 🔥 كل الفروع (ثابتة أو من DB لاحقًا)
+    branches = ["alhail", "mabella", "alamerat", "pharmacy"]
 
-    # حماية لو ما فيه branch
-    if not branch:
-        branch = "alhail"
+    rooms_data = []
 
-    qr_url = f"https://yourapp.onrender.com/feedback/{branch}"
+    for branch in branches:
 
-    # عدد التقييمات لكل فرع
-    count = collection.count_documents({"branch": branch})
+        qr_url = f"https://yourapp.onrender.com/feedback/{branch}"
 
-    rooms_data = [{
-        "name": branch,
-        "count": count,
-        "qr": qr_url
-    }]
+        count = collection.count_documents({"branch": branch})
 
-    return render_template("qr_dashboard.html", rooms=rooms_data, branch=branch)
+        rooms_data.append({
+            "name": branch,
+            "count": count,
+            "qr": qr_url
+        })
+
+    return render_template(
+        "qr_dashboard.html",
+        rooms=rooms_data
+    )
 
 # @app.route('/fix_branch')
 # def fix_branch():
