@@ -276,7 +276,7 @@ def admin():
     }).sort("date", -1)
 )
 
-    ذtotal = len(data)
+    total = len(data)
     avg = round(sum(i["rating"] for i in data) / total, 2) if total else 0
     stats = {}
 
