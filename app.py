@@ -137,6 +137,12 @@ branch_rooms_map = {
 }
 
 branches = list(branch_rooms_map.keys())
+
+def get_branch_from_location(location):
+    for branch, rooms in branch_rooms_map.items():
+        if location in rooms:
+            return branch
+    return "unknown"
 # ---------------- HOME ----------------
 @app.route('/')
 def home():
@@ -161,13 +167,14 @@ def feedback(location):
 
         # ⭐ 4 و 5 → حفظ مباشر
         if rating >= 4:
-            collection.insert_one({
+           collection.insert_one({
+                "branch": get_branch_from_location(location),
                 "location": location,
                 "rating": rating,
                 "comment": comment,
                 "phone": None,
                 "date": datetime.now()
-            })
+})
 
             return {"need_phone": False}
 
