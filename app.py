@@ -157,35 +157,35 @@ def feedback(location):
 
     if request.method == 'POST':
 
-        rating = request.form.get('rating')
-        comment = request.form.get('comment')
+    rating = request.form.get('rating')
+    comment = request.form.get('comment')
 
-        if not rating:
-            return {"error": "missing rating"}
+    if not rating:
+        return {"error": "missing rating"}
 
-        rating = int(rating)
+    rating = int(rating)
 
-        # ⭐ 4 و 5 → حفظ مباشر
-        if rating >= 4:
+    # ⭐ 4 و 5 → حفظ مباشر
+    if rating >= 4:
 
-            collection.insert_one({
-                "location": location,
-                "branch": get_branch_from_location(location),  # 👈 مهم جداً
-                "rating": rating,
-                "comment": comment,
-                "phone": None,
-                "date": datetime.now()
-            })
-
-            return {"need_phone": False}
-
-        # ⭐ 1 - 3 → نطلب رقم
-        return {
-            "need_phone": True,
+        collection.insert_one({
+            "location": location,
+            "branch": get_branch_from_location(location),  # ✔ مهم
             "rating": rating,
             "comment": comment,
-            "location": location
-        }
+            "phone": None,
+            "date": datetime.now()
+        })
+
+        return {"need_phone": False}
+
+    # ⭐ 1 - 3 → نطلب رقم
+    return {
+        "need_phone": True,
+        "rating": rating,
+        "comment": comment,
+        "location": location
+    }
 
     return render_template(
         "feedback.html",
@@ -627,12 +627,16 @@ def qr_dashboard():
 
 @app.route('/fix_branch')
 def fix_branch():
+
     for i in collection.find():
-        if "branch" not in i:
+
+        if "branch" not in i or not i.get("branch"):
+
             collection.update_one(
-                {"_id": i["_id"]},
+                {"_id": ObjectId(i["_id"])},
                 {"$set": {"branch": get_branch_from_location(i["location"])}}
             )
+
     return "DONE"
 # ---------------- RUN ----------------
 if __name__ == "__main__":
