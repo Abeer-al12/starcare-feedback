@@ -88,53 +88,55 @@ room_names = {
     "sample_collaction":"sample collection room"
 }
 
-# branch_rooms_map = {
-#     # 🏥 Al Hail
-#     "alhail": [
-#         "consultation101",
-#         "consultation102",
-#         "consultation103",
-#         "consultation104",
-#         "cystoscopy110",
-#         "urodynamic109",
-#         "waiting_area",
-#         "laboratory107",
-#         "staff",
-#         "ultrasound106",
-#         "xray108",
-#         "triage105",
-#         "nurse",
-#         "department",
-#         "doctor",
-#         "it",
-#         "admin",
-#         "toilet",
-#         "sample_collaction"
-#     ],
+branch_rooms_map = {
+    # 🏥 Al Hail
+    "alhail": [
+        "consultation101",
+        "consultation102",
+        "consultation103",
+        "consultation104",
+        "cystoscopy110",
+        "urodynamic109",
+        "waiting_area",
+        "laboratory107",
+        "staff",
+        "ultrasound106",
+        "xray108",
+        "triage105",
+        "nurse",
+        "department",
+        "doctor",
+        "it",
+        "admin",
+        "toilet",
+        "sample_collaction"
+    ],
 
-#     # 💊 Pharmacy
-#     "pharmacy": [
-#         "pharmacy_area",
-#         "pharmacy_store",
-#         "medical_area"
-#     ],
+    # 💊 Pharmacy
+    "pharmacy": [
+        "pharmacy_area",
+        "pharmacy_store",
+        "medical_area"
+    ],
 
-#     # 🏥 Al Amerat (مثال)
-#     "alamerat": [
-#         "consultation201",
-#         "waiting_area_2",
-#         "lab_201",
-#         "nurse_station_2"
-#     ],
+    # 🏥 Al Amerat (مثال)
+    "alamerat": [
+        "consultation201",
+        "waiting_area_2",
+        "lab_201",
+        "nurse_station_2"
+    ],
 
-#     # 🏥 Mabella (مثال)
-#     "mabella": [
-#         "consultation301",
-#         "xray301",
-#         "ultrasound301",
-#         "reception"
-#     ]
-# }
+    # 🏥 Mabella (مثال)
+    "mabella": [
+        "consultation301",
+        "xray301",
+        "ultrasound301",
+        "reception"
+    ]
+}
+
+branches = list(branch_rooms_map.keys())
 # ---------------- HOME ----------------
 @app.route('/')
 def home():
@@ -253,6 +255,7 @@ def admin():
     username = session.get("username")
 
     selected_location = request.args.get("location")
+    # selected_branch = request.args.get("branch")
 
     user = db.users.find_one({"username": username})
 
