@@ -168,14 +168,14 @@ def feedback(location):
         # ⭐ 4 و 5 → حفظ مباشر
         if rating >= 4:
 
-            collection.insert_one({
-                "branch": get_branch_from_location(location),
-                "location": location,
-                "rating": rating,
-                "comment": comment,
-                "phone": None,
-                "date": datetime.now()
-            })
+        collection.insert_one({
+            "location": location,
+            "branch": get_branch_from_location(location),  # 👈 مهم جداً
+            "rating": rating,
+            "comment": comment,
+            "phone": None,
+            "date": datetime.now()
+        })
 
             return {"need_phone": False}
 
@@ -201,6 +201,7 @@ def save_low_rating():
 
     collection.insert_one({
         "location": data["location"],
+        "branch": get_branch_from_location(data["location"]),  # 👈 مهم
         "rating": int(data["rating"]),
         "comment": data["comment"],
         "phone": data["phone"],
@@ -277,14 +278,16 @@ def admin():
         query["location"] = {"$in": allowed_locations}
 
 # 🎯 فلترة حسب اختيار الصفحة (dropdown)
-    if selected_location:
-        query["location"] = selected_location
-
     query = {}
 
+# فلترة حسب الفرع
     if selected_branch:
         query["branch"] = selected_branch
 
+# فلترة حسب location (إذا مستخدمة)
+    if selected_location:
+        query["location"] = selected_location
+        
     data = list(collection.find(query).sort("date", -1))
 
     low_ratings = list(
@@ -622,6 +625,15 @@ def qr_dashboard():
 
     return render_template("qr_dashboard.html", rooms=rooms_data)
 
+@app.route('/fix_branch')
+def fix_branch():
+    for i in collection.find():
+        if "branch" not in i:
+            collection.update_one(
+                {"_id": i["_id"]},
+                {"$set": {"branch": get_branch_from_location(i["location"])}}
+            )
+    return "DONE"
 # ---------------- RUN ----------------
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
