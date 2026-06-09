@@ -270,9 +270,14 @@ def admin():
 
     data = list(collection.find(query).sort("date", -1))
 
-    total = len(data)
-    avg = round(sum(i["rating"] for i in data) / total, 2) if total else 0
+    low_ratings = list(
+        collection.find({
+            "rating": {"$lte": 3}
+    }).sort("date", -1)
+)
 
+    ذtotal = len(data)
+    avg = round(sum(i["rating"] for i in data) / total, 2) if total else 0
     stats = {}
 
     for i in data:
@@ -296,6 +301,7 @@ def admin():
     return render_template(
         "dashboard.html",
         data=data,
+        low_ratings=low_ratings,
         total_feedback=total,
         avg_rating=avg,
         stats=stats_list,
