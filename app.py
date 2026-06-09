@@ -263,7 +263,7 @@ def admin():
     username = session.get("username")
 
     selected_location = request.args.get("location")
-    # selected_branch = request.args.get("branch")
+    selected_branch = request.args.get("branch")
 
     user = db.users.find_one({"username": username})
 
@@ -279,6 +279,11 @@ def admin():
 # 🎯 فلترة حسب اختيار الصفحة (dropdown)
     if selected_location:
         query["location"] = selected_location
+
+    query = {}
+
+    if selected_branch:
+        query["branch"] = selected_branch
 
     data = list(collection.find(query).sort("date", -1))
 
@@ -317,7 +322,8 @@ def admin():
         total_feedback=total,
         avg_rating=avg,
         stats=stats_list,
-        role=role
+        role=role,
+        branches=branches
     )
 
 #اضافه مستخدمين

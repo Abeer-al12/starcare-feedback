@@ -262,15 +262,17 @@
 
             <form method="GET" action="/admin">
 
-                <!-- <select name="branch">
+                <select name="branch" onchange="this.form.submit()">
+
                     <option value="">All Branches</option>
 
-                    {% for branch in branches %}
-                    <option value="{{ branch }}">
-                        {{ branch }}
+                    {% for b in branches %}
+                    <option value="{{ b }}">
+                        {{ b }}
                     </option>
                     {% endfor %}
-                </select> -->
+
+                </select>
 
                 <select name="location" onchange="this.form.submit()"
                     style="padding:12px;border-radius:10px;border:1px solid #ddd;">
