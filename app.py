@@ -264,40 +264,50 @@ def admin():
     username = session.get("username")
 
     selected_location = request.args.get("location")
-    selected_branch = request.args.get("branch")
+    active_branch = request.args.get("branch") or session.get("active_branch")
+    session["active_branch"] = active_branch
 
     user = db.users.find_one({"username": username})
-
     allowed_locations = user.get("locations", []) if user else []
 
-    # 🔥 admin يشوف الكل
+    # =========================
+    # 🔥 QUERY الأساسي
+    # =========================
     query = {}
 
-# 🔐 فلترة حسب role
+    # 🔐 صلاحيات المستخدم
     if role != "admin":
         query["location"] = {"$in": allowed_locations}
 
-# 🎯 فلترة حسب اختيار الصفحة (dropdown)
-    query = {}
-
-# فلترة حسب الفرع
-    if selected_branch:
-        query["branch"] = selected_branch
-
-# فلترة حسب location (إذا مستخدمة)
+    if active_branch:
+        query["branch"] = active_branch
+    # 🌟 فلترة الفرع
+    
+    # 🌟 فلترة الموقع
     if selected_location:
         query["location"] = selected_location
-        
+
+
+
+    # =========================
+    # 📊 البيانات الرئيسية
+    # =========================
     data = list(collection.find(query).sort("date", -1))
 
-    low_ratings = list(
-        collection.find({
-            "rating": {"$lte": 3}
-    }).sort("date", -1)
-)
+    # =========================
+    # ⚠️ Low ratings (مهم)
+    # =========================
+    low_ratings = list(collection.find({
+        **query,
+        "rating": {"$lte": 3}
+    }).sort("date", -1))
 
+    # =========================
+    # 📈 الإحصائيات
+    # =========================
     total = len(data)
     avg = round(sum(i["rating"] for i in data) / total, 2) if total else 0
+
     stats = {}
 
     for i in data:
@@ -318,6 +328,11 @@ def admin():
         for l, v in stats.items()
     ]
 
+    # =========================
+    # 🚀 branches (حل الخطأ)
+    # =========================
+    branches = list(branch_rooms_map.keys())
+
     return render_template(
         "dashboard.html",
         data=data,
@@ -326,7 +341,8 @@ def admin():
         avg_rating=avg,
         stats=stats_list,
         role=role,
-        branches=branches
+        branches=branches,
+        active_branch=active_branch
     )
 
 #اضافه مستخدمين
@@ -612,18 +628,24 @@ def generate_qr():
 @app.route('/qr_dashboard')
 def qr_dashboard():
 
-    rooms_data = []
+    branch = session.get("active_branch")
 
-    for loc in locations:
-        count = collection.count_documents({"location": loc})
+    # حماية لو ما فيه branch
+    if not branch:
+        branch = "alhail"
 
-        rooms_data.append({
-            "name": loc,
-            "count": count,
-            "qr": BASE_URL + loc
-        })
+    qr_url = f"https://yourapp.onrender.com/feedback/{branch}"
 
-    return render_template("qr_dashboard.html", rooms=rooms_data)
+    # عدد التقييمات لكل فرع
+    count = collection.count_documents({"branch": branch})
+
+    rooms_data = [{
+        "name": branch,
+        "count": count,
+        "qr": qr_url
+    }]
+
+    return render_template("qr_dashboard.html", rooms=rooms_data, branch=branch)
 
 # @app.route('/fix_branch')
 # def fix_branch():
