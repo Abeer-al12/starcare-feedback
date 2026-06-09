@@ -275,18 +275,17 @@ def admin():
     # =========================
     query = {}
 
-    # 🔐 صلاحيات المستخدم
+# 🔐 صلاحيات المستخدم
     if role != "admin":
         query["location"] = {"$in": allowed_locations}
 
+# 🌟 فلترة الفرع (أهم شيء)
     if active_branch:
         query["branch"] = active_branch
-    # 🌟 فلترة الفرع
-    
-    # 🌟 فلترة الموقع
-    if selected_location:
-        query["location"] = selected_location
 
+# 🌟 فلترة الموقع (فقط إذا ما فيه branch مختار)
+    if selected_location and not active_branch:
+        query["location"] = selected_location
 
 
     # =========================
@@ -591,6 +590,7 @@ def analytics():
 
     data = list(collection.find())
 
+    # 📊 هنا يبدأ stats
     stats = {}
 
     for i in data:
@@ -611,7 +611,10 @@ def analytics():
         for loc, v in stats.items()
     ]
 
-    return render_template("analytics.html", data=chart_data)
+    return render_template(
+        "analytics.html",
+        data=chart_data
+    )
 # ---------------- GENERATE QR ----------------
 @app.route('/generate_qr')
 def generate_qr():

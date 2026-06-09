@@ -263,15 +263,12 @@
             <form method="GET" action="/admin">
 
                 <select name="branch" onchange="this.form.submit()">
-
                     <option value="">All Branches</option>
-
                     {% for b in branches %}
-                    <option value="{{ b }}">
+                    <option value="{{ b }}" {% if active_branch==b %}selected{% endif %}>
                         {{ b }}
                     </option>
                     {% endfor %}
-
                 </select>
 
                 <select name="location" onchange="this.form.submit()"
