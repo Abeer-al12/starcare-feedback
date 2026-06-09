@@ -17,6 +17,7 @@ from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet
 from io import BytesIO
 from flask import Response
+from bson import ObjectId
 
 app = Flask(__name__)
 app.secret_key = "starcare_secret"
@@ -387,7 +388,17 @@ def api_feedback():
 
     return {"data": data}
 
+@app.route('/delete_feedback/<id>')
+def delete_feedback(id):
 
+    if 'admin' not in session:
+        return redirect('/login')
+
+    collection.delete_one({
+        "_id": ObjectId(id)
+    })
+
+    return redirect('/admin')
 # ---------------- PDF ----------------
 @app.route('/download_pdf')
 def download_pdf():

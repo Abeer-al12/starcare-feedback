@@ -280,8 +280,8 @@
 
         </div>
 
-        
-    
+
+
         <!-- Table -->
         <table>
 
@@ -292,6 +292,7 @@
                 <th>Status</th>
                 <th>Date</th>
                 <th>Phone</th>
+                <th>Delete</th>
             </tr>
 
             {% for item in data %}
@@ -324,6 +325,16 @@
 
                 <td>
                     {{ item.phone if item.phone else "-" }}
+                </td>
+                <td>
+                    <a href="/delete_feedback/{{ item._id }}" onclick="return confirm('Delete this feedback?')" style="
+       background:#e74c3c;
+       color:white;
+       padding:8px 12px;
+       border-radius:8px;
+       text-decoration:none;">
+                        Delete
+                    </a>
                 </td>
             </tr>
             {% endfor %}
