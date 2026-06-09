@@ -1,264 +1,259 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>StarCare Feedback</title>
 
     <style>
-
-        body{
-            margin:0;
-            font-family:Arial;
-            background:#f6fbfc;
-            display:flex;
-            justify-content:center;
-            align-items:center;
-            height:100vh;
+        body {
+            margin: 0;
+            font-family: Arial;
+            background: #f6fbfc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
 
-        .card{
-            background:white;
-            width:430px;
-            padding:35px;
-            border-radius:30px;
-            text-align:center;
-            box-shadow:0 8px 25px rgba(0,0,0,.10);
+        .card {
+            background: white;
+            width: 430px;
+            padding: 35px;
+            border-radius: 30px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, .10);
         }
 
-        .logo{
-    width: 200px;
-    height:auto;
-    display:block;
-    margin:0 auto 20px;
+        .logo {
+            width: 200px;
+            height: auto;
+            display: block;
+            margin: 0 auto 20px;
         }
 
-        h1{
-            color:#1b2a41;
-            margin:15px 0 5px;
+        h1 {
+            color: #1b2a41;
+            margin: 15px 0 5px;
         }
 
-        .lang-switch{
-            display:flex;
-            justify-content:center;
-            gap:10px;
-            margin:15px 0;
+        .lang-switch {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 15px 0;
         }
 
-        .lang-switch button{
-            background:#eafcfd;
-            color:#00A79B;
-            border:1px solid #00A79B;
-            padding:8px 18px;
-            border-radius:12px;
-            cursor:pointer;
-            font-size:14px;
-            width:auto;
-            margin:0;
+        .lang-switch button {
+            background: #eafcfd;
+            color: #00A79B;
+            border: 1px solid #00A79B;
+            padding: 8px 18px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 14px;
+            width: auto;
+            margin: 0;
         }
 
-        .lang-switch button:hover{
-            background:#00A79B;
-            color:white;
+        .lang-switch button:hover {
+            background: #00A79B;
+            color: white;
         }
 
-        .title{
-            color:#666;
-            margin-top:10px;
-            font-size:16px;
+        .title {
+            color: #666;
+            margin-top: 10px;
+            font-size: 16px;
         }
 
-        .room{
-            color:#00A79B;
-            font-size:20px;
-            font-weight:bold;
-            margin:15px 0;
+        .room {
+            color: #00A79B;
+            font-size: 20px;
+            font-weight: bold;
+            margin: 15px 0;
         }
 
-        .stars{
-            display:flex;
-            justify-content:center;
-            flex-direction:row-reverse;
-            margin:25px 0;
+        .stars {
+            display: flex;
+            justify-content: center;
+            flex-direction: row-reverse;
+            margin: 25px 0;
         }
 
-        .stars input{
-            display:none;
+        .stars input {
+            display: none;
         }
 
-        .stars label{
-            font-size:48px;
-            color:#d7d7d7;
-            cursor:pointer;
-            padding:4px;
-            transition:.2s;
+        .stars label {
+            font-size: 48px;
+            color: #d7d7d7;
+            cursor: pointer;
+            padding: 4px;
+            transition: .2s;
         }
 
-        .stars input:checked ~ label,
+        .stars input:checked~label,
         .stars label:hover,
-        .stars label:hover ~ label{
-            color:#00A79B;
+        .stars label:hover~label {
+            color: #00A79B;
         }
 
-        #starText{
-            color:#777;
-            margin-bottom:18px;
+        #starText {
+            color: #777;
+            margin-bottom: 18px;
         }
 
-        textarea{
-            width:100%;
-            height:110px;
-            border:1px solid #ddd;
-            border-radius:18px;
-            padding:15px;
-            font-size:15px;
-            resize:none;
-            box-sizing:border-box;
-            outline:none;
+        textarea {
+            width: 100%;
+            height: 110px;
+            border: 1px solid #ddd;
+            border-radius: 18px;
+            padding: 15px;
+            font-size: 15px;
+            resize: none;
+            box-sizing: border-box;
+            outline: none;
         }
 
-        textarea:focus{
-            border-color:#00A79B;
+        textarea:focus {
+            border-color: #00A79B;
         }
 
-        .submit-btn{
-            width:100%;
-            margin-top:20px;
-            padding:15px;
-            border:none;
-            border-radius:18px;
-            background:#00A79B;
-            color:white;
-            font-size:17px;
-            cursor:pointer;
-            transition:.3s;
-            font-weight:bold;
+        .submit-btn {
+            width: 100%;
+            margin-top: 20px;
+            padding: 15px;
+            border: none;
+            border-radius: 18px;
+            background: #00A79B;
+            color: white;
+            font-size: 17px;
+            cursor: pointer;
+            transition: .3s;
+            font-weight: bold;
         }
 
-        .submit-btn:hover{
-            background:#00A79B;
+        .submit-btn:hover {
+            background: #00A79B;
         }
-
     </style>
 </head>
 
 <body>
 
-<div class="card">
+    <div class="card">
 
-    <img src="{{ url_for('static', filename='LOGO.webp') }}" class="logo">
+        <img src="{{ url_for('static', filename='LOGO.webp') }}" class="logo">
 
-    
 
-    <div class="lang-switch">
-        <button type="button" onclick="setLang('en')">
-            English
-        </button>
 
-        <button type="button" onclick="setLang('ar')">
-            عربي
-        </button>
-    </div>
+        <div class="lang-switch">
+            <button type="button" onclick="setLang('en')">
+                English
+            </button>
 
-    <p class="title" id="titleText">
-        Rate our Service
-    </p>
-
-    <div class="room">
-        {{ room_name }}
-    </div>
-
-        <form id="feedbackForm">
-            
-
-        <div class="stars">
-
-            <input type="radio" name="rating" value="5" id="5" required>
-            <label for="5">★</label>
-
-            <input type="radio" name="rating" value="4" id="4">
-            <label for="4">★</label>
-
-            <input type="radio" name="rating" value="3" id="3">
-            <label for="3">★</label>
-
-            <input type="radio" name="rating" value="2" id="2">
-            <label for="2">★</label>
-
-            <input type="radio" name="rating" value="1" id="1">
-            <label for="1">★</label>
-
+            <button type="button" onclick="setLang('ar')">
+                عربي
+            </button>
         </div>
 
-        <!-- <input type="text" name="phone" placeholder="Optional phone number"> -->
-        <p id="starText">
-            Tap a star to rate
+        <p class="title" id="titleText">
+            Rate our Service
         </p>
 
-        <textarea
-            name="comment"
-            id="commentBox"
-            placeholder="Share your thoughts...">
+        <div class="room">
+            {{ room_name }}
+        </div>
+
+        <form id="feedbackForm">
+
+
+            <div class="stars">
+
+                <input type="radio" name="rating" value="5" id="5" required>
+                <label for="5">★</label>
+
+                <input type="radio" name="rating" value="4" id="4">
+                <label for="4">★</label>
+
+                <input type="radio" name="rating" value="3" id="3">
+                <label for="3">★</label>
+
+                <input type="radio" name="rating" value="2" id="2">
+                <label for="2">★</label>
+
+                <input type="radio" name="rating" value="1" id="1">
+                <label for="1">★</label>
+
+            </div>
+
+            <!-- <input type="text" name="phone" placeholder="Optional phone number"> -->
+            <p id="starText">
+                Tap a star to rate
+            </p>
+
+            <textarea name="comment" id="commentBox" placeholder="Share your thoughts...">
         </textarea>
 
-        <button class="submit-btn" type="submit">
-            <span id="btnText">
-                Submit Feedback
-            </span>
-        </button>
+            <button class="submit-btn" type="submit">
+                <span id="btnText">
+                    Submit Feedback
+                </span>
+            </button>
 
-    </form>
+        </form>
 
-</div>
+    </div>
 
-<script>
-let currentLang = "en";
-function setLang(lang){
+    <script>
+        let currentLang = "en";
+        function setLang(lang) {
 
-    currentLang = lang;
+            currentLang = lang;
 
-    let popupTitle = document.getElementById("popupTitle");
-    let popupText = document.getElementById("popupText");
-    let popupPhone = document.getElementById("popupPhone");
-    let popupBtn = document.getElementById("popupBtn");
+            let popupTitle = document.getElementById("popupTitle");
+            let popupText = document.getElementById("popupText");
+            let popupPhone = document.getElementById("popupPhone");
+            let popupBtn = document.getElementById("popupBtn");
 
-    if(lang=="ar"){
+            if (lang == "ar") {
 
-        document.documentElement.dir="rtl";
+                document.documentElement.dir = "rtl";
 
-        document.getElementById("titleText").innerHTML="قيّم خدمتنا";
-        document.getElementById("starText").innerHTML="اضغط على النجوم للتقييم";
-        document.getElementById("commentBox").placeholder="اكتب ملاحظاتك...";
-        document.getElementById("btnText").innerHTML="إرسال التقييم";
+                document.getElementById("titleText").innerHTML = "قيّم خدمتنا";
+                document.getElementById("starText").innerHTML = "اضغط على النجوم للتقييم";
+                document.getElementById("commentBox").placeholder = "اكتب ملاحظاتك...";
+                document.getElementById("btnText").innerHTML = "إرسال التقييم";
 
-        if(popupTitle){
-            popupTitle.innerHTML="نود التواصل معك";
-            popupText.innerHTML="نعتذر أن تجربتك لم تكن بالمستوى المطلوب، يرجى إدخال رقم الهاتف للتواصل معك.";
-            popupPhone.placeholder="رقم الهاتف";
-            popupBtn.innerHTML="إرسال";
+                if (popupTitle) {
+                    popupTitle.innerHTML = "نود التواصل معك";
+                    popupText.innerHTML = "نعتذر أن تجربتك لم تكن بالمستوى المطلوب، يرجى إدخال رقم الهاتف للتواصل معك.";
+                    popupPhone.placeholder = "رقم الهاتف";
+                    popupBtn.innerHTML = "إرسال";
+                }
+
+            } else {
+
+                document.documentElement.dir = "ltr";
+
+                document.getElementById("titleText").innerHTML = "Rate our Service";
+                document.getElementById("starText").innerHTML = "Tap a star to rate";
+                document.getElementById("commentBox").placeholder = "Share your thoughts...";
+                document.getElementById("btnText").innerHTML = "Submit Feedback";
+
+                if (popupTitle) {
+                    popupTitle.innerHTML = "Contact Information";
+                    popupText.innerHTML = "We are sorry your experience was not satisfactory. Please enter your phone number so we can contact you.";
+                    popupPhone.placeholder = "Phone Number";
+                    popupBtn.innerHTML = "Submit";
+                }
+            }
         }
 
-    } else {
-
-        document.documentElement.dir="ltr";
-
-        document.getElementById("titleText").innerHTML="Rate our Service";
-        document.getElementById("starText").innerHTML="Tap a star to rate";
-        document.getElementById("commentBox").placeholder="Share your thoughts...";
-        document.getElementById("btnText").innerHTML="Submit Feedback";
-
-        if(popupTitle){
-            popupTitle.innerHTML="Contact Information";
-            popupText.innerHTML="We are sorry your experience was not satisfactory. Please enter your phone number so we can contact you.";
-            popupPhone.placeholder="Phone Number";
-            popupBtn.innerHTML="Submit";
-        }
-    }
-}
 
 
-
-</script>
-<div id="phonePopup"
-     style="display:none;
+    </script>
+    <div id="phonePopup" style="display:none;
             position:fixed;
             top:0;
             left:0;
@@ -269,7 +264,7 @@ function setLang(lang){
             align-items:center;
             z-index:999;">
 
-    <div style="
+        <div style="
         background:white;
         width:350px;
         padding:30px;
@@ -277,22 +272,16 @@ function setLang(lang){
         text-align:center;
         box-shadow:0 10px 30px rgba(0,0,0,0.15);">
 
-        <h2 id="popupTitle"
-            style="color:#00A79B;margin-top:0;">
-            Contact Information
-        </h2>
+            <h2 id="popupTitle" style="color:#00A79B;margin-top:0;">
+                Contact Information
+            </h2>
 
-        <p id="popupText"
-           style="color:#666;font-size:14px;margin-bottom:20px;">
-            We are sorry your experience was not satisfactory.
-            Please enter your phone number so we can contact you.
-        </p>
+            <p id="popupText" style="color:#666;font-size:14px;margin-bottom:20px;">
+                We are sorry your experience was not satisfactory.
+                Please enter your phone number so we can contact you.
+            </p>
 
-        <input
-            type="text"
-            id="popupPhone"
-            placeholder="Phone Number"
-            style="
+            <input type="text" id="popupPhone" placeholder="Phone Number" style="
                 width:100%;
                 padding:14px;
                 border:1px solid #ddd;
@@ -301,10 +290,7 @@ function setLang(lang){
                 box-sizing:border-box;
                 outline:none;">
 
-        <button
-            id="popupBtn"
-            onclick="submitLowRating()"
-            style="
+            <button id="popupBtn" onclick="submitLowRating()" style="
                 width:100%;
                 margin-top:15px;
                 padding:14px;
@@ -315,103 +301,104 @@ function setLang(lang){
                 font-size:16px;
                 font-weight:bold;
                 cursor:pointer;">
-            Submit
-        </button>
+                Submit
+            </button>
 
+        </div>
     </div>
-</div>
-<script>
+    <script>
 
-let tempRating = 0;
-let tempComment = "";
+        let tempRating = 0;
+        let tempComment = "";
 
-document.getElementById("feedbackForm").addEventListener("submit", function(e){
-    e.preventDefault();
+        document.getElementById("feedbackForm").addEventListener("submit", function (e) {
+            e.preventDefault();
 
-    let ratingEl = document.querySelector('input[name="rating"]:checked');
+            let ratingEl = document.querySelector('input[name="rating"]:checked');
 
-    let rating = parseInt(ratingEl.value);
-    let comment = document.getElementById("commentBox").value;
+            let rating = parseInt(ratingEl.value);
+            let comment = document.getElementById("commentBox").value;
 
-    fetch("/feedback/{{ location }}", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-        },
-        body: `rating=${rating}&comment=${comment}`
-    })
-    .then(res => res.json())
-    .then(data => {
+            fetch(window.location.pathname, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: `rating=${rating}&comment=${comment}`
+            })
+                .then(res => res.json())
+                .then(data => {
 
-        if(data.need_phone){
+                    if (data.need_phone) {
 
-            tempRating = rating;
-            tempComment = comment;
+                        tempRating = rating;
+                        tempComment = comment;
 
-            document.getElementById("phonePopup").style.display = "flex";
-        }
-        else{
-            window.location.href = "/thankyou/{{ location }}";
-        }
-    });
-});
+                        document.getElementById("phonePopup").style.display = "flex";
+                    }
+                    else {
+                        window.location.href = "/thankyou";
+                    }
+                });
+        });
 
-function submitLowRating(){
+        function submitLowRating() {
 
-    let phone = document.getElementById("popupPhone").value.trim();
+            let phone = document.getElementById("popupPhone").value.trim();
 
-    // التحقق من الرقم
-    if(phone.length !== 8 || isNaN(phone)){
+            // التحقق من الرقم
+            if (phone.length !== 8 || isNaN(phone)) {
 
-        if(currentLang == "ar"){
-            alert("يجب أن يتكون رقم الهاتف من 8 أرقام");
-        }else{
-            alert("Phone number must be 8 digits");
-        }
+                if (currentLang == "ar") {
+                    alert("يجب أن يتكون رقم الهاتف من 8 أرقام");
+                } else {
+                    alert("Phone number must be 8 digits");
+                }
 
-        return;
-    }
-
-    fetch("/save_low_rating", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            location: "{{ location }}",
-            rating: tempRating,
-            comment: tempComment,
-            phone: phone
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-
-        if(data.success){
-            window.location.href = "/thankyou/{{ location }}";
-        }else{
-
-            if(currentLang == "ar"){
-                alert("حدث خطأ أثناء الحفظ");
-            }else{
-                alert("Error while saving feedback");
+                return;
             }
 
+            fetch("/save_low_rating", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    location: "{{ room }}",
+                    rating: tempRating,
+                    comment: tempComment,
+                    phone: phone
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+
+                    if (data.success) {
+                        window.location.href = "/thankyou";
+                    } else {
+
+                        if (currentLang == "ar") {
+                            alert("حدث خطأ أثناء الحفظ");
+                        } else {
+                            alert("Error while saving feedback");
+                        }
+
+                    }
+                })
+                .catch(error => {
+
+                    console.error(error);
+
+                    if (currentLang == "ar") {
+                        alert("تعذر الاتصال بالخادم");
+                    } else {
+                        alert("Unable to connect to server");
+                    }
+
+                });
         }
-    })
-    .catch(error => {
-
-        console.error(error);
-
-        if(currentLang == "ar"){
-            alert("تعذر الاتصال بالخادم");
-        }else{
-            alert("Unable to connect to server");
-        }
-
-    });
-}
-</script>
+    </script>
 
 </body>
+
 </html>
