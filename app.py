@@ -196,7 +196,7 @@ def home():
 
 
 @app.route('/feedback/<branch>/<room>', methods=['GET', 'POST'])
-def feedback_room(branch, room):
+def feedback(branch, room):
 
     if request.method == 'POST':
 
@@ -208,7 +208,7 @@ def feedback_room(branch, room):
 
         rating = int(rating)
 
-        # ⭐ حفظ مباشر
+        # ⭐ 4-5 → شكر مباشر
         if rating >= 4:
 
             collection.insert_one({
@@ -220,22 +220,22 @@ def feedback_room(branch, room):
                 "date": datetime.now()
             })
 
-            return {"need_phone": False}
+            return {"status": "success", "redirect": "/thankyou"}
 
-        # ⭐ طلب رقم
+        # ⭐ 1-3 → نطلب رقم
         return {
-            "need_phone": True,
+            "status": "need_phone",
             "rating": rating,
             "comment": comment,
-            "location": room
+            "branch": branch,
+            "room": room
         }
 
     return render_template(
         "feedback.html",
-        location=room,
         branch=branch,
-        room_name=room_names.get(room, "Unknown Room"),
-        need_phone=False
+        room=room,
+        room_name=room_names.get(room, room)
     )
 
 
@@ -664,19 +664,15 @@ def qr_dashboard():
 
         for room in rooms:
 
-            qr_url = f"{BASE_URL}/feedback/{branch}/{room}"
-
-            count = collection.count_documents({
-                "branch": branch,
-                "location": room
-            })
-
             rooms_data.append({
                 "branch": branch,
                 "room": room,
                 "name": room_names.get(room, room),
-                "count": count,
-                "qr": qr_url
+                "count": collection.count_documents({
+                    "branch": branch,
+                    "location": room
+                }),
+                "qr": f"{BASE_URL}/feedback/{branch}/{room}"
             })
 
     return render_template("qr_dashboard.html", rooms=rooms_data)

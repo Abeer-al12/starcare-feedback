@@ -330,11 +330,6 @@ document.getElementById("feedbackForm").addEventListener("submit", function(e){
 
     let ratingEl = document.querySelector('input[name="rating"]:checked');
 
-    if(!ratingEl){
-        alert("Please select rating");
-        return;
-    }
-
     let rating = parseInt(ratingEl.value);
     let comment = document.getElementById("commentBox").value;
 
@@ -349,8 +344,9 @@ document.getElementById("feedbackForm").addEventListener("submit", function(e){
     .then(data => {
 
         if(data.need_phone){
-            tempRating = data.rating;
-            tempComment = data.comment;
+
+            tempRating = rating;
+            tempComment = comment;
 
             document.getElementById("phonePopup").style.display = "flex";
         }
@@ -359,7 +355,6 @@ document.getElementById("feedbackForm").addEventListener("submit", function(e){
         }
     });
 });
-
 
 function submitLowRating(){
 
