@@ -625,19 +625,19 @@ def qr_dashboard():
 
     return render_template("qr_dashboard.html", rooms=rooms_data)
 
-@app.route('/fix_branch')
-def fix_branch():
+# @app.route('/fix_branch')
+# def fix_branch():
 
-    for i in collection.find():
+#     for i in collection.find():
 
-        if "branch" not in i or not i.get("branch"):
+#         if "branch" not in i or not i.get("branch"):
 
-            collection.update_one(
-                {"_id": ObjectId(i["_id"])},
-                {"$set": {"branch": get_branch_from_location(i["location"])}}
-            )
+#             collection.update_one(
+#                 {"_id": ObjectId(i["_id"])},
+#                 {"$set": {"branch": get_branch_from_location(i["location"])}}
+#             )
 
-    return "DONE"
+#     return "DONE"
 # ---------------- RUN ----------------
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
