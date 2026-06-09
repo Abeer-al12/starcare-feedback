@@ -46,7 +46,9 @@ users_collection = db["users"]
 #     "role": "it"
 # })
 # ---------------- BASE URL ----------------
-BASE_URL = "https://starcare-feedback-1.onrender.com/feedback/"
+BASE_URL = "https://starcare-feedback-1.onrender.com"
+
+qr_url = f"{BASE_URL}/feedback/{branch}/{room}"
 
 # ---------------- BRANCHES ----------------
 # branches = ["alhail", "mabella", "alamerat"]
