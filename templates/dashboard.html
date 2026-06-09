@@ -286,13 +286,13 @@
         <table>
 
             <tr>
-                <th>Location</th>
-                <th>Rating</th>
-                <th>Comment</th>
-                <th>Status</th>
-                <th>Date</th>
-                <th>Phone</th>
-                <th>Delete</th>
+                <th id="thLocation">Location</th>
+                <th id="thRating">Rating</th>
+                <th id="thComment">Comment</th>
+                <th id="thStatus">Status</th>
+                <th id="thDate">Date</th>
+                <th id="thPhone">Phone</th>
+                <th id="thDelete">Delete</th>
             </tr>
 
             {% for item in data %}
@@ -378,6 +378,28 @@
 
             document.getElementById("menuLogout").innerText =
                 (lang === "ar") ? "تسجيل الخروج" : "Logout";
+
+            document.getElementById("thLocation").innerText =
+                (lang === "ar") ? "الموقع" : "Location";
+
+            document.getElementById("thRating").innerText =
+                (lang === "ar") ? "التقييم" : "Rating";
+
+            document.getElementById("thComment").innerText =
+                (lang === "ar") ? "الملاحظة" : "Comment";
+
+            document.getElementById("thStatus").innerText =
+                (lang === "ar") ? "الحالة" : "Status";
+
+            document.getElementById("thDate").innerText =
+                (lang === "ar") ? "التاريخ" : "Date";
+
+            document.getElementById("thPhone").innerText =
+                (lang === "ar") ? "الهاتف" : "Phone";
+
+            document.getElementById("thDelete").innerText =
+                (lang === "ar") ? "حذف" : "Delete";
+
         }
 
         window.onload = function () {
