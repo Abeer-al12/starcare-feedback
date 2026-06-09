@@ -46,9 +46,7 @@ users_collection = db["users"]
 #     "role": "it"
 # })
 # ---------------- BASE URL ----------------
-BASE_URL = "https://starcare-feedback-1.onrender.com"
-
-qr_url = f"{BASE_URL}/feedback/{branch}/{room}"
+BASE_URL = "https://starcare-feedback-1.onrender.com/feedback/"
 
 # ---------------- BRANCHES ----------------
 # branches = ["alhail", "mabella", "alamerat"]
@@ -660,20 +658,13 @@ def generate_qr():
 @app.route('/qr_dashboard')
 def qr_dashboard():
 
-    if 'admin' not in session:
-        return redirect('/login')
-
-    branches = collection.distinct("branch")
-
     rooms_data = []
 
-    for branch in branches:
-
-        rooms = collection.distinct("location", {"branch": branch})
+    for branch, rooms in branch_rooms_map.items():
 
         for room in rooms:
 
-            qr_url = f"https://yourapp.onrender.com/feedback/{branch}/{room}"
+            qr_url = f"{BASE_URL}/feedback/{branch}/{room}"
 
             count = collection.count_documents({
                 "branch": branch,
@@ -683,6 +674,7 @@ def qr_dashboard():
             rooms_data.append({
                 "branch": branch,
                 "room": room,
+                "name": room_names.get(room, room),
                 "count": count,
                 "qr": qr_url
             })
