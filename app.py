@@ -658,14 +658,15 @@ def generate_qr():
 @app.route('/qr_dashboard')
 def qr_dashboard():
 
-    # 🔥 خذ كل الفروع من الداتا
+    if 'admin' not in session:
+        return redirect('/login')
+
     branches = collection.distinct("branch")
 
     rooms_data = []
 
     for branch in branches:
 
-        # 🔥 نجيب كل الغرف داخل الفرع
         rooms = collection.distinct("location", {"branch": branch})
 
         for room in rooms:
