@@ -168,14 +168,14 @@ def feedback(location):
         # ⭐ 4 و 5 → حفظ مباشر
         if rating >= 4:
 
-        collection.insert_one({
-            "location": location,
-            "branch": get_branch_from_location(location),  # 👈 مهم جداً
-            "rating": rating,
-            "comment": comment,
-            "phone": None,
-            "date": datetime.now()
-        })
+            collection.insert_one({
+                "location": location,
+                "branch": get_branch_from_location(location),  # 👈 مهم جداً
+                "rating": rating,
+                "comment": comment,
+                "phone": None,
+                "date": datetime.now()
+            })
 
             return {"need_phone": False}
 
