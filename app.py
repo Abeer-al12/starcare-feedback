@@ -220,8 +220,10 @@ def feedback(branch, room):
                 "date": datetime.now()
             })
 
-            return {"status": "success", "redirect": "/thankyou"}
-
+            return {
+                "status": "success",
+                "redirect": f"/thankyou/{branch}/{room}"
+            }
         # ⭐ 1-3 → نطلب رقم
         return {
             "status": "need_phone",
@@ -256,14 +258,15 @@ def save_low_rating():
     return {"success": True}
 
 
-@app.route('/thankyou/<location>')
-def thankyou(location):
+@app.route('/thankyou/<branch>/<room>')
+def thankyou(branch, room):
 
-    name = room_names.get(location, "Unknown Room")
+    name = room_names.get(room, room)
 
     return render_template(
         "thankyou.html",
-        location=location,
+        branch=branch,
+        room=room,
         room_name=name
     )
 # ---------------- LOGIN ----------------
@@ -664,6 +667,10 @@ def qr_dashboard():
 
         for room in rooms:
 
+            url = f"{BASE_URL}/feedback/{branch}/{room}"
+
+            print("QR:", url)  # 👈 للتأكد
+
             rooms_data.append({
                 "branch": branch,
                 "room": room,
@@ -674,7 +681,7 @@ def qr_dashboard():
                     "location": room
                 }),
 
-                "qr": f"{BASE_URL}/feedback/{branch}/{room}"
+                "qr": url
             })
 
     return render_template("qr_dashboard.html", rooms=rooms_data)

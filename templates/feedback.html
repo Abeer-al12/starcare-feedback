@@ -338,7 +338,7 @@
                     }
                     else if (data.status === "success") {
 
-                        window.location.href = "/thankyou/{{ room }}";
+                        window.location.href = data.redirect;
                     }
                 });
         });
