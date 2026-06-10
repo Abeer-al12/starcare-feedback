@@ -663,20 +663,21 @@ def qr_dashboard():
     for branch, rooms in branch_rooms_map.items():
 
         for room in rooms:
-            
+
             rooms_data.append({
                 "branch": branch,
                 "room": room,
                 "name": room_names.get(room, room),
+
                 "count": collection.count_documents({
                     "branch": branch,
                     "location": room
                 }),
+
                 "qr": f"{BASE_URL}/feedback/{branch}/{room}"
             })
 
     return render_template("qr_dashboard.html", rooms=rooms_data)
-
 # @app.route('/fix_branch')
 # def fix_branch():
 
