@@ -663,8 +663,6 @@ def qr_dashboard():
     for branch, rooms in branch_rooms_map.items():
 
         for room in rooms:
-
-            print(qr_url)
             
             rooms_data.append({
                 "branch": branch,
