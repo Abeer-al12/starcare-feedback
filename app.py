@@ -664,6 +664,8 @@ def qr_dashboard():
 
         for room in rooms:
 
+            print(qr_url)
+            
             rooms_data.append({
                 "branch": branch,
                 "room": room,
