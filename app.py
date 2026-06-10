@@ -658,25 +658,37 @@ def generate_qr():
 @app.route('/qr_dashboard')
 def qr_dashboard():
 
+    branches = collection.distinct("branch")
+
     rooms_data = []
 
-    for branch, rooms in branch_rooms_map.items():
+    for branch in branches:
+
+        rooms = collection.distinct("location", {"branch": branch})
 
         for room in rooms:
 
-            rooms_data.append({
+            qr_url = f"{BASE_URL}{branch}/{room}"
+
+            print(branch, room, qr_url)
+
+            count = collection.count_documents({
                 "branch": branch,
-                "room": room,
-                "name": room_names.get(room, room),
-                "count": collection.count_documents({
-                    "branch": branch,
-                    "location": room
-                }),
-                "qr": f"{BASE_URL}/feedback/{branch}/{room}"
+                "location": room
             })
 
-    return render_template("qr_dashboard.html", rooms=rooms_data)
+            rooms_data.append({
+                "branch": branch,
+                "name": room_names.get(room, room),
+                "room": room,
+                "count": count,
+                "qr": qr_url
+            })
 
+    return render_template(
+        "qr_dashboard.html",
+        rooms=rooms_data
+    )
 # @app.route('/fix_branch')
 # def fix_branch():
 
