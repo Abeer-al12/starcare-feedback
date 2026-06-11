@@ -205,6 +205,14 @@
         }
     </style>
     <!-- <meta http-equiv="refresh" content="10"> -->
+    <title>
+        {% if role == "admin" %}
+        لوحة تحكم المدير | Admin Dashboard
+        {% else %}
+        لوحة تحكم {{ role }} | {{ role|upper }} Dashboard
+        {% endif %}
+    </title>
+
 </head>
 
 <body>
@@ -234,8 +242,15 @@
             <button onclick="setLang('ar')">عربي</button>
         </div>
 
-        <h1>Dashboard</h1>
+        <h1 data-ar="{% if role == 'admin' %}لوحة تحكم المدير{% else %}لوحة تحكم {{ role }}{% endif %}"
+            data-en="{% if role == 'admin' %}Admin Dashboard{% else %}{{ role|upper }} Dashboard{% endif %}">
 
+            {% if role == 'admin' %}
+            Admin Dashboard
+            {% else %}
+            {{ role|upper }} Dashboard
+            {% endif %}
+        </h1>
 
 
         <!-- Cards -->
@@ -366,8 +381,12 @@
 
             document.body.dir = (lang === "ar") ? "rtl" : "ltr";
 
-            document.querySelector("h1").innerText =
-                (lang === "ar") ? "لوحة التحكم" : "Dashboard";
+            const dashboardTitle =
+                (lang === "ar")
+                    ? document.querySelector("h1").getAttribute("data-ar")
+                    : document.querySelector("h1").getAttribute("data-en");
+
+            document.querySelector("h1").innerText = dashboardTitle;
 
             document.querySelectorAll(".card h3")[0].innerText =
                 (lang === "ar") ? "إجمالي التقييمات" : "Total Feedback";
