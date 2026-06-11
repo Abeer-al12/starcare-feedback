@@ -375,7 +375,7 @@
                 .then(data => {
 
                     if (data.success) {
-                        window.location.href = "/thankyou/{{ room }}";
+                        window.location.href = `/thankyou/{{ branch }}/{{ room }}`;
                     } else {
 
                         if (currentLang == "ar") {
