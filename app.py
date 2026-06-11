@@ -513,6 +513,12 @@ def download_pdf():
     # 🔢 الحسابات
     total = len(data)
 
+    five_star = len([x for x in data if x["rating"] == 5])
+    four_star = len([x for x in data if x["rating"] == 4])
+    three_star = len([x for x in data if x["rating"] == 3])
+    two_star = len([x for x in data if x["rating"] == 2])
+    one_star = len([x for x in data if x["rating"] == 1])
+
     avg = round(
         sum(i["rating"] for i in data) / total,
         2
@@ -554,7 +560,29 @@ def download_pdf():
     elements.append(
         Paragraph(f"Overall Rating: {avg} ⭐", styles['Normal'])
     )
+
+    elements.append(
+        Paragraph(
+            f"⭐5:{five_star} | ⭐4:{four_star} | ⭐3:{three_star} | ⭐2:{two_star} | ⭐1:{one_star}",
+            styles['Normal']
+        )
+    )
     
+    elements.append(Spacer(1, 10))
+
+    if avg >= 4.5:
+        summary = "Overall patient satisfaction is excellent."
+    elif avg >= 4:
+        summary = "Overall patient satisfaction is good."
+    elif avg >= 3:
+        summary = "Patient satisfaction needs improvement."
+    else:
+        summary = "Immediate action is recommended."
+
+    elements.append(
+        Paragraph(f"<b>Executive Summary:</b> {summary}", styles['Normal'])
+    )
+
     if branch:
         elements.append(
             Paragraph(f"Branch: {branch.upper()}", styles['Heading2'])
@@ -635,16 +663,49 @@ def download_pdf():
 
     elements.append(details_table)
 
+    elements.append(Spacer(1, 20))
+    elements.append(
+        Paragraph("Low Rating Cases", styles['Heading2'])
+    )
+
+    low_rows = [["Location", "Rating", "Comment", "Phone"]]
+
+    for item in data:
+
+        if item["rating"] <= 3:
+
+            low_rows.append([
+                room_names.get(item["location"], item["location"]),
+                str(item["rating"]),
+                item.get("comment", ""),
+                item.get("phone", "-")
+            ])
+
+    if len(low_rows) > 1:
+
+        low_table = Table(low_rows)
+
+        low_table.setStyle(TableStyle([
+            ('BACKGROUND',(0,0),(-1,0),colors.red),
+            ('TEXTCOLOR',(0,0),(-1,0),colors.white),
+            ('GRID',(0,0),(-1,-1),1,colors.black)
+        ]))
+
+        elements.append(low_table)
+
+
     doc.build(elements)
 
     pdf = buffer.getvalue()
     buffer.close()
 
+    filename = f"starcare_{branch if branch else 'all_branches'}_report.pdf"
+
     return Response(
         pdf,
         mimetype='application/pdf',
         headers={
-            'Content-Disposition': 'attachment; filename=starcare_report.pdf'
+            'Content-Disposition': f'attachment; filename={filename}'
         }
     )
 # ---------------- ANALYTICS ----------------
