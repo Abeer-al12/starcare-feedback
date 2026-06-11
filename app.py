@@ -546,12 +546,14 @@ def download_pdf():
     styles = getSampleStyleSheet()
     elements = []
 
-    # logo = Image("static/logowhite.jpeg")
-    # logo.drawHeight = 60
-    # ogo.drawWidth = 180
+    logo_path = os.path.join(app.root_path, "static", "logowhite.jpeg")
 
-    # elements.append(logo)
-    # elements.append(Spacer(1, 15))
+    logo = Image(logo_path)
+    logo.drawHeight = 60
+    logo.drawWidth = 180
+
+    elements.append(logo)
+    elements.append(Spacer(1, 15))
 
     elements.append(
         Paragraph("StarCare Hospital Feedback Report", styles['Title'])
