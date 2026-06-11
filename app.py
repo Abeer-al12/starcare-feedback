@@ -549,7 +549,7 @@ def download_pdf():
     logo_path = os.path.join(app.root_path, "static", "logowhite.jpeg")
 
     logo = Image(logo_path)
-    logo.drawHeight = 60
+    logo.drawHeight = 100
     logo.drawWidth = 180
 
     elements.append(logo)
@@ -705,6 +705,37 @@ def download_pdf():
 
 
     doc.build(elements)
+
+    elements.append(Spacer(1, 20))
+    elements.append(
+        Paragraph("Management Recommendations", styles['Heading2'])
+    )
+
+    if avg >= 4.5:
+        recommendation = """
+        • Maintain current service quality.
+        • Continue monitoring patient satisfaction.
+        """
+    elif avg >= 4:
+        recommendation = """
+        • Improve patient communication.
+        • Monitor waiting times.
+        """
+    elif avg >= 3:
+        recommendation = """
+        • Review patient complaints.
+        • Improve waiting time and service delivery.
+        """
+    else:
+        recommendation = """
+        • Immediate management review required.
+        • Contact dissatisfied patients.
+        • Investigate recurring issues.
+        """
+
+    elements.append(
+        Paragraph(recommendation.replace("\n", "<br/>"), styles['BodyText'])
+    )
 
     pdf = buffer.getvalue()
     buffer.close()
