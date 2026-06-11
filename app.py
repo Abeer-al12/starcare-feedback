@@ -554,6 +554,15 @@ def download_pdf():
     elements.append(
         Paragraph(f"Overall Rating: {avg} ⭐", styles['Normal'])
     )
+    
+    if branch:
+        elements.append(
+            Paragraph(f"Branch: {branch.upper()}", styles['Heading2'])
+        )
+    else:
+        elements.append(
+            Paragraph("Branch: ALL BRANCHES", styles['Heading2'])
+        )
 
     elements.append(Spacer(1, 20))
 
@@ -588,6 +597,43 @@ def download_pdf():
     ]))
 
     elements.append(table)
+
+    elements.append(Spacer(1, 20))
+
+    elements.append(
+        Paragraph("Detailed Feedback", styles['Heading2'])
+    )
+
+    details = [[
+        "Date",
+        "Branch",
+        "Location",
+        "Rating",
+        "Comment",
+        "Phone"
+    ]]
+
+    for item in data:
+
+        details.append([
+            item["date"].strftime("%Y-%m-%d"),
+            item.get("branch", "-"),
+            room_names.get(item["location"], item["location"]),
+            str(item["rating"]),
+            item.get("comment", ""),
+            item.get("phone", "-")
+        ])
+
+    details_table = Table(details)
+
+    details_table.setStyle(TableStyle([
+        ('BACKGROUND',(0,0),(-1,0),colors.HexColor("#00A79B")),
+        ('TEXTCOLOR',(0,0),(-1,0),colors.white),
+        ('GRID',(0,0),(-1,-1),1,colors.black),
+        ('FONTSIZE',(0,0),(-1,-1),8)
+    ]))
+
+    elements.append(details_table)
 
     doc.build(elements)
 
