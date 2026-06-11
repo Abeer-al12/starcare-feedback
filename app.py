@@ -8,7 +8,8 @@ from reportlab.platypus import (
     Table,
     TableStyle,
     Paragraph,
-    Spacer
+    Spacer,
+    Image
 )
 from dotenv import load_dotenv
 
@@ -544,6 +545,13 @@ def download_pdf():
     doc = SimpleDocTemplate(buffer)
     styles = getSampleStyleSheet()
     elements = []
+
+    logo = Image("static/logowhite.jpeg")
+    logo.drawHeight = 60
+    ogo.drawWidth = 180
+
+    elements.append(logo)
+    elements.append(Spacer(1, 15))
 
     elements.append(
         Paragraph("StarCare Hospital Feedback Report", styles['Title'])
