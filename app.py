@@ -501,9 +501,20 @@ def download_pdf():
 
     query = {}
 
-    # 🌿 فلترة الفرع (هذا هو التعديل المهم)
     if branch:
         query["branch"] = branch
+
+    elif role != "admin":
+
+        user = db.users.find_one({
+            "username": session.get("username")
+        })
+
+        allowed_locations = user.get("locations", []) if user else []
+
+        query["location"] = {
+            "$in": allowed_locations
+        }
 
     # 📦 جلب البيانات
     data = list(collection.find(query))
