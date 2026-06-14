@@ -507,23 +507,30 @@ def download_pdf():
     location = request.args.get("location")
     role = session.get("role")
 
-    if branch and branch != "all":
-        query["branch"] = branch
+    filters = []
 
+# 🔹 branch filter
+    if branch and branch != "all":
+        filters.append({"branch": branch})
+
+# 🔹 role filter (IT)
     if role != "admin":
         user = db.users.find_one({"username": session.get("username")})
-
         allowed_locations = user.get("locations", [])
 
         if allowed_locations:
-            query["location"] = {"$in": allowed_locations}
+            filters.append({"location": {"$in": allowed_locations}})
 
+# 🔹 dropdown location
     if location:
-        if "location" in query and isinstance(query["location"], dict):
-            query["location"]["$in"] = [location]
-        else:
-            query["location"] = location
+        filters.append({"location": location})
 
+# 🔥 combine correctly
+    if filters:
+        query = {"$and": filters}
+    else:
+        query = {}
+        
     # 📦 جلب البيانات
     data = list(collection.find(query))
 
