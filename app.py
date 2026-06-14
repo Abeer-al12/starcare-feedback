@@ -519,7 +519,10 @@ def download_pdf():
             query["location"] = {"$in": allowed_locations}
 
     if location:
-        query["location"] = location
+        if "location" in query and isinstance(query["location"], dict):
+            query["location"]["$in"] = [location]
+        else:
+            query["location"] = location
 
     # 📦 جلب البيانات
     data = list(collection.find(query))
