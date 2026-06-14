@@ -506,24 +506,24 @@ def download_pdf():
 
     query = {}
 
-# 🔥 أهم تعديل
+# 🔥 إذا فيه فرع محدد (مو all)
     if branch and branch != "all":
         query["branch"] = branch
 
-# 🔐 صلاحيات IT وغيره
+# 🔥 إذا ما فيه branch (All Branches)
     elif role != "admin":
 
         user = db.users.find_one({
             "username": session.get("username")
         })
 
-        allowed_locations = user.get("locations", []) if user else []
+        allowed_locations = user.get("locations")
 
-        query["location"] = {"$in": allowed_locations}
-
-    elif branch:
-
-        query["branch"] = branch
+    # 🚨 مهم جدًا: إذا فاضي لا تطبق فلتر
+        if allowed_locations:
+            query["location"] = {"$in": allowed_locations}
+        else:
+            query = {}   # 👈 هذا هو الحل للمشكلة
 
     # 📦 جلب البيانات
     data = list(collection.find(query))
