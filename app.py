@@ -506,7 +506,12 @@ def download_pdf():
 
     query = {}
 
-    if role != "admin":
+# 🔥 أهم تعديل
+    if branch and branch != "all":
+        query["branch"] = branch
+
+# 🔐 صلاحيات IT وغيره
+    elif role != "admin":
 
         user = db.users.find_one({
             "username": session.get("username")
@@ -514,9 +519,7 @@ def download_pdf():
 
         allowed_locations = user.get("locations", []) if user else []
 
-        query["location"] = {
-            "$in": allowed_locations
-        }
+        query["location"] = {"$in": allowed_locations}
 
     elif branch:
 
