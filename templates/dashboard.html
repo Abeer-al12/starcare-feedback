@@ -267,8 +267,8 @@
             </div>
 
         </div>
-        <a href="/download_pdf?branch={{ active_branch }}" class="pdf-btn" id="pdfBtn">
-            ⬇ Download PDF Report
+        <a href="/download_pdf?branch={{ active_branch if active_branch else 'all' }}" class="pdf-btn">
+        ⬇ Download PDF Report
         </a>
 
         <!-- Filter -->

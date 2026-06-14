@@ -315,10 +315,15 @@ def admin():
     selected_location = request.args.get("location")
     active_branch = request.args.get("branch")
 
-    if active_branch:
+    if active_branch == "all":
+        session.pop("active_branch", None)
+        active_branch = None
+
+    elif active_branch:
         session["active_branch"] = active_branch
+
     else:
-        active_branch = session.get("active_branch")
+        active_branch = None
 
     user = db.users.find_one({"username": username})
     allowed_locations = user.get("locations", []) if user else []
