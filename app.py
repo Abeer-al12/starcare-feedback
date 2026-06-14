@@ -499,32 +499,33 @@ def download_pdf():
     if 'admin' not in session:
         return redirect('/login')
 
-    role = session.get("role")
+    @app.route('/download_pdf')
+def download_pdf():
 
-    # 🌿 هنا تحط الفرع
-    branch = request.args.get("branch") or session.get("active_branch")
+    if 'admin' not in session:
+        return redirect('/login')
 
+    # 👇 هنا تحطين الكود الجديد مباشرة
     query = {}
 
-# 🔥 إذا فيه فرع محدد (مو all)
+    branch = request.args.get("branch") or session.get("active_branch")
+    location = request.args.get("location")
+    role = session.get("role")
+
     if branch and branch != "all":
         query["branch"] = branch
 
-# 🔥 إذا ما فيه branch (All Branches)
-    elif role != "admin":
+    if role != "admin":
+        user = db.users.find_one({"username": session.get("username")})
 
-        user = db.users.find_one({
-            "username": session.get("username")
-        })
+        allowed_locations = user.get("locations", [])
 
-        allowed_locations = user.get("locations")
-
-    # 🚨 مهم جدًا: إذا فاضي لا تطبق فلتر
         if allowed_locations:
             query["location"] = {"$in": allowed_locations}
-        else:
-            query = {}   # 👈 هذا هو الحل للمشكلة
 
+    if location:
+        query["location"] = location
+        
     # 📦 جلب البيانات
     data = list(collection.find(query))
 
