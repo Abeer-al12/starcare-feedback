@@ -499,11 +499,6 @@ def download_pdf():
     if 'admin' not in session:
         return redirect('/login')
 
-    @app.route('/download_pdf')
-def download_pdf():
-
-    if 'admin' not in session:
-        return redirect('/login')
 
     # 👇 هنا تحطين الكود الجديد مباشرة
     query = {}
@@ -525,7 +520,7 @@ def download_pdf():
 
     if location:
         query["location"] = location
-        
+
     # 📦 جلب البيانات
     data = list(collection.find(query))
 
