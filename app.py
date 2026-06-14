@@ -497,7 +497,7 @@ def download_pdf():
     role = session.get("role")
 
     # 🌿 هنا تحط الفرع
-    branch = session.get("active_branch")
+    branch = request.args.get("branch") or session.get("active_branch")
 
     query = {}
 
