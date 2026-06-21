@@ -201,41 +201,39 @@ def feedback(branch, room):
 
     if request.method == 'POST':
 
-        data = request.get_json()
+    data = request.get_json()
 
+    rating = data.get('rating')
+    comment = data.get('comment')
 
-        rating = request.form.get('rating')
-        comment = request.form.get('comment')
+    if not rating:
+        return jsonify({"error": "missing rating"})
 
-        if not rating:
-            return {"error": "missing rating"}
+    rating = int(rating)
 
-        rating = int(rating)
+    if rating >= 4:
 
-        # ⭐ 4-5 → شكر مباشر
-        if rating >= 4:
-
-            collection.insert_one({
-                "branch": branch,
-                "location": room,
-                "rating": rating,
-                "comment": comment,
-                "phone": None,
-                "date": datetime.now()
-            })
-
-            return {
-                "status": "success",
-                "redirect": f"/thankyou/{branch}/{room}"
-            }
-        # ⭐ 1-3 → نطلب رقم
-        return {
-            "status": "need_phone",
+        collection.insert_one({
+            "branch": branch,
+            "location": room,
             "rating": rating,
             "comment": comment,
-            "branch": branch,
-            "room": room
-        }
+            "phone": None,
+            "date": datetime.now()
+        })
+
+        return jsonify({
+            "status": "success",
+            "redirect": f"/thankyou/{branch}/{room}"
+        })
+
+    return jsonify({
+        "status": "need_phone",
+        "rating": rating,
+        "comment": comment,
+        "branch": branch,
+        "room": room
+    })
 
     return render_template(
         "feedback.html",
