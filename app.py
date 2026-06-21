@@ -629,16 +629,16 @@ def download_pdf():
         )
     )
     
-elements.append(Spacer(1, 10))
+    elements.append(Spacer(1, 10))
 
-if avg >= 4.5:
-    summary = "Overall patient satisfaction is excellent."
-elif avg >= 4:
-    summary = "Overall patient satisfaction is good."
-elif avg >= 3:
-    summary = "Patient satisfaction needs improvement."
-else:
-    summary = "Immediate action is recommended."
+    if avg >= 4.5:
+        summary = "Overall patient satisfaction is excellent."
+    elif avg >= 4:
+        summary = "Overall patient satisfaction is good."
+    elif avg >= 3:
+        summary = "Patient satisfaction needs improvement."
+    else:
+        summary = "Immediate action is recommended."
         
     title = fix_arabic("Executive Summary")
     summary_text = fix_arabic(summary)
