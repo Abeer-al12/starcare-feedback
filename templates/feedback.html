@@ -167,9 +167,6 @@
 
         <form id="feedbackForm">
 
-            <select id="categorySelect" style="width:100%;padding:12px;margin-bottom:15px;border-radius:10px;">
-                <option value="general">General Experience</option>
-            </select>
 
             <div class="stars">
 
@@ -349,23 +346,23 @@
             let rating = parseInt(ratingEl.value);
             let comment = document.getElementById("commentBox").value;
 
-            // نخزن البيانات مؤقت
             tempRating = rating;
             tempComment = comment;
 
-            // ⭐ 1–3 (إجباري)
+            // ⭐ LOW rating (1-3) = إجباري popup
             if (rating <= 3) {
                 isLowRating = true;
+                document.getElementById("phonePopup").style.display = "flex";
             }
 
-            // ⭐ 4–5 (اختياري)
+            // ⭐ HIGH rating (4-5) = اختياري popup
             else {
                 isLowRating = false;
+                document.getElementById("phonePopup").style.display = "flex";
             }
-
-            // 👇 فتح popup بعد التحديد
-            document.getElementById("phonePopup").style.display = "flex";
         });
+
+
         // ---------------- SUBMIT LOW RATING ----------------
         function submitLowRating() {
 
@@ -406,48 +403,6 @@
                     }
                 });
         }
-
-
-        document.addEventListener("DOMContentLoaded", function () {
-
-            let branch = "{{ branch }}";
-            let select = document.getElementById("categorySelect");
-
-            if (!select) {
-                console.log("categorySelect not found");
-                return;
-            }
-
-            console.log("Branch is:", branch);
-
-            let options = `<option value="general">General Experience</option>`;
-
-            if (branch === "it") {
-                options = `
-            <option value="general">IT Overall</option>
-            <option value="support">IT Support</option>
-            <option value="systems">Systems Performance</option>
-            <option value="communication">Communication</option>
-        `;
-            }
-
-            else if (branch === "nurse") {
-                options = `
-            <option value="general">Nursing Service</option>
-            <option value="care">Patient Care</option>
-            <option value="response">Response Time</option>
-        `;
-            }
-
-            else if (branch === "doctor") {
-                options = `
-            <option value="general">Doctor Service</option>
-            <option value="consultation">Consultation</option>
-        `;
-            }
-
-            select.innerHTML = options;
-        });
         // ---------------- SKIP BUTTON ----------------
         function skipContact() {
 
