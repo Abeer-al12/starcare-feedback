@@ -23,7 +23,8 @@ from flask import jsonify
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.lib.styles import ParagraphStyle
-
+import arabic_reshaper
+from bidi.algorithm import get_display
 
 app = Flask(__name__)
 app.secret_key = "starcare_secret"
@@ -33,6 +34,11 @@ font_path = os.path.join(app.root_path, "static/fonts/NotoNaskhArabic-Regular.tt
 pdfmetrics.registerFont(
     TTFont('Arabic', font_path)
 )
+
+def fix_arabic(text):
+    if not text:
+        return text
+    return get_display(arabic_reshaper.reshape(str(text)))
 # ---------------- MONGO (Atlas) ----------------
 MONGO_URI = os.environ.get("MONGO_URI")
 
@@ -634,8 +640,13 @@ def download_pdf():
     else:
         summary = "Immediate action is recommended."
 
+        
+        
+    title = fix_arabic("Executive Summary")
+    summary_text = fix_arabic(summary)
+
     elements.append(
-        Paragraph(f"<b>Executive Summary:</b> {summary}", styles['Normal'])
+        Paragraph(f"<b>{title}:</b> {summary_text}", styles['Normal'])
     )
 
     if branch:
@@ -665,10 +676,10 @@ def download_pdf():
             status = "EXCELLENT"
 
         rows.append([
-            room_names.get(loc, loc),
+            fix_arabic(room_names.get(loc, loc)),
             str(v["count"]),
             str(avg_loc),
-            status
+            fix_arabic(status)
         ])
 
     table = Table(rows)
@@ -704,9 +715,9 @@ def download_pdf():
             item.get("branch", "-"),
             room_names.get(item["location"], item["location"]),
             str(item["rating"]),
-            item.get("comment", ""),
-            item.get("name", "-"),
-            item.get("phone", "-")
+            fix_arabic(item.get("comment", "")),
+            fix_arabic(item.get("name", "-")),
+            fix_arabic(item.get("phone", "-"))
         ])
 
     details_table = Table(details)
@@ -748,15 +759,21 @@ def download_pdf():
             ('GRID',(0,0),(-1,-1),1,colors.black)
         ]))
 
-        elements.append(low_table)
+elements.append(low_table)
 
 
-    doc.build(elements)
+    # doc.build(elements)
 
-    elements.append(Spacer(1, 20))
-    elements.append(
-        Paragraph("Management Recommendations", styles['Heading2'])
-    )
+elements.append(Spacer(1, 20))
+elements.append(
+    Paragraph("Management Recommendations", styles['Heading2'])
+)
+
+elements.append(
+    Paragraph(recommendation.replace("\n", "<br/>"), styles['BodyText'])
+)
+
+doc.build(elements)
 
     if avg >= 4.5:
         recommendation = """
