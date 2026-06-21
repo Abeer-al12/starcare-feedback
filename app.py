@@ -516,11 +516,7 @@ def download_pdf():
     if 'admin' not in session:
         return redirect('/login')
 
-    # =========================
-    # 🔹 Filters
-    # =========================
-    query = {}
-
+    # ================= FILTER =================
     branch = request.args.get("branch") or session.get("active_branch")
     location = request.args.get("location")
     role = session.get("role")
@@ -533,21 +529,17 @@ def download_pdf():
     if role != "admin":
         user = db.users.find_one({"username": session.get("username")})
         allowed_locations = user.get("locations", [])
-
         if allowed_locations:
             filters.append({"location": {"$in": allowed_locations}})
 
     if location:
         filters.append({"location": location})
 
-    if filters:
-        query = {"$and": filters}
+    query = {"$and": filters} if filters else {}
 
     data = list(collection.find(query))
 
-    # =========================
-    # 🔹 Stats
-    # =========================
+    # ================= STATS =================
     total = len(data)
 
     five_star = len([x for x in data if x["rating"] == 5])
@@ -569,22 +561,19 @@ def download_pdf():
         stats[loc]["count"] += 1
         stats[loc]["total"] += i["rating"]
 
-    # =========================
-    # 🔹 PDF Setup
-    # =========================
+    # ================= PDF SETUP =================
     buffer = BytesIO()
     doc = SimpleDocTemplate(buffer)
 
     styles = getSampleStyleSheet()
+
     styles['Normal'].fontName = 'Arabic'
     styles['Title'].fontName = 'Arabic'
     styles['Heading2'].fontName = 'Arabic'
 
     elements = []
 
-    # =========================
-    # 🔹 Logo + Header
-    # =========================
+    # ================= HEADER =================
     logo_path = os.path.join(app.root_path, "static", "logowhite.jpeg")
     logo = Image(logo_path)
     logo.drawHeight = 100
@@ -607,9 +596,7 @@ def download_pdf():
 
     elements.append(Spacer(1, 10))
 
-    # =========================
-    # 🔹 Summary
-    # =========================
+    # ================= SUMMARY =================
     if avg >= 4.5:
         summary = "Overall patient satisfaction is excellent."
     elif avg >= 4:
@@ -619,13 +606,14 @@ def download_pdf():
     else:
         summary = "Immediate action is recommended."
 
+    title = fix_arabic("Executive Summary")
+    summary_text = fix_arabic(summary)
+
     elements.append(
-        Paragraph(f"<b>Executive Summary:</b> {fix_arabic(summary)}", styles['Normal'])
+        Paragraph(f"<b>{title}:</b> {summary_text}", styles['Normal'])
     )
 
-    # =========================
-    # 🔹 Branch
-    # =========================
+    # ================= BRANCH =================
     if branch:
         elements.append(Paragraph(f"Branch: {branch.upper()}", styles['Heading2']))
     else:
@@ -633,13 +621,10 @@ def download_pdf():
 
     elements.append(Spacer(1, 20))
 
-    # =========================
-    # 🔹 Table
-    # =========================
+    # ================= TABLE 1 =================
     rows = [["Room", "Feedbacks", "Average", "Status"]]
 
     for loc, v in stats.items():
-
         avg_loc = round(v["total"] / v["count"], 2)
 
         if avg_loc <= 2:
@@ -661,18 +646,16 @@ def download_pdf():
     table = Table(rows)
 
     table.setStyle(TableStyle([
-        ('BACKGROUND', (0,0), (-1,0), colors.HexColor("#59e3ec")),
-        ('TEXTCOLOR', (0,0), (-1,0), colors.white),
-        ('GRID', (0,0), (-1,-1), 1, colors.black)
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#59e3ec")),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
     ]))
 
     elements.append(table)
 
     elements.append(Spacer(1, 20))
 
-    # =========================
-    # 🔹 Details
-    # =========================
+    # ================= DETAILS =================
     elements.append(Paragraph("Detailed Feedback", styles['Heading2']))
 
     details = [["Date", "Branch", "Location", "Rating", "Comment", "Name", "Phone"]]
@@ -691,19 +674,17 @@ def download_pdf():
     details_table = Table(details)
 
     details_table.setStyle(TableStyle([
-        ('BACKGROUND',(0,0),(-1,0),colors.HexColor("#00A79B")),
-        ('TEXTCOLOR',(0,0),(-1,0),colors.white),
-        ('GRID',(0,0),(-1,-1),1,colors.black),
-        ('FONTSIZE',(0,0),(-1,-1),8)
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#00A79B")),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+        ('FONTSIZE', (0, 0), (-1, -1), 8),
     ]))
 
     elements.append(details_table)
 
     elements.append(Spacer(1, 20))
 
-    # =========================
-    # 🔹 Low Ratings
-    # =========================
+    # ================= LOW RATING =================
     elements.append(Paragraph("Low Rating Cases", styles['Heading2']))
 
     low_rows = [["Location", "Rating", "Comment", "Phone"]]
@@ -713,60 +694,43 @@ def download_pdf():
             low_rows.append([
                 room_names.get(item["location"], item["location"]),
                 str(item["rating"]),
-                item.get("comment", ""),
-                item.get("phone", "-")
+                fix_arabic(item.get("comment", "")),
+                fix_arabic(item.get("phone", "-"))
             ])
 
     if len(low_rows) > 1:
         low_table = Table(low_rows)
-
         low_table.setStyle(TableStyle([
-            ('BACKGROUND',(0,0),(-1,0),colors.red),
-            ('TEXTCOLOR',(0,0),(-1,0),colors.white),
-            ('GRID',(0,0),(-1,-1),1,colors.black)
+            ('BACKGROUND', (0, 0), (-1, 0), colors.red),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+            ('GRID', (0, 0), (-1, -1), 1, colors.black),
         ]))
 
         elements.append(low_table)
 
     elements.append(Spacer(1, 20))
 
-    # =========================
-    # 🔹 Recommendations
-    # =========================
-    if avg >= 4.5:
-        recommendation = """
-        • Maintain current service quality.
-        • Continue monitoring patient satisfaction.
-        """
-    elif avg >= 4:
-        recommendation = """
-        • Improve patient communication.
-        • Monitor waiting times.
-        """
-    elif avg >= 3:
-        recommendation = """
-        • Review patient complaints.
-        • Improve service delivery.
-        """
-    else:
-        recommendation = """
-        • Immediate management review required.
-        • Contact dissatisfied patients.
-        • Investigate issues.
-        """
-
+    # ================= RECOMMENDATION =================
     elements.append(Paragraph("Management Recommendations", styles['Heading2']))
-    elements.append(Paragraph(recommendation.replace("\n", "<br/>"), styles['BodyText']))
 
-    # =========================
-    # 🔹 BUILD PDF (IMPORTANT ONCE ONLY)
-    # =========================
+    if avg >= 4.5:
+        recommendation = "• Maintain current service quality.<br/>• Continue monitoring."
+    elif avg >= 4:
+        recommendation = "• Improve communication.<br/>• Monitor waiting time."
+    elif avg >= 3:
+        recommendation = "• Review complaints.<br/>• Improve service."
+    else:
+        recommendation = "• Immediate action required.<br/>• Investigate issues."
+
+    elements.append(Paragraph(recommendation, styles['BodyText']))
+
+    # ================= BUILD PDF =================
     doc.build(elements)
 
     pdf = buffer.getvalue()
     buffer.close()
 
-    filename = f"starcare_{branch if branch else 'all_branches'}_report.pdf"
+    filename = f"starcare_{branch if branch else 'all'}_report.pdf"
 
     return Response(
         pdf,
