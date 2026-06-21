@@ -86,7 +86,7 @@ room_names = {
     "it":"IT Department",
     "admin":"Administration",
     "toilet":"Restroom",
-    "sample_collaction":"sample collection room"
+    "Sample_Collaction":"Sample Collection Room"
 }
 
 branch_rooms_map = {
