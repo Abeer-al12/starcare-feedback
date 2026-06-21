@@ -201,39 +201,39 @@ def feedback(branch, room):
 
     if request.method == 'POST':
 
-    data = request.get_json()
+        data = request.get_json()
 
-    rating = data.get('rating')
-    comment = data.get('comment')
+        rating = data.get('rating')
+        comment = data.get('comment')
 
-    if not rating:
-        return jsonify({"error": "missing rating"})
+        if not rating:
+            return jsonify({"error": "missing rating"})
 
-    rating = int(rating)
+        rating = int(rating)
 
-    if rating >= 4:
+        if rating >= 4:
 
-        collection.insert_one({
-            "branch": branch,
-            "location": room,
-            "rating": rating,
-            "comment": comment,
-            "phone": None,
-            "date": datetime.now()
-        })
+            collection.insert_one({
+                "branch": branch,
+                "location": room,
+                "rating": rating,
+                "comment": comment,
+                "phone": None,
+                "date": datetime.now()
+            })
+
+            return jsonify({
+                "status": "success",
+                "redirect": f"/thankyou/{branch}/{room}"
+            })
 
         return jsonify({
-            "status": "success",
-            "redirect": f"/thankyou/{branch}/{room}"
+            "status": "need_phone",
+            "rating": rating,
+            "comment": comment,
+            "branch": branch,
+            "room": room
         })
-
-    return jsonify({
-        "status": "need_phone",
-        "rating": rating,
-        "comment": comment,
-        "branch": branch,
-        "room": room
-    })
 
     return render_template(
         "feedback.html",
