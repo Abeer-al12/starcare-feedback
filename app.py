@@ -516,30 +516,45 @@ def download_pdf():
     if 'admin' not in session:
         return redirect('/login')
 
-    # ================= FILTER =================
+
+    # 👇 هنا تحطين الكود الجديد مباشرة
+    query = {}
+
     branch = request.args.get("branch") or session.get("active_branch")
     location = request.args.get("location")
     role = session.get("role")
 
     filters = []
 
+# 🔹 branch filter
     if branch and branch != "all":
         filters.append({"branch": branch})
 
+# 🔹 role filter (IT)
     if role != "admin":
         user = db.users.find_one({"username": session.get("username")})
         allowed_locations = user.get("locations", [])
+
         if allowed_locations:
             filters.append({"location": {"$in": allowed_locations}})
 
+# 🔹 dropdown location
     if location:
         filters.append({"location": location})
 
-    query = {"$and": filters} if filters else {}
-
+# 🔥 combine correctly
+    if filters:
+        query = {"$and": filters}
+    else:
+        query = {}
+        
+    # 📦 جلب البيانات
     data = list(collection.find(query))
 
-    # ================= STATS =================
+    # (حذفنا هذا الغلط القديم)
+    # data = list(collection.find()) ❌
+
+    # 🔢 الحسابات
     total = len(data)
 
     five_star = len([x for x in data if x["rating"] == 5])
@@ -548,33 +563,42 @@ def download_pdf():
     two_star = len([x for x in data if x["rating"] == 2])
     one_star = len([x for x in data if x["rating"] == 1])
 
-    avg = round(sum(i["rating"] for i in data) / total, 2) if total else 0
+    avg = round(
+        sum(i["rating"] for i in data) / total,
+        2
+    ) if total else 0
 
     stats = {}
 
     for i in data:
+
         loc = i["location"]
 
         if loc not in stats:
-            stats[loc] = {"count": 0, "total": 0}
+            stats[loc] = {
+                "count": 0,
+                "total": 0
+            }
 
         stats[loc]["count"] += 1
         stats[loc]["total"] += i["rating"]
 
-    # ================= PDF SETUP =================
+
+
+    # 📄 PDF generation
     buffer = BytesIO()
     doc = SimpleDocTemplate(buffer)
 
+    # pdfmetrics.registerFont(TTFont('Helvetica', 'Helvetica'))
+
     styles = getSampleStyleSheet()
-
-    styles['Normal'].fontName = 'Arabic'
-    styles['Title'].fontName = 'Arabic'
-    styles['Heading2'].fontName = 'Arabic'
-
+    # styles['Normal'].fontName = 'Arabic'
+    # styles['Title'].fontName = 'Arabic'
+    # styles['Heading2'].fontName = 'Arabic'
     elements = []
 
-    # ================= HEADER =================
     logo_path = os.path.join(app.root_path, "static", "logowhite.jpeg")
+
     logo = Image(logo_path)
     logo.drawHeight = 100
     logo.drawWidth = 180
@@ -582,10 +606,21 @@ def download_pdf():
     elements.append(logo)
     elements.append(Spacer(1, 15))
 
-    elements.append(Paragraph("StarCare Hospital Feedback Report", styles['Title']))
-    elements.append(Paragraph(f"Date: {datetime.now().strftime('%Y-%m-%d')}", styles['Normal']))
-    elements.append(Paragraph(f"Total Feedback: {total}", styles['Normal']))
-    elements.append(Paragraph(f"Overall Rating: {avg} ⭐", styles['Normal']))
+    elements.append(
+        Paragraph("StarCare Hospital Feedback Report", styles['Title'])
+    )
+
+    elements.append(
+        Paragraph(f"Date: {datetime.now().strftime('%Y-%m-%d')}", styles['Normal'])
+    )
+
+    elements.append(
+        Paragraph(f"Total Feedback: {total}", styles['Normal'])
+    )
+
+    elements.append(
+        Paragraph(f"Overall Rating: {avg} ⭐", styles['Normal'])
+    )
 
     elements.append(
         Paragraph(
@@ -593,10 +628,9 @@ def download_pdf():
             styles['Normal']
         )
     )
-
+    
     elements.append(Spacer(1, 10))
 
-    # ================= SUMMARY =================
     if avg >= 4.5:
         summary = "Overall patient satisfaction is excellent."
     elif avg >= 4:
@@ -606,25 +640,25 @@ def download_pdf():
     else:
         summary = "Immediate action is recommended."
 
-    title = fix_arabic("Executive Summary")
-    summary_text = fix_arabic(summary)
-
     elements.append(
-        Paragraph(f"<b>{title}:</b> {summary_text}", styles['Normal'])
+        Paragraph(f"<b>Executive Summary:</b> {summary}", styles['Normal'])
     )
 
-    # ================= BRANCH =================
     if branch:
-        elements.append(Paragraph(f"Branch: {branch.upper()}", styles['Heading2']))
+        elements.append(
+            Paragraph(f"Branch: {branch.upper()}", styles['Heading2'])
+        )
     else:
-        elements.append(Paragraph("Branch: ALL BRANCHES", styles['Heading2']))
+        elements.append(
+            Paragraph("Branch: ALL BRANCHES", styles['Heading2'])
+        )
 
     elements.append(Spacer(1, 20))
 
-    # ================= TABLE 1 =================
     rows = [["Room", "Feedbacks", "Average", "Status"]]
 
     for loc, v in stats.items():
+
         avg_loc = round(v["total"] / v["count"], 2)
 
         if avg_loc <= 2:
@@ -637,100 +671,129 @@ def download_pdf():
             status = "EXCELLENT"
 
         rows.append([
-            fix_arabic(room_names.get(loc, loc)),
+            room_names.get(loc, loc),
             str(v["count"]),
             str(avg_loc),
-            fix_arabic(status)
+            status
         ])
 
     table = Table(rows)
 
     table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#59e3ec")),
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
-        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+        ('BACKGROUND', (0,0), (-1,0), colors.HexColor("#59e3ec")),
+        ('TEXTCOLOR', (0,0), (-1,0), colors.white),
+        ('GRID', (0,0), (-1,-1), 1, colors.black)
     ]))
 
     elements.append(table)
 
     elements.append(Spacer(1, 20))
 
-    # ================= DETAILS =================
-    elements.append(Paragraph("Detailed Feedback", styles['Heading2']))
+    elements.append(
+        Paragraph("Detailed Feedback", styles['Heading2'])
+    )
 
-    details = [["Date", "Branch", "Location", "Rating", "Comment", "Name", "Phone"]]
+    details = [[
+        "Date",
+        "Branch",
+        "Location",
+        "Rating",
+        "Comment",
+        "Name",
+        "Phone"
+    ]]
 
     for item in data:
+
         details.append([
             item["date"].strftime("%Y-%m-%d"),
             item.get("branch", "-"),
             room_names.get(item["location"], item["location"]),
             str(item["rating"]),
-            fix_arabic(item.get("comment", "")),
-            fix_arabic(item.get("name", "-")),
-            fix_arabic(item.get("phone", "-"))
+            item.get("comment", ""),
+            item.get("name", "-"),
+            item.get("phone", "-")
         ])
 
     details_table = Table(details)
 
     details_table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#00A79B")),
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
-        ('GRID', (0, 0), (-1, -1), 1, colors.black),
-        ('FONTSIZE', (0, 0), (-1, -1), 8),
+        ('BACKGROUND',(0,0),(-1,0),colors.HexColor("#00A79B")),
+        ('TEXTCOLOR',(0,0),(-1,0),colors.white),
+        ('GRID',(0,0),(-1,-1),1,colors.black),
+        ('FONTSIZE',(0,0),(-1,-1),8)
     ]))
 
     elements.append(details_table)
 
     elements.append(Spacer(1, 20))
-
-    # ================= LOW RATING =================
-    elements.append(Paragraph("Low Rating Cases", styles['Heading2']))
+    elements.append(
+        Paragraph("Low Rating Cases", styles['Heading2'])
+    )
 
     low_rows = [["Location", "Rating", "Comment", "Phone"]]
 
     for item in data:
+
         if item["rating"] <= 3:
+
             low_rows.append([
                 room_names.get(item["location"], item["location"]),
                 str(item["rating"]),
-                fix_arabic(item.get("comment", "")),
-                fix_arabic(item.get("phone", "-"))
+                item.get("comment", ""),
+                item.get("phone", "-")
             ])
 
     if len(low_rows) > 1:
+
         low_table = Table(low_rows)
+
         low_table.setStyle(TableStyle([
-            ('BACKGROUND', (0, 0), (-1, 0), colors.red),
-            ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
-            ('GRID', (0, 0), (-1, -1), 1, colors.black),
+            ('BACKGROUND',(0,0),(-1,0),colors.red),
+            ('TEXTCOLOR',(0,0),(-1,0),colors.white),
+            ('GRID',(0,0),(-1,-1),1,colors.black)
         ]))
 
         elements.append(low_table)
 
-    elements.append(Spacer(1, 20))
 
-    # ================= RECOMMENDATION =================
-    elements.append(Paragraph("Management Recommendations", styles['Heading2']))
+    doc.build(elements)
+
+    elements.append(Spacer(1, 20))
+    elements.append(
+        Paragraph("Management Recommendations", styles['Heading2'])
+    )
 
     if avg >= 4.5:
-        recommendation = "• Maintain current service quality.<br/>• Continue monitoring."
+        recommendation = """
+        • Maintain current service quality.
+        • Continue monitoring patient satisfaction.
+        """
     elif avg >= 4:
-        recommendation = "• Improve communication.<br/>• Monitor waiting time."
+        recommendation = """
+        • Improve patient communication.
+        • Monitor waiting times.
+        """
     elif avg >= 3:
-        recommendation = "• Review complaints.<br/>• Improve service."
+        recommendation = """
+        • Review patient complaints.
+        • Improve waiting time and service delivery.
+        """
     else:
-        recommendation = "• Immediate action required.<br/>• Investigate issues."
+        recommendation = """
+        • Immediate management review required.
+        • Contact dissatisfied patients.
+        • Investigate recurring issues.
+        """
 
-    elements.append(Paragraph(recommendation, styles['BodyText']))
-
-    # ================= BUILD PDF =================
-    doc.build(elements)
+    elements.append(
+        Paragraph(recommendation.replace("\n", "<br/>"), styles['BodyText'])
+    )
 
     pdf = buffer.getvalue()
     buffer.close()
 
-    filename = f"starcare_{branch if branch else 'all'}_report.pdf"
+    filename = f"starcare_{branch if branch else 'all_branches'}_report.pdf"
 
     return Response(
         pdf,
