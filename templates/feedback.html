@@ -206,51 +206,56 @@
     </div>
 
     <script>
+
+        const i18n = {
+            en: {
+                skip: "Skip",
+                nameRequired: "Name is required",
+                phoneRequired: "Phone number must be 8 digits",
+                contactTitle: "Contact Information",
+                contactText: "We are sorry your experience was not satisfactory. Please enter your phone number so we can contact you.",
+                submit: "Submit"
+            },
+            ar: {
+                skip: "تخطي",
+                nameRequired: "الاسم مطلوب",
+                phoneRequired: "يجب أن يتكون رقم الهاتف من 8 أرقام",
+                contactTitle: "معلومات التواصل",
+                contactText: "نعتذر أن تجربتك لم تكن بالمستوى المطلوب، يرجى إدخال رقم الهاتف للتواصل معك.",
+                submit: "إرسال"
+            }
+        };
+
         let currentLang = "en";
         function setLang(lang) {
 
             currentLang = lang;
 
-            let popupTitle = document.getElementById("popupTitle");
-            let popupText = document.getElementById("popupText");
-            let popupPhone = document.getElementById("popupPhone");
-            let popupBtn = document.getElementById("popupBtn");
+            document.documentElement.dir = (lang === "ar") ? "rtl" : "ltr";
 
-            if (lang == "ar") {
+            document.getElementById("titleText").innerHTML =
+                lang === "ar" ? "قيّم خدمتنا" : "Rate our Service";
 
-                document.documentElement.dir = "rtl";
+            document.getElementById("starText").innerHTML =
+                lang === "ar" ? "اضغط على النجوم للتقييم" : "Tap a star to rate";
 
-                document.getElementById("titleText").innerHTML = "قيّم خدمتنا";
-                document.getElementById("starText").innerHTML = "اضغط على النجوم للتقييم";
-                document.getElementById("commentBox").placeholder = "اكتب ملاحظاتك...";
-                document.getElementById("btnText").innerHTML = "إرسال التقييم";
+            document.getElementById("commentBox").placeholder =
+                lang === "ar" ? "اكتب ملاحظاتك..." : "Share your thoughts...";
 
-                if (popupTitle) {
-                    popupTitle.innerHTML = "نود التواصل معك";
-                    popupText.innerHTML = "نعتذر أن تجربتك لم تكن بالمستوى المطلوب، يرجى إدخال رقم الهاتف للتواصل معك.";
-                    popupPhone.placeholder = "رقم الهاتف";
-                    popupBtn.innerHTML = "إرسال";
-                }
+            document.getElementById("btnText").innerHTML =
+                lang === "ar" ? "إرسال التقييم" : "Submit Feedback";
 
-            } else {
+            // ⭐ هنا تحطه
+            const skipBtn = document.getElementById("skipBtn");
+            if (skipBtn) skipBtn.innerText = i18n[lang].skip;
 
-                document.documentElement.dir = "ltr";
-
-                document.getElementById("titleText").innerHTML = "Rate our Service";
-                document.getElementById("starText").innerHTML = "Tap a star to rate";
-                document.getElementById("commentBox").placeholder = "Share your thoughts...";
-                document.getElementById("btnText").innerHTML = "Submit Feedback";
-
-                if (popupTitle) {
-                    popupTitle.innerHTML = "Contact Information";
-                    popupText.innerHTML = "We are sorry your experience was not satisfactory. Please enter your phone number so we can contact you.";
-                    popupPhone.placeholder = "Phone Number";
-                    popupBtn.innerHTML = "Submit";
-                }
+            // popup
+            if (popupTitle) {
+                popupTitle.innerHTML = i18n[lang].contactTitle;
+                popupText.innerHTML = i18n[lang].contactText;
+                popupBtn.innerHTML = i18n[lang].submit;
             }
         }
-
-
 
     </script>
     <div id="phonePopup" style="display:none;
