@@ -28,7 +28,11 @@ from reportlab.lib.styles import ParagraphStyle
 app = Flask(__name__)
 app.secret_key = "starcare_secret"
 
-pdfmetrics.registerFont(TTFont('Arabic', 'static/fonts/NotoNaskhArabic-Regular.ttf'))
+font_path = os.path.join(app.root_path, "static/fonts/NotoNaskhArabic-Regular.ttf")
+
+pdfmetrics.registerFont(
+    TTFont('Arabic', font_path)
+)
 # ---------------- MONGO (Atlas) ----------------
 MONGO_URI = os.environ.get("MONGO_URI")
 
