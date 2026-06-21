@@ -331,22 +331,22 @@
         let tempRating = 0;
         let tempComment = "";
 
+        // ---------------- FORM SUBMIT ----------------
         document.getElementById("feedbackForm").addEventListener("submit", function (e) {
             e.preventDefault();
 
             let ratingEl = document.querySelector('input[name="rating"]:checked');
+            if (!ratingEl) return alert("Select rating");
+
             let rating = parseInt(ratingEl.value);
             let comment = document.getElementById("commentBox").value;
 
             fetch(window.location.pathname, {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/x-www-form-urlencoded"
                 },
-                body: JSON.stringify({
-                    rating: rating,
-                    comment: comment
-                })
+                body: `rating=${rating}&comment=${comment}`
             })
                 .then(res => res.json())
                 .then(data => {
@@ -361,35 +361,23 @@
                             document.getElementById("phonePopup").style.display = "flex";
 
                         } else {
+
                             window.location.href = data.redirect;
                         }
                     }
-                });
+                })
+                .catch(err => console.log(err));
         });
 
 
-        // ⭐⭐⭐ هذي لازم تكون هنا (برا أي function ثانية)
+        // ---------------- SUBMIT LOW RATING ----------------
         function submitLowRating() {
-
-            let isLowRating = tempRating <= 3;
 
             let name = document.getElementById("popupName").value.trim();
             let phone = document.getElementById("popupPhone").value.trim();
 
-            if (isLowRating) {
-
-                if (!name || name.length < 2) {
-                    alert(currentLang == "ar" ? "الاسم مطلوب" : "Name is required");
-                    return;
-                }
-
-                if (phone.length !== 8 || isNaN(phone)) {
-                    alert(currentLang == "ar"
-                        ? "يجب أن يتكون رقم الهاتف من 8 أرقام"
-                        : "Phone number must be 8 digits");
-                    return;
-                }
-            }
+            // name optional (حسب طلبك)
+            // phone optional OR validate if entered
 
             fetch("/save_low_rating", {
                 method: "POST",
@@ -400,8 +388,8 @@
                     location: "{{ room }}",
                     rating: tempRating,
                     comment: tempComment,
-                    name: name,
-                    phone: phone
+                    name: name || null,
+                    phone: phone || null
                 })
             })
                 .then(res => res.json())
@@ -410,12 +398,38 @@
                     if (data.success) {
                         window.location.href = `/thankyou/{{ branch }}/{{ room }}`;
                     } else {
-                        alert(currentLang == "ar"
-                            ? "حدث خطأ أثناء الحفظ"
-                            : "Error while saving feedback");
+                        alert("Error saving");
                     }
-                });
+                })
+                .catch(err => console.log(err));
         }
+
+
+        // ---------------- SKIP BUTTON ----------------
+        function skipContact() {
+
+            fetch("/save_low_rating", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    location: "{{ room }}",
+                    rating: tempRating,
+                    comment: tempComment,
+                    name: null,
+                    phone: null
+                })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.href = `/thankyou/{{ branch }}/{{ room }}`;
+                    }
+                })
+                .catch(err => console.log(err));
+        }
+
     </script>
 
 </body>

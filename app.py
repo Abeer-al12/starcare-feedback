@@ -202,8 +202,6 @@ def feedback(branch, room):
 
     if request.method == 'POST':
 
-        data = request.get_json()
-
         rating = request.form.get('rating')
         comment = request.form.get('comment')
 
@@ -220,6 +218,7 @@ def feedback(branch, room):
                 "rating": rating,
                 "comment": comment,
                 "phone": None,
+                "name": None,
                 "date": datetime.now()
             })
 
@@ -228,12 +227,11 @@ def feedback(branch, room):
                 "redirect": f"/thankyou/{branch}/{room}"
             })
 
+        # ⭐ low rating
         return jsonify({
             "status": "need_phone",
             "rating": rating,
-            "comment": comment,
-            "branch": branch,
-            "room": room
+            "comment": comment
         })
 
     return render_template(
@@ -247,18 +245,19 @@ def feedback(branch, room):
 @app.route('/save_low_rating', methods=['POST'])
 def save_low_rating():
 
-    data = request.json
+    data = request.get_json()
 
     collection.insert_one({
         "location": data["location"],
-        "branch": get_branch_from_location(data["location"]),  # 👈 مهم
+        "branch": get_branch_from_location(data["location"]),
         "rating": int(data["rating"]),
         "comment": data["comment"],
-        "phone": data["phone"],
+        "name": data.get("name"),
+        "phone": data.get("phone"),
         "date": datetime.now()
     })
 
-    return {"success": True}
+    return jsonify({"success": True})
 
 
 @app.route('/thankyou/<branch>/<room>')
