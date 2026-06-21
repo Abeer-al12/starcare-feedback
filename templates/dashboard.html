@@ -268,7 +268,7 @@
 
         </div>
         <a href="/download_pdf?branch={{ active_branch if active_branch else 'all' }}" class="pdf-btn">
-        ⬇ Download PDF Report
+            ⬇ Download PDF Report
         </a>
 
         <!-- Filter -->
@@ -356,11 +356,12 @@
                 </td>
 
                 <td>{{ item.name or "-" }}</td>
-                
+
                 <td>
                     {{ item.phone if item.phone else "-" }}
                 </td>
                 <td>
+                    {% if role == "admin" %}
                     <a href="/delete_feedback/{{ item._id }}" onclick="return confirm('Delete this feedback?')" style="
        background:#e74c3c;
        color:white;
@@ -369,6 +370,7 @@
        text-decoration:none;">
                         Delete
                     </a>
+                    {% endif %}
                 </td>
             </tr>
             {% endfor %}
