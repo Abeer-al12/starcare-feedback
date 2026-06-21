@@ -19,6 +19,7 @@ from reportlab.lib.styles import getSampleStyleSheet
 from io import BytesIO
 from flask import Response
 from bson import ObjectId
+from flask import jsonify
 
 app = Flask(__name__)
 app.secret_key = "starcare_secret"
@@ -201,8 +202,10 @@ def feedback(branch, room):
 
     if request.method == 'POST':
 
-        rating = data.get('rating')
-        comment = data.get('comment')
+        data = request.get_json()
+
+        rating = request.form.get('rating')
+        comment = request.form.get('comment')
 
         if not rating:
             return jsonify({"error": "missing rating"})

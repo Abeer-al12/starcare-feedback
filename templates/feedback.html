@@ -341,9 +341,12 @@
             fetch(window.location.pathname, {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/x-www-form-urlencoded"
+                    "Content-Type": "application/json"
                 },
-                body: `rating=${rating}&comment=${comment}`
+                body: JSON.stringify({
+                    rating: rating,
+                    comment: comment
+                })
             })
                 .then(res => res.json())
                 .then(data => {
