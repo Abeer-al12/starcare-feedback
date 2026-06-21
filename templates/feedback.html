@@ -201,6 +201,7 @@
                 </span>
             </button>
 
+            <button id="skipBtn" onclick="skipContact()">Skip</button>
         </form>
 
     </div>
@@ -341,29 +342,20 @@
             let rating = parseInt(ratingEl.value);
             let comment = document.getElementById("commentBox").value;
 
-            fetch(window.location.pathname, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    rating: rating,
-                    comment: comment
-                })
-            })
-                .then(res => res.json())
-                .then(data => {
+            tempRating = rating;
+            tempComment = comment;
 
-                    tempRating = rating;
-                    tempComment = comment;
+            // ⭐ LOW rating (1-3) = إجباري popup
+            if (rating <= 3) {
+                isLowRating = true;
+                document.getElementById("phonePopup").style.display = "flex";
+            }
 
-                    if (rating <= 3) {
-                        isLowRating = true;
-                        document.getElementById("phonePopup").style.display = "flex";
-                    } else {
-                        window.location.href = data.redirect;
-                    }
-                });
+            // ⭐ HIGH rating (4-5) = اختياري popup
+            else {
+                isLowRating = false;
+                document.getElementById("phonePopup").style.display = "flex";
+            }
         });
 
 
@@ -372,6 +364,20 @@
 
             let name = document.getElementById("popupName").value.trim();
             let phone = document.getElementById("popupPhone").value.trim();
+
+            // ⭐ 1-3 إجباري
+            if (isLowRating) {
+
+                if (!name || name.length < 2) {
+                    alert("Name required");
+                    return;
+                }
+
+                if (phone.length !== 8 || isNaN(phone)) {
+                    alert("Phone must be 8 digits");
+                    return;
+                }
+            }
 
             fetch("/save_low_rating", {
                 method: "POST",
@@ -396,6 +402,12 @@
         // ---------------- SKIP BUTTON ----------------
         function skipContact() {
 
+            // ❌ ممنوع skip إذا 1–3
+            if (isLowRating) {
+                alert("الاسم والرقم إجباري");
+                return;
+            }
+
             fetch("/save_low_rating", {
                 method: "POST",
                 headers: {
@@ -416,7 +428,6 @@
                     }
                 });
         }
-
     </script>
 
 </body>

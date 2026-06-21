@@ -204,8 +204,8 @@ def feedback(branch, room):
 
         data = request.get_json()   # ✅ هذا ناقص عندك
 
-        rating = request.form.get('rating')
-        comment = request.form.get('comment')
+        rating = request.get('rating')
+        comment = request.get('comment')
 
         if not rating:
             return jsonify({"error": "missing rating"})
