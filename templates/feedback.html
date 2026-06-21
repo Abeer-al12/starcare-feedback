@@ -167,6 +167,9 @@
 
         <form id="feedbackForm">
 
+            <select id="categorySelect" style="width:100%;padding:12px;margin-bottom:15px;border-radius:10px;">
+                <option value="general">General Experience</option>
+            </select>
 
             <div class="stars">
 
@@ -346,23 +349,23 @@
             let rating = parseInt(ratingEl.value);
             let comment = document.getElementById("commentBox").value;
 
+            // نخزن البيانات مؤقت
             tempRating = rating;
             tempComment = comment;
 
-            // ⭐ LOW rating (1-3) = إجباري popup
+            // ⭐ 1–3 (إجباري)
             if (rating <= 3) {
                 isLowRating = true;
-                document.getElementById("phonePopup").style.display = "flex";
             }
 
-            // ⭐ HIGH rating (4-5) = اختياري popup
+            // ⭐ 4–5 (اختياري)
             else {
                 isLowRating = false;
-                document.getElementById("phonePopup").style.display = "flex";
             }
+
+            // 👇 فتح popup بعد التحديد
+            document.getElementById("phonePopup").style.display = "flex";
         });
-
-
         // ---------------- SUBMIT LOW RATING ----------------
         function submitLowRating() {
 
@@ -403,6 +406,32 @@
                     }
                 });
         }
+
+
+        window.onload = function () {
+
+            let branch = "{{ branch }}";
+            let select = document.getElementById("categorySelect");
+
+            if (branch === "it") {
+
+                select.innerHTML = `
+            <option value="general">IT Department Overall</option>
+            <option value="support">IT Support</option>
+            <option value="systems">Systems Performance</option>
+            <option value="communication">Communication</option>
+        `;
+            }
+
+            if (branch === "nurse") {
+
+                select.innerHTML = `
+            <option value="general">Nursing Service</option>
+            <option value="care">Patient Care</option>
+            <option value="response">Response Time</option>
+        `;
+            }
+        };
         // ---------------- SKIP BUTTON ----------------
         function skipContact() {
 
