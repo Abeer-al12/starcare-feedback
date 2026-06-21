@@ -351,41 +351,21 @@
 
                     if (data.status === "success") {
 
-                        window.location.href = data.redirect;
-                        return;
-                    }
+                        if (rating <= 3) {
 
-                    if (rating <= 3) {
+                            tempRating = rating;
+                            tempComment = comment;
 
-                        tempRating = rating;
-                        tempComment = comment;
+                            document.getElementById("phonePopup").style.display = "flex";
+                            isLowRating = true;
 
-                        document.getElementById("popupTitle").innerText =
-                            "Contact Information";
+                        } else {
 
-                        document.getElementById("popupText").innerText =
-                            "Please enter your name and phone number so we can contact you.";
-
-                        document.getElementById("phonePopup").style.display = "flex";
-
-                        isLowRating = true;
-
-                    } else {
-
-                        tempRating = rating;
-                        tempComment = comment;
-
-                        document.getElementById("popupTitle").innerText =
-                            "Contact Information (Optional)";
-
-                        document.getElementById("popupText").innerText =
-                            "You may leave your name and phone number, or skip this step.";
-
-                        document.getElementById("phonePopup").style.display = "flex";
-
-                        isLowRating = false;
+                            window.location.href = data.redirect;
+                        }
                     }
                 });
+
             function submitLowRating() {
 
                 let isLowRating = tempRating <= 3;
