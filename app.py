@@ -20,14 +20,15 @@ from io import BytesIO
 from flask import Response
 from bson import ObjectId
 from flask import jsonify
-# from reportlab.pdfbase import pdfmetrics
-# from reportlab.pdfbase.ttfonts import TTFont
-# from reportlab.lib.styles import ParagraphStyle
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.lib.styles import ParagraphStyle
+
 
 app = Flask(__name__)
 app.secret_key = "starcare_secret"
 
-
+pdfmetrics.registerFont(TTFont('Arabic', 'static/fonts/NotoNaskhArabic-Regular.ttf'))
 # ---------------- MONGO (Atlas) ----------------
 MONGO_URI = os.environ.get("MONGO_URI")
 
@@ -581,9 +582,9 @@ def download_pdf():
     # pdfmetrics.registerFont(TTFont('Helvetica', 'Helvetica'))
 
     styles = getSampleStyleSheet()
-    # styles['Normal'].fontName = 'Arabic'
-    # styles['Title'].fontName = 'Arabic'
-    # styles['Heading2'].fontName = 'Arabic'
+    styles['Normal'].fontName = 'Arabic'
+    styles['Title'].fontName = 'Arabic'
+    styles['Heading2'].fontName = 'Arabic'
     elements = []
 
     logo_path = os.path.join(app.root_path, "static", "logowhite.jpeg")
