@@ -408,30 +408,46 @@
         }
 
 
-        window.onload = function () {
+        document.addEventListener("DOMContentLoaded", function () {
 
             let branch = "{{ branch }}";
             let select = document.getElementById("categorySelect");
 
-            if (branch === "it") {
+            if (!select) {
+                console.log("categorySelect not found");
+                return;
+            }
 
-                select.innerHTML = `
-            <option value="general">IT Department Overall</option>
+            console.log("Branch is:", branch);
+
+            let options = `<option value="general">General Experience</option>`;
+
+            if (branch === "it") {
+                options = `
+            <option value="general">IT Overall</option>
             <option value="support">IT Support</option>
             <option value="systems">Systems Performance</option>
             <option value="communication">Communication</option>
         `;
             }
 
-            if (branch === "nurse") {
-
-                select.innerHTML = `
+            else if (branch === "nurse") {
+                options = `
             <option value="general">Nursing Service</option>
             <option value="care">Patient Care</option>
             <option value="response">Response Time</option>
         `;
             }
-        };
+
+            else if (branch === "doctor") {
+                options = `
+            <option value="general">Doctor Service</option>
+            <option value="consultation">Consultation</option>
+        `;
+            }
+
+            select.innerHTML = options;
+        });
         // ---------------- SKIP BUTTON ----------------
         function skipContact() {
 
