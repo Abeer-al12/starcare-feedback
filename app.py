@@ -202,6 +202,8 @@ def feedback(branch, room):
 
     if request.method == 'POST':
 
+        data = request.get_json()   # ✅ هذا ناقص عندك
+
         rating = request.form.get('rating')
         comment = request.form.get('comment')
 

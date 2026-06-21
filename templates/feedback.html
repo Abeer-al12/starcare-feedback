@@ -330,13 +330,13 @@
 
         let tempRating = 0;
         let tempComment = "";
+        let isLowRating = false;
 
-        // ---------------- FORM SUBMIT ----------------
         document.getElementById("feedbackForm").addEventListener("submit", function (e) {
             e.preventDefault();
 
             let ratingEl = document.querySelector('input[name="rating"]:checked');
-            if (!ratingEl) return alert("Select rating");
+            if (!ratingEl) return alert("اختر تقييم");
 
             let rating = parseInt(ratingEl.value);
             let comment = document.getElementById("commentBox").value;
@@ -344,29 +344,26 @@
             fetch(window.location.pathname, {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/x-www-form-urlencoded"
+                    "Content-Type": "application/json"
                 },
-                body: `rating=${rating}&comment=${comment}`
+                body: JSON.stringify({
+                    rating: rating,
+                    comment: comment
+                })
             })
                 .then(res => res.json())
                 .then(data => {
 
-                    if (data.status === "success") {
+                    tempRating = rating;
+                    tempComment = comment;
 
-                        if (rating <= 3) {
-
-                            tempRating = rating;
-                            tempComment = comment;
-
-                            document.getElementById("phonePopup").style.display = "flex";
-
-                        } else {
-
-                            window.location.href = data.redirect;
-                        }
+                    if (rating <= 3) {
+                        isLowRating = true;
+                        document.getElementById("phonePopup").style.display = "flex";
+                    } else {
+                        window.location.href = data.redirect;
                     }
-                })
-                .catch(err => console.log(err));
+                });
         });
 
 
@@ -375,9 +372,6 @@
 
             let name = document.getElementById("popupName").value.trim();
             let phone = document.getElementById("popupPhone").value.trim();
-
-            // name optional (حسب طلبك)
-            // phone optional OR validate if entered
 
             fetch("/save_low_rating", {
                 method: "POST",
@@ -394,17 +388,11 @@
             })
                 .then(res => res.json())
                 .then(data => {
-
                     if (data.success) {
                         window.location.href = `/thankyou/{{ branch }}/{{ room }}`;
-                    } else {
-                        alert("Error saving");
                     }
-                })
-                .catch(err => console.log(err));
+                });
         }
-
-
         // ---------------- SKIP BUTTON ----------------
         function skipContact() {
 
@@ -426,8 +414,7 @@
                     if (data.success) {
                         window.location.href = `/thankyou/{{ branch }}/{{ room }}`;
                     }
-                })
-                .catch(err => console.log(err));
+                });
         }
 
     </script>
