@@ -20,25 +20,25 @@ from io import BytesIO
 from flask import Response
 from bson import ObjectId
 from flask import jsonify
-from reportlab.pdfbase import pdfmetrics
-from reportlab.pdfbase.ttfonts import TTFont
-from reportlab.lib.styles import ParagraphStyle
-import arabic_reshaper
-from bidi.algorithm import get_display
+# from reportlab.pdfbase import pdfmetrics
+# from reportlab.pdfbase.ttfonts import TTFont
+# from reportlab.lib.styles import ParagraphStyle
+# import arabic_reshaper
+# from bidi.algorithm import get_display
 
 app = Flask(__name__)
 app.secret_key = "starcare_secret"
 
-font_path = os.path.join(app.root_path, "static/fonts/NotoNaskhArabic-Regular.ttf")
+# font_path = os.path.join(app.root_path, "static/fonts/NotoNaskhArabic-Regular.ttf")
 
-pdfmetrics.registerFont(
-    TTFont('Arabic', font_path)
-)
+# pdfmetrics.registerFont(
+#     TTFont('Arabic', font_path)
+# )
 
-def fix_arabic(text):
-    if not text:
-        return text
-    return get_display(arabic_reshaper.reshape(str(text)))
+# def fix_arabic(text):
+#     if not text:
+#         return text
+#     return get_display(arabic_reshaper.reshape(str(text)))
 # ---------------- MONGO (Atlas) ----------------
 MONGO_URI = os.environ.get("MONGO_URI")
 
