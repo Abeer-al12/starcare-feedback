@@ -322,6 +322,7 @@
                 <th id="thComment">Comment</th>
                 <th id="thStatus">Status</th>
                 <th id="thDate">Date</th>
+                <th id="thName">Name</th>
                 <th id="thPhone">Phone</th>
                 <th id="thDelete">Delete</th>
             </tr>
@@ -354,6 +355,8 @@
                     {{ item.date.strftime('%Y-%m-%d') }}
                 </td>
 
+                <td>{{ item.name or "-" }}</td>
+                
                 <td>
                     {{ item.phone if item.phone else "-" }}
                 </td>
