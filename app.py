@@ -748,7 +748,6 @@ else:
             ])
 
     if len(low_rows) > 1:
-
         low_table = Table(low_rows)
 
         low_table.setStyle(TableStyle([
@@ -757,21 +756,21 @@ else:
             ('GRID',(0,0),(-1,-1),1,colors.black)
         ]))
 
-elements.append(low_table)
+        elements.append(low_table)
 
 
     # doc.build(elements)
 
-elements.append(Spacer(1, 20))
-elements.append(
-    Paragraph("Management Recommendations", styles['Heading2'])
-)
+        elements.append(Spacer(1, 20))
+        elements.append(
+            Paragraph("Management Recommendations", styles['Heading2'])
+        )
 
-elements.append(
-    Paragraph(recommendation.replace("\n", "<br/>"), styles['BodyText'])
-)
+        elements.append(
+            Paragraph(recommendation.replace("\n", "<br/>"), styles['BodyText'])
+        )
 
-doc.build(elements)
+        doc.build(elements)
 
     if avg >= 4.5:
         recommendation = """
