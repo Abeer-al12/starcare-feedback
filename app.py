@@ -639,8 +639,6 @@ elif avg >= 3:
     summary = "Patient satisfaction needs improvement."
 else:
     summary = "Immediate action is recommended."
-
-        
         
     title = fix_arabic("Executive Summary")
     summary_text = fix_arabic(summary)
