@@ -281,6 +281,16 @@
                 Please enter your phone number so we can contact you.
             </p>
 
+            <input type="text" id="popupName" placeholder="Full Name" style="
+                width:100%;
+                padding:14px;
+                border:1px solid #ddd;
+                border-radius:15px;
+                font-size:15px;
+                box-sizing:border-box;
+                outline:none;
+                margin-bottom:10px;">
+
             <input type="text" id="popupPhone" placeholder="Phone Number" style="
                 width:100%;
                 padding:14px;
@@ -304,6 +314,16 @@
                 Submit
             </button>
 
+            <button id="skipBtn" onclick="skipContact()" style="
+                width:100%;
+                margin-top:10px;
+                padding:14px;
+                border:none;
+                border-radius:15px;
+                background:#ddd;
+                cursor:pointer;">
+                Skip
+            </button>
         </div>
     </div>
     <script>
@@ -329,75 +349,97 @@
                 .then(res => res.json())
                 .then(data => {
 
-                    if (data.status === "need_phone") {
+                    if (data.status === "success") {
+
+                        window.location.href = data.redirect;
+                        return;
+                    }
+
+                    if (rating <= 3) {
 
                         tempRating = rating;
                         tempComment = comment;
 
-                        document.getElementById("phonePopup").style.display = "flex";
-                    }
-                    else if (data.status === "success") {
+                        document.getElementById("popupTitle").innerText =
+                            "Contact Information";
 
-                        window.location.href = data.redirect;
+                        document.getElementById("popupText").innerText =
+                            "Please enter your name and phone number so we can contact you.";
+
+                        document.getElementById("phonePopup").style.display = "flex";
+
+                        isLowRating = true;
+
+                    } else {
+
+                        tempRating = rating;
+                        tempComment = comment;
+
+                        document.getElementById("popupTitle").innerText =
+                            "Contact Information (Optional)";
+
+                        document.getElementById("popupText").innerText =
+                            "You may leave your name and phone number, or skip this step.";
+
+                        document.getElementById("phonePopup").style.display = "flex";
+
+                        isLowRating = false;
                     }
                 });
-        });
+            function submitLowRating() {
 
-        function submitLowRating() {
+                let isLowRating = tempRating <= 3;
 
-            let phone = document.getElementById("popupPhone").value.trim();
+                let name = document.getElementById("popupName").value.trim();
+                let phone = document.getElementById("popupPhone").value.trim();
 
-            // التحقق من الرقم
-            if (phone.length !== 8 || isNaN(phone)) {
+                // 🔴 LOW rating = إجباري
+                if (isLowRating) {
 
-                if (currentLang == "ar") {
-                    alert("يجب أن يتكون رقم الهاتف من 8 أرقام");
-                } else {
-                    alert("Phone number must be 8 digits");
+                    if (!name || name.length < 2) {
+                        alert(currentLang == "ar" ? "الاسم مطلوب" : "Name is required");
+                        return;
+                    }
+
+                    if (phone.length !== 8 || isNaN(phone)) {
+                        alert(currentLang == "ar"
+                            ? "يجب أن يتكون رقم الهاتف من 8 أرقام"
+                            : "Phone number must be 8 digits");
+                        return;
+                    }
                 }
 
-                return;
-            }
-
-            fetch("/save_low_rating", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    location: "{{ room }}",
-                    rating: tempRating,
-                    comment: tempComment,
-                    phone: phone
+                fetch("/save_low_rating", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        location: "{{ room }}",
+                        rating: tempRating,
+                        comment: tempComment,
+                        name: name || "",
+                        phone: phone || ""
+                    })
                 })
-            })
-                .then(response => response.json())
-                .then(data => {
+                    .then(response => response.json())
+                    .then(data => {
 
-                    if (data.success) {
-                        window.location.href = `/thankyou/{{ branch }}/{{ room }}`;
-                    } else {
-
-                        if (currentLang == "ar") {
-                            alert("حدث خطأ أثناء الحفظ");
+                        if (data.success) {
+                            window.location.href = `/thankyou/{{ branch }}/{{ room }}`;
                         } else {
-                            alert("Error while saving feedback");
+                            alert(currentLang == "ar"
+                                ? "حدث خطأ أثناء الحفظ"
+                                : "Error while saving feedback");
                         }
-
-                    }
-                })
-                .catch(error => {
-
-                    console.error(error);
-
-                    if (currentLang == "ar") {
-                        alert("تعذر الاتصال بالخادم");
-                    } else {
-                        alert("Unable to connect to server");
-                    }
-
-                });
-        }
+                    })
+                    .catch(error => {
+                        console.error(error);
+                        alert(currentLang == "ar"
+                            ? "تعذر الاتصال بالخادم"
+                            : "Unable to connect to server");
+                    });
+            }
     </script>
 
 </body>
