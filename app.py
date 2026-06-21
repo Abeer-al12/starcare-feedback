@@ -677,6 +677,7 @@ def download_pdf():
         "Location",
         "Rating",
         "Comment",
+        "Name",
         "Phone"
     ]]
 
@@ -688,6 +689,7 @@ def download_pdf():
             room_names.get(item["location"], item["location"]),
             str(item["rating"]),
             item.get("comment", ""),
+            item.get("name", "-"),
             item.get("phone", "-")
         ])
 
