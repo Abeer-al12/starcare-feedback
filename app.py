@@ -451,7 +451,11 @@ def add_user():
 
         return redirect('/manage_users')
 
-    return render_template("add_user.html")
+    return render_template(
+        "add_user.html",
+        branches=branches,
+        room_names=room_names
+    )
 
 #حذف مستخدمين 
 @app.route('/delete_user/<username>')
