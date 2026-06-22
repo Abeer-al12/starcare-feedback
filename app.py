@@ -26,6 +26,10 @@ from flask import jsonify
 # import arabic_reshaper
 # from bidi.algorithm import get_display
 
+from openpyxl import Workbook
+from io import BytesIO
+from flask import Response
+
 app = Flask(__name__)
 app.secret_key = "starcare_secret"
 
@@ -800,6 +804,84 @@ def download_pdf():
         mimetype='application/pdf',
         headers={
             'Content-Disposition': f'attachment; filename={filename}'
+        }
+    )
+
+
+
+
+@app.route('/download_excel')
+def download_excel():
+
+    if 'admin' not in session:
+        return redirect('/login')
+
+    # نفس فلتر الـ PDF
+    query = {}
+
+    branch = request.args.get("branch") or session.get("active_branch")
+    location = request.args.get("location")
+    role = session.get("role")
+
+    filters = []
+
+    if branch and branch != "all":
+        filters.append({"branch": branch})
+
+    if role != "admin":
+        user = db.users.find_one({"username": session.get("username")})
+        allowed_locations = user.get("locations", [])
+        if allowed_locations:
+            filters.append({"location": {"$in": allowed_locations}})
+
+    if location:
+        filters.append({"location": location})
+
+    if filters:
+        query = {"$and": filters}
+
+    data = list(collection.find(query))
+
+    # 📊 Excel file
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Feedback Report"
+
+    # Header
+    ws.append([
+        "Date",
+        "Branch",
+        "Location",
+        "Rating",
+        "Category",
+        "Comment",
+        "Name",
+        "Phone"
+    ])
+
+    # Rows
+    for item in data:
+        ws.append([
+            item["date"].strftime("%Y-%m-%d") if item.get("date") else "",
+            item.get("branch", "-"),
+            room_names.get(item["location"], item["location"]),
+            item.get("rating", ""),
+            item.get("category", "-"),
+            item.get("comment", ""),
+            item.get("name", "-"),
+            item.get("phone", "-")
+        ])
+
+    # save in memory
+    buffer = BytesIO()
+    wb.save(buffer)
+    buffer.seek(0)
+
+    return Response(
+        buffer,
+        mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        headers={
+            "Content-Disposition": "attachment; filename=feedback_report.xlsx"
         }
     )
 # ---------------- ANALYTICS ----------------

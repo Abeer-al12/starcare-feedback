@@ -203,6 +203,45 @@
             background: #008f85;
             transform: translateY(-2px);
         }
+
+
+        .download-group {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .pdf-btn,
+        .excel-btn {
+            padding: 12px 18px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: bold;
+            color: white;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.3s;
+        }
+
+        /* PDF button */
+        .pdf-btn {
+            background: #e74c3c;
+        }
+
+        .pdf-btn:hover {
+            background: #c0392b;
+        }
+
+        /* Excel button */
+        .excel-btn {
+            background: #27ae60;
+        }
+
+        .excel-btn:hover {
+            background: #1e8449;
+        }
     </style>
     <!-- <meta http-equiv="refresh" content="10"> -->
     <title>
@@ -266,188 +305,196 @@
                 <h2>{{ avg_rating }} ⭐</h2>
             </div>
 
-        </div>
-        <a href="/download_pdf?branch={{ active_branch if active_branch else 'all' }}" class="pdf-btn">
-            ⬇ Download PDF Report
-        </a>
+            <div class="download-group">
 
-        <!-- Filter -->
-        <!-- Filters Row -->
-        <div style="display:flex; gap:10px; margin-bottom:20px; align-items:center;">
+                <a href="/download_pdf?branch={{ active_branch if active_branch else 'all' }}" class="pdf-btn">
+                    ⬇ PDF Report
+                </a>
 
-            <form method="GET" action="/admin">
+                <a href="/download_excel?branch={{ active_branch if active_branch else 'all' }}" class="excel-btn">
+                    ⬇ Excel Report
+                </a>
 
-                <select name="branch" onchange="this.form.submit()">
-                    <option value="">All Branches</option>
-                    {% for b in branches %}
-                    <option value="{{ b }}" {% if active_branch==b %}selected{% endif %}>
-                        {{ b }}
-                    </option>
-                    {% endfor %}
-                </select>
+            </div>
 
-                <select name="location" onchange="this.form.submit()"
-                    style="padding:12px;border-radius:10px;border:1px solid #ddd;">
+            <!-- Filter -->
+            <!-- Filters Row -->
+            <div style="display:flex; gap:10px; margin-bottom:20px; align-items:center;">
 
-                    <option value="">All Locations</option>
+                <form method="GET" action="/admin">
 
-                    {% for s in stats %}
-                    <option value="{{ s.location }}" {% if request.args.get('location')==s.location %}selected{% endif
-                        %}>
-                        {{ s.location }}
-                    </option>
-                    {% endfor %}
+                    <select name="branch" onchange="this.form.submit()">
+                        <option value="">All Branches</option>
+                        {% for b in branches %}
+                        <option value="{{ b }}" {% if active_branch==b %}selected{% endif %}>
+                            {{ b }}
+                        </option>
+                        {% endfor %}
+                    </select>
 
-                </select>
+                    <select name="location" onchange="this.form.submit()"
+                        style="padding:12px;border-radius:10px;border:1px solid #ddd;">
 
-            </form>
+                        <option value="">All Locations</option>
 
-        </div>
+                        {% for s in stats %}
+                        <option value="{{ s.location }}" {% if request.args.get('location')==s.location %}selected{%
+                            endif %}>
+                            {{ s.location }}
+                        </option>
+                        {% endfor %}
 
-        <h3>
-            Active Branch:
-            <span style="color:#00A79B;">
-                {{ active_branch if active_branch else "All Branches" }}
-            </span>
-        </h3>
+                    </select>
+
+                </form>
+
+            </div>
+
+            <h3>
+                Active Branch:
+                <span style="color:#00A79B;">
+                    {{ active_branch if active_branch else "All Branches" }}
+                </span>
+            </h3>
 
 
 
-        <!-- Table -->
-        <table>
+            <!-- Table -->
+            <table>
 
-            <tr>
-                <th id="thLocation">Location</th>
-                <th id="thRating">Rating</th>
-                <th id="thComment">Comment</th>
-                <th id="thStatus">Status</th>
-                <th id="thDate">Date</th>
-                <th id="thName">Name</th>
-                <th id="thPhone">Phone</th>
-                <th id="thDelete">Delete</th>
-            </tr>
+                <tr>
+                    <th id="thLocation">Location</th>
+                    <th id="thRating">Rating</th>
+                    <th id="thComment">Comment</th>
+                    <th id="thStatus">Status</th>
+                    <th id="thDate">Date</th>
+                    <th id="thName">Name</th>
+                    <th id="thPhone">Phone</th>
+                    <th id="thDelete">Delete</th>
+                </tr>
 
-            {% for item in data %}
-            <tr class="row">
+                {% for item in data %}
+                <tr class="row">
 
-                <td class="loc" data-loc="{{ item.location }}">
-                    {{ item.location.replace('_',' ').title() }}
-                </td>
+                    <td class="loc" data-loc="{{ item.location }}">
+                        {{ item.location.replace('_',' ').title() }}
+                    </td>
 
-                <td class="stars">
-                    {% for i in range(item.rating) %} ⭐ {% endfor %}
-                </td>
+                    <td class="stars">
+                        {% for i in range(item.rating) %} ⭐ {% endfor %}
+                    </td>
 
-                <td class="comment">
-                    {{ item.comment }}
-                </td>
+                    <td class="comment">
+                        {{ item.comment }}
+                    </td>
 
-                <td>
-                    {% if item.rating <= 2 %} <span style="color:red; font-weight:bold;">⚠ Problem</span>
-                        {% elif item.rating == 3 %}
-                        <span style="color:orange; font-weight:bold;">⚠ Medium</span>
-                        {% else %}
-                        <span style="color:green; font-weight:bold;">✔ Good</span>
-                        {% endif %}
-                </td>
+                    <td>
+                        {% if item.rating <= 2 %} <span style="color:red; font-weight:bold;">⚠ Problem</span>
+                            {% elif item.rating == 3 %}
+                            <span style="color:orange; font-weight:bold;">⚠ Medium</span>
+                            {% else %}
+                            <span style="color:green; font-weight:bold;">✔ Good</span>
+                            {% endif %}
+                    </td>
 
-                <td class="date">
-                    {{ item.date.strftime('%Y-%m-%d') }}
-                </td>
+                    <td class="date">
+                        {{ item.date.strftime('%Y-%m-%d') }}
+                    </td>
 
-                <td>{{ item.name or "-" }}</td>
+                    <td>{{ item.name or "-" }}</td>
 
-                <td>
-                    {{ item.phone if item.phone else "-" }}
-                </td>
-                <td>
-                    {% if role == "admin" %}
-                    <a href="/delete_feedback/{{ item._id }}" onclick="return confirm('Delete this feedback?')" style="
+                    <td>
+                        {{ item.phone if item.phone else "-" }}
+                    </td>
+                    <td>
+                        {% if role == "admin" %}
+                        <a href="/delete_feedback/{{ item._id }}" onclick="return confirm('Delete this feedback?')"
+                            style="
        background:#e74c3c;
        color:white;
        padding:8px 12px;
        border-radius:8px;
        text-decoration:none;">
-                        Delete
-                    </a>
-                    {% endif %}
-                </td>
-            </tr>
-            {% endfor %}
+                            Delete
+                        </a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
 
-        </table>
-    </div>
+            </table>
+        </div>
 
-    <script>
+        <script>
 
-        function setLang(lang) {
+            function setLang(lang) {
 
-            localStorage.setItem("lang", lang);
+                localStorage.setItem("lang", lang);
 
-            document.body.dir = (lang === "ar") ? "rtl" : "ltr";
+                document.body.dir = (lang === "ar") ? "rtl" : "ltr";
 
-            const dashboardTitle =
-                (lang === "ar")
-                    ? document.querySelector("h1").getAttribute("data-ar")
-                    : document.querySelector("h1").getAttribute("data-en");
+                const dashboardTitle =
+                    (lang === "ar")
+                        ? document.querySelector("h1").getAttribute("data-ar")
+                        : document.querySelector("h1").getAttribute("data-en");
 
-            document.querySelector("h1").innerText = dashboardTitle;
+                document.querySelector("h1").innerText = dashboardTitle;
 
-            document.querySelectorAll(".card h3")[0].innerText =
-                (lang === "ar") ? "إجمالي التقييمات" : "Total Feedback";
+                document.querySelectorAll(".card h3")[0].innerText =
+                    (lang === "ar") ? "إجمالي التقييمات" : "Total Feedback";
 
-            document.querySelectorAll(".card h3")[1].innerText =
-                (lang === "ar") ? "متوسط التقييم" : "Average Rating";
+                document.querySelectorAll(".card h3")[1].innerText =
+                    (lang === "ar") ? "متوسط التقييم" : "Average Rating";
 
-            document.getElementById("pdfBtn").innerHTML =
-                (lang === "ar")
-                    ? "⬇ تحميل التقرير PDF"
-                    : "⬇ Download PDF Report";
+                document.getElementById("pdfBtn").innerHTML =
+                    (lang === "ar")
+                        ? "⬇ تحميل التقرير PDF"
+                        : "⬇ Download PDF Report";
 
-            document.getElementById("menuDashboard").innerText =
-                (lang === "ar") ? "لوحة التحكم" : "Dashboard";
+                document.getElementById("menuDashboard").innerText =
+                    (lang === "ar") ? "لوحة التحكم" : "Dashboard";
 
-            document.getElementById("menuAnalytics").innerText =
-                (lang === "ar") ? "التحليلات" : "Analytics";
+                document.getElementById("menuAnalytics").innerText =
+                    (lang === "ar") ? "التحليلات" : "Analytics";
 
-            document.getElementById("menuQR").innerText =
-                (lang === "ar") ? "لوحة QR" : "QR Dashboard";
+                document.getElementById("menuQR").innerText =
+                    (lang === "ar") ? "لوحة QR" : "QR Dashboard";
 
-            document.getElementById("menuUsers").innerText =
-                (lang === "ar") ? "إدارة المستخدمين" : "Manage Users";
+                document.getElementById("menuUsers").innerText =
+                    (lang === "ar") ? "إدارة المستخدمين" : "Manage Users";
 
-            document.getElementById("menuLogout").innerText =
-                (lang === "ar") ? "تسجيل الخروج" : "Logout";
+                document.getElementById("menuLogout").innerText =
+                    (lang === "ar") ? "تسجيل الخروج" : "Logout";
 
-            document.getElementById("thLocation").innerText =
-                (lang === "ar") ? "الموقع" : "Location";
+                document.getElementById("thLocation").innerText =
+                    (lang === "ar") ? "الموقع" : "Location";
 
-            document.getElementById("thRating").innerText =
-                (lang === "ar") ? "التقييم" : "Rating";
+                document.getElementById("thRating").innerText =
+                    (lang === "ar") ? "التقييم" : "Rating";
 
-            document.getElementById("thComment").innerText =
-                (lang === "ar") ? "الملاحظة" : "Comment";
+                document.getElementById("thComment").innerText =
+                    (lang === "ar") ? "الملاحظة" : "Comment";
 
-            document.getElementById("thStatus").innerText =
-                (lang === "ar") ? "الحالة" : "Status";
+                document.getElementById("thStatus").innerText =
+                    (lang === "ar") ? "الحالة" : "Status";
 
-            document.getElementById("thDate").innerText =
-                (lang === "ar") ? "التاريخ" : "Date";
+                document.getElementById("thDate").innerText =
+                    (lang === "ar") ? "التاريخ" : "Date";
 
-            document.getElementById("thPhone").innerText =
-                (lang === "ar") ? "الهاتف" : "Phone";
+                document.getElementById("thPhone").innerText =
+                    (lang === "ar") ? "الهاتف" : "Phone";
 
-            document.getElementById("thDelete").innerText =
-                (lang === "ar") ? "حذف" : "Delete";
+                document.getElementById("thDelete").innerText =
+                    (lang === "ar") ? "حذف" : "Delete";
 
-        }
+            }
 
-        window.onload = function () {
-            let lang = localStorage.getItem("lang") || "en";
-            setLang(lang);
-        }
+            window.onload = function () {
+                let lang = localStorage.getItem("lang") || "en";
+                setLang(lang);
+            }
 
-    </script>
+        </script>
 
 </body>
 
