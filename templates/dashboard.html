@@ -172,75 +172,54 @@
             margin-left: 0;
         }
 
-        .pdf-btn {
-            display: inline-block;
-            margin: 15px 0;
-            padding: 12px 18px;
-            background: #00A79B;
-            color: white;
-            border-radius: 12px;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .pdf-btn:hover {
-            background: #00A79B;
-        }
-
-        .pdf-btn {
-            display: inline-block;
-            margin: 15px 0;
-            padding: 12px 18px;
-            background: #00A79B;
-            color: white;
-            border-radius: 12px;
-            text-decoration: none;
-            font-weight: bold;
-            transition: 0.3s;
-        }
-
-        .pdf-btn:hover {
-            background: #008f85;
-            transform: translateY(-2px);
-        }
-
-
         .download-group {
             display: flex;
-            gap: 12px;
+            flex-direction: row;
             justify-content: center;
+            align-items: center;
+            gap: 12px;
             margin-top: 20px;
+            flex-wrap: wrap;
         }
 
+        /* زر عام */
         .pdf-btn,
         .excel-btn {
-            padding: 12px 18px;
-            border-radius: 12px;
-            text-decoration: none;
-            font-weight: bold;
-            color: white;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            justify-content: center;
+
+            padding: 12px 20px;
+            border-radius: 12px;
+
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+
+            width: auto;
+            white-space: nowrap;
+
             transition: 0.3s;
         }
 
-        /* PDF button */
+        /* PDF */
         .pdf-btn {
             background: #e74c3c;
         }
 
         .pdf-btn:hover {
             background: #c0392b;
+            transform: translateY(-2px);
         }
 
-        /* Excel button */
+        /* Excel */
         .excel-btn {
             background: #27ae60;
         }
 
         .excel-btn:hover {
             background: #1e8449;
+            transform: translateY(-2px);
         }
     </style>
     <!-- <meta http-equiv="refresh" content="10"> -->
