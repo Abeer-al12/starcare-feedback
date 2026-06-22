@@ -134,7 +134,7 @@
 
            
 
-            <select name="branch">
+            <select name="branch" required>
                 {% for b in branches %}
                 <option value="{{ b }}">{{ b.upper() }}</option>
                 {% endfor %}
@@ -143,7 +143,7 @@
 
            
 
-            <select name="location">
+            <select name="location" required>
                 {% for key, value in room_names.items() %}
                 <option value="{{ key }}">{{ value }}</option>
                 {% endfor %}
