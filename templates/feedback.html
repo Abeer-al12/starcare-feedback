@@ -216,33 +216,33 @@
             <div class="category-options">
 
                 <label class="category-item">
-                    <input type="radio" name="category" value="facility" checked>
+                    <input type="radio" name="category" value="facility">
                     <span></span>
-                    <small id="facilityText">Facility / Maintenance</small>
+                    <div data-key="catFacility">Facility / Maintenance</div>
                 </label>
 
                 <label class="category-item">
                     <input type="radio" name="category" value="it">
                     <span></span>
-                    <small id="itText">IT</small>
+                    <div data-key="catIT">IT</div>
                 </label>
 
                 <label class="category-item">
-                    <input type="radio" name="category" value="equipment">
+                    <input type="radio" name="category" value="medical">
                     <span></span>
-                    <small id="equipmentText">Medical Equipment</small>
+                    <div data-key="catMedical">Medical Equipment</div>
                 </label>
 
                 <label class="category-item">
                     <input type="radio" name="category" value="nursing">
                     <span></span>
-                    <small id="nursingText">Nursing</small>
+                    <div data-key="catNursing">Nursing</div>
                 </label>
 
                 <label class="category-item">
                     <input type="radio" name="category" value="other">
                     <span></span>
-                    <small id="otherText">Other</small>
+                    <div data-key="catOther">Other</div>
                 </label>
 
             </div>
@@ -323,34 +323,24 @@
             document.getElementById("btnText").innerHTML =
                 lang === "ar" ? "إرسال التقييم" : "Submit Feedback";
 
-            // ⭐ هنا تحطه
             const skipBtn = document.getElementById("skipBtn");
             if (skipBtn) skipBtn.innerText = i18n[lang].skip;
 
-            // popup
-            if (popupTitle) {
-                popupTitle.innerHTML = i18n[lang].contactTitle;
-                popupText.innerHTML = i18n[lang].contactText;
-                popupBtn.innerHTML = i18n[lang].submit;
-            }
-            if (lang === "ar") {
+            // ⭐ الترجمة الجديدة الصح
+            const map = {
+                catFacility: ["Facility / Maintenance", "المرافق والصيانة"],
+                catIT: ["IT", "تقنية المعلومات"],
+                catMedical: ["Medical Equipment", "الأجهزة الطبية"],
+                catNursing: ["Nursing", "التمريض"],
+                catOther: ["Other", "أخرى"]
+            };
 
-                document.getElementById("catFacility").innerHTML = "المرافق والصيانة";
-                document.getElementById("catIT").innerHTML = "تقنية المعلومات";
-                document.getElementById("catMedical").innerHTML = "الأجهزة الطبية";
-                document.getElementById("catNursing").innerHTML = "التمريض";
-                document.getElementById("catOther").innerHTML = "أخرى";
-
-            } else {
-
-                document.getElementById("catFacility").innerHTML = "Facility / Maintenance";
-                document.getElementById("catIT").innerHTML = "IT";
-                document.getElementById("catMedical").innerHTML = "Medical Equipment";
-                document.getElementById("catNursing").innerHTML = "Nursing";
-                document.getElementById("catOther").innerHTML = "Other";
-            }
-
-
+            document.querySelectorAll("[data-key]").forEach(el => {
+                const key = el.getAttribute("data-key");
+                if (map[key]) {
+                    el.innerText = (lang === "ar") ? map[key][1] : map[key][0];
+                }
+            });
         }
 
     </script>
