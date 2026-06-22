@@ -136,6 +136,32 @@
         .submit-btn:hover {
             background: #00A79B;
         }
+
+        .category-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .category-card {
+            border: 2px solid #ddd;
+            border-radius: 15px;
+            padding: 12px;
+            cursor: pointer;
+            transition: .3s;
+            text-align: center;
+        }
+
+        .category-card input {
+            display: none;
+        }
+
+        .category-card:has(input:checked) {
+            border-color: #00A79B;
+            background: #eafcfd;
+            font-weight: bold;
+        }
     </style>
 </head>
 
@@ -167,6 +193,44 @@
 
         <form id="feedbackForm">
 
+            <div class="category-group">
+
+                <label class="category-card">
+                    <input type="radio" name="category" value="facility" checked>
+                    🏢 Facility / Maintenance
+                    <br>
+                    المرافق والصيانة
+                </label>
+
+                <label class="category-card">
+                    <input type="radio" name="category" value="it">
+                    💻 IT
+                    <br>
+                    تقنية المعلومات
+                </label>
+
+                <label class="category-card">
+                    <input type="radio" name="category" value="medical">
+                    🩺 Medical Equipment
+                    <br>
+                    الأجهزة الطبية
+                </label>
+
+                <label class="category-card">
+                    <input type="radio" name="category" value="nursing">
+                    👩‍⚕️ Nursing
+                    <br>
+                    التمريض
+                </label>
+
+                <label class="category-card">
+                    <input type="radio" name="category" value="other">
+                    📋 Other
+                    <br>
+                    أخرى
+                </label>
+
+            </div>
 
             <div class="stars">
 
