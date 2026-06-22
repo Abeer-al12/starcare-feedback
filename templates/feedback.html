@@ -162,6 +162,47 @@
             background: #eafcfd;
             font-weight: bold;
         }
+
+        .category-options {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .category-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .category-item input {
+            display: none;
+        }
+
+        .category-item span {
+            width: 18px;
+            height: 18px;
+            border: 2px solid #00A79B;
+            border-radius: 50%;
+            display: inline-block;
+            position: relative;
+        }
+
+        .category-item input:checked+span::after {
+            content: '';
+            width: 10px;
+            height: 10px;
+            background: #00A79B;
+            border-radius: 50%;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+        }
     </style>
 </head>
 
@@ -193,41 +234,36 @@
 
         <form id="feedbackForm">
 
-            <div class="category-group">
+            <div class="category-options">
 
-                <label class="category-card">
+                <label class="category-item">
                     <input type="radio" name="category" value="facility" checked>
-                    🏢 Facility / Maintenance
-                    <br>
-                    المرافق والصيانة
+                    <span></span>
+                    <span class="cat-text" id="catFacility">Facility / Maintenance</span>
                 </label>
 
-                <label class="category-card">
+                <label class="category-item">
                     <input type="radio" name="category" value="it">
-                    💻 IT
-                    <br>
-                    تقنية المعلومات
+                    <span></span>
+                    <span class="cat-text" id="catIT">IT</span>
                 </label>
 
-                <label class="category-card">
+                <label class="category-item">
                     <input type="radio" name="category" value="medical">
-                    🩺 Medical Equipment
-                    <br>
-                    الأجهزة الطبية
+                    <span></span>
+                    <span class="cat-text" id="catMedical">Medical Equipment</span>
                 </label>
 
-                <label class="category-card">
+                <label class="category-item">
                     <input type="radio" name="category" value="nursing">
-                    👩‍⚕️ Nursing
-                    <br>
-                    التمريض
+                    <span></span>
+                    <span class="cat-text" id="catNursing">Nursing</span>
                 </label>
 
-                <label class="category-card">
+                <label class="category-item">
                     <input type="radio" name="category" value="other">
-                    📋 Other
-                    <br>
-                    أخرى
+                    <span></span>
+                    <span class="cat-text" id="catOther">Other</span>
                 </label>
 
             </div>
@@ -319,6 +355,24 @@
                 popupText.innerHTML = i18n[lang].contactText;
                 popupBtn.innerHTML = i18n[lang].submit;
             }
+            if (lang === "ar") {
+
+                document.getElementById("catFacility").innerHTML = "المرافق والصيانة";
+                document.getElementById("catIT").innerHTML = "تقنية المعلومات";
+                document.getElementById("catMedical").innerHTML = "الأجهزة الطبية";
+                document.getElementById("catNursing").innerHTML = "التمريض";
+                document.getElementById("catOther").innerHTML = "أخرى";
+
+            } else {
+
+                document.getElementById("catFacility").innerHTML = "Facility / Maintenance";
+                document.getElementById("catIT").innerHTML = "IT";
+                document.getElementById("catMedical").innerHTML = "Medical Equipment";
+                document.getElementById("catNursing").innerHTML = "Nursing";
+                document.getElementById("catOther").innerHTML = "Other";
+            }
+
+
         }
 
     </script>
