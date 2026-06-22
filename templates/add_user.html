@@ -1,176 +1,199 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Add User - StarCare</title>
 
     <style>
-        body{
-            margin:0;
-            font-family:Arial;
-            background:#f6fbfc;
-            display:flex;
-            justify-content:center;
-            align-items:center;
-            height:100vh;
+        body {
+            margin: 0;
+            font-family: Arial;
+            background: #f6fbfc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
 
-        .card{
-            width:420px;
-            background:white;
-            padding:30px;
-            border-radius:20px;
-            box-shadow:0 10px 30px rgba(0,0,0,0.1);
-            text-align:center;
+        .card {
+            width: 420px;
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
         }
 
-        .logo{
-            width:200px;
-            margin:0 auto 20px;
-            display:block;
+        .logo {
+            width: 200px;
+            margin: 0 auto 20px;
+            display: block;
         }
 
-        h2{
-            color:#00A79B;
-            margin-bottom:20px;
+        h2 {
+            color: #00A79B;
+            margin-bottom: 20px;
         }
 
-        input, select{
-            width:100%;
-            padding:12px;
-            margin:10px 0;
-            border:1px solid #ddd;
-            border-radius:12px;
-            outline:none;
+        input,
+        select {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            outline: none;
         }
 
-        select{
-            appearance:none;
-            background:#fff;
-            cursor:pointer;
+        select {
+            appearance: none;
+            background: #fff;
+            cursor: pointer;
         }
 
-        button{
-            width:100%;
-            padding:12px;
-            background:#00A79B;
-            color:white;
-            border:none;
-            border-radius:12px;
-            cursor:pointer;
-            margin-top:10px;
-            font-weight:bold;
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #00A79B;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-weight: bold;
         }
 
-        button:hover{
-            background:#008f88;
+        button:hover {
+            background: #008f88;
         }
 
-        .back{
-            display:block;
-            margin-top:15px;
-            color:#00A79B;
-            text-decoration:none;
+        .back {
+            display: block;
+            margin-top: 15px;
+            color: #00A79B;
+            text-decoration: none;
         }
 
-        .back:hover{
-            text-decoration:underline;
+        .back:hover {
+            text-decoration: underline;
         }
 
         /* language buttons */
-        .lang-switch{
-            display:flex;
-            justify-content:center;
-            gap:10px;
-            margin-bottom:15px;
+        .lang-switch {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
         }
 
-        .lang-switch button{
-            background:#eafcfd;
-            color:#00A79B;
-            border:1px solid #00A79B;
-            padding:8px 18px;
-            border-radius:12px;
-            cursor:pointer;
-            transition:.3s;
+        .lang-switch button {
+            background: #eafcfd;
+            color: #00A79B;
+            border: 1px solid #00A79B;
+            padding: 8px 18px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: .3s;
         }
 
-        .lang-switch button:hover{
-            background:#00A79B;
-            color:white;
+        .lang-switch button:hover {
+            background: #00A79B;
+            color: white;
         }
     </style>
 </head>
 
 <body>
 
-<div class="card">
+    <div class="card">
 
-    <img src="{{ url_for('static', filename='logowhite.jpeg') }}" class="logo">
+        <img src="{{ url_for('static', filename='logowhite.jpeg') }}" class="logo">
 
-    <!-- Language -->
-    <div class="lang-switch">
-        <button onclick="setLang('en')">English</button>
-        <button onclick="setLang('ar')">عربي</button>
+        <!-- Language -->
+        <div class="lang-switch">
+            <button onclick="setLang('en')">English</button>
+            <button onclick="setLang('ar')">عربي</button>
+        </div>
+
+        <h2 id="title">Add New User</h2>
+
+        <form method="POST">
+
+            <input id="username" name="username" placeholder="Username" required>
+            <input id="password" name="password" placeholder="Password" required>
+
+            <select id="role" name="role" required>
+                <option value="">Select Role</option>
+                <option value="admin">Admin</option>
+                <option value="it">IT Department</option>
+                <option value="nurse">Nurse</option>
+                <option value="doctor">Doctor</option>
+                <option value="alhail">Al Hail</option>
+                <option value="mabella">Mabella</option>
+            </select>
+
+            <label>Branch</label>
+
+            <select name="branch">
+                <option value="">Select Branch</option>
+                <option value="it">IT</option>
+                <option value="nurse">Nursing</option>
+                <option value="facility">Facility</option>
+            </select>
+
+
+            <label>Location</label>
+
+            <select name="location">
+                <option value="">Select Location</option>
+                <option value="it_room">IT Room</option>
+                <option value="pharmacy">Pharmacy</option>
+                <option value="reception">Reception</option>
+            </select>
+
+
+            <button id="btn" type="submit">Add User</button>
+
+        </form>
+
+        <a id="back" href="/manage_users" class="back">⬅ Back to Users</a>
+
     </div>
 
-    <h2 id="title">Add New User</h2>
+    <script>
 
-    <form method="POST">
+        function setLang(lang) {
 
-        <input id="username" name="username" placeholder="Username" required>
-        <input id="password" name="password" placeholder="Password" required>
+            localStorage.setItem("lang", lang);
 
-        <select id="role" name="role" required>
-            <option value="">Select Role</option>
-            <option value="admin">Admin</option>
-            <option value="it">IT Department</option>
-            <option value="nurse">Nurse</option>
-            <option value="doctor">Doctor</option>
-            <option value="alhail">Al Hail</option>
-            <option value="mabella">Mabella</option>
-        </select>
+            document.documentElement.dir = (lang === "ar") ? "rtl" : "ltr";
 
-        <button id="btn" type="submit">Add User</button>
+            document.getElementById("title").innerText =
+                (lang === "ar") ? "إضافة مستخدم جديد" : "Add New User";
 
-    </form>
+            document.getElementById("username").placeholder =
+                (lang === "ar") ? "اسم المستخدم" : "Username";
 
-    <a id="back" href="/manage_users" class="back">⬅ Back to Users</a>
+            document.getElementById("password").placeholder =
+                (lang === "ar") ? "كلمة المرور" : "Password";
 
-</div>
+            document.getElementById("role").options[0].text =
+                (lang === "ar") ? "اختر الدور" : "Select Role";
 
-<script>
+            document.getElementById("btn").innerText =
+                (lang === "ar") ? "إضافة المستخدم" : "Add User";
 
-function setLang(lang){
+            document.getElementById("back").innerText =
+                (lang === "ar") ? "رجوع للمستخدمين" : "⬅ Back to Users";
+        }
 
-    localStorage.setItem("lang", lang);
+        window.onload = function () {
+            let lang = localStorage.getItem("lang") || "en";
+            setLang(lang);
+        }
 
-    document.documentElement.dir = (lang === "ar") ? "rtl" : "ltr";
-
-    document.getElementById("title").innerText =
-        (lang === "ar") ? "إضافة مستخدم جديد" : "Add New User";
-
-    document.getElementById("username").placeholder =
-        (lang === "ar") ? "اسم المستخدم" : "Username";
-
-    document.getElementById("password").placeholder =
-        (lang === "ar") ? "كلمة المرور" : "Password";
-
-    document.getElementById("role").options[0].text =
-        (lang === "ar") ? "اختر الدور" : "Select Role";
-
-    document.getElementById("btn").innerText =
-        (lang === "ar") ? "إضافة المستخدم" : "Add User";
-
-    document.getElementById("back").innerText =
-        (lang === "ar") ? "رجوع للمستخدمين" : "⬅ Back to Users";
-}
-
-window.onload = function(){
-    let lang = localStorage.getItem("lang") || "en";
-    setLang(lang);
-}
-
-</script>
+    </script>
 
 </body>
+
 </html>

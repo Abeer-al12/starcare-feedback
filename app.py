@@ -435,6 +435,8 @@ def add_user():
         username = request.form['username']
         password = request.form['password']
         role = request.form['role']
+        branch = request.form.get("branch")
+        location = request.form.get("location")
 
         # ⭐ هذا الجديد
         locations = request.form.getlist('locations')
@@ -443,7 +445,8 @@ def add_user():
             "username": username,
             "password": password,
             "role": role,
-            "locations": locations
+            "branch": branch,
+            "location": location
         })
 
         return redirect('/manage_users')
