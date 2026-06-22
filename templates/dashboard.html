@@ -172,35 +172,51 @@
             margin-left: 0;
         }
 
-        .pdf-btn {
-            display: inline-block;
+
+
+        .download-group {
+            display: flex;
+            gap: 12px;
+            align-items: center;
             margin: 15px 0;
-            padding: 12px 18px;
-            background: #00A79B;
-            color: white;
-            border-radius: 12px;
-            text-decoration: none;
-            font-weight: bold;
+            flex-wrap: wrap;
         }
 
-        .pdf-btn:hover {
-            background: #00A79B;
-        }
+        /* زر عام */
+        .pdf-btn,
+        .excel-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
 
-        .pdf-btn {
-            display: inline-block;
-            margin: 15px 0;
             padding: 12px 18px;
-            background: #00A79B;
-            color: white;
             border-radius: 12px;
+
+            color: white;
             text-decoration: none;
             font-weight: bold;
+
             transition: 0.3s;
+            white-space: nowrap;
+        }
+
+        /* PDF */
+        .pdf-btn {
+            background: #e74c3c;
         }
 
         .pdf-btn:hover {
-            background: #008f85;
+            background: #c0392b;
+            transform: translateY(-2px);
+        }
+
+        /* Excel */
+        .excel-btn {
+            background: #27ae60;
+        }
+
+        .excel-btn:hover {
+            background: #1e8449;
             transform: translateY(-2px);
         }
     </style>
@@ -267,9 +283,17 @@
             </div>
 
         </div>
-        <a href="/download_pdf?branch={{ active_branch if active_branch else 'all' }}" class="pdf-btn">
-            ⬇ Download PDF Report
-        </a>
+        <div class="download-group">
+
+            <a class="pdf-btn" href="/download_pdf?branch={{ active_branch if active_branch else 'all' }}">
+                ⬇ Download PDF Report
+            </a>
+
+            <a class="excel-btn" href="/download_excel?branch={{ active_branch if active_branch else 'all' }}">
+                ⬇ Download Excel Report
+            </a>
+
+        </div>
 
         <!-- Filter -->
         <!-- Filters Row -->
