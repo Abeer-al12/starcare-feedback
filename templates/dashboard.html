@@ -346,6 +346,7 @@
                 <th id="thComment">Comment</th>
                 <th id="thStatus">Status</th>
                 <th id="thDate">Date</th>
+                <th id="thTime">Time</th>
                 <th id="thName">Name</th>
                 <th id="thPhone">Phone</th>
                 <th id="thDelete">Delete</th>
@@ -379,6 +380,9 @@
                     {{ item.date.strftime('%Y-%m-%d') }}
                 </td>
 
+                <td class="time">
+                    {{ item.date.strftime('%H:%M') }}
+                </td>
                 <td>{{ item.name or "-" }}</td>
 
                 <td>

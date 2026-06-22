@@ -699,6 +699,7 @@ def download_pdf():
 
     details = [[
         "Date",
+        "Time",
         "Branch",
         "Location",
         "Rating",
@@ -711,6 +712,7 @@ def download_pdf():
 
         details.append([
             item["date"].strftime("%Y-%m-%d"),
+            item["date"].strftime("%H:%M"),
             item.get("branch", "-"),
             room_names.get(item["location"], item["location"]),
             str(item["rating"]),
@@ -850,6 +852,7 @@ def download_excel():
     # Header
     ws.append([
         "Date",
+        "Time",
         "Branch",
         "Location",
         "Rating",
@@ -863,6 +866,7 @@ def download_excel():
     for item in data:
         ws.append([
             item["date"].strftime("%Y-%m-%d") if item.get("date") else "",
+            item["date"].strftime("%H:%M"),
             item.get("branch", "-"),
             room_names.get(item["location"], item["location"]),
             item.get("rating", ""),
