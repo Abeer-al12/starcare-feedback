@@ -307,17 +307,11 @@ def login():
 
         if user:
 
+            session['admin'] = True
             session['role'] = user["role"]
             session['username'] = username
-            session["branch"] = user.get("branch")
-            session["location"] = user.get("location")
-            session["locations"] = user.get("locations", [])
 
-    # 👇 مهم جدًا
-            if user["role"] == "admin":
-                return redirect('/admin')
-            else:
-                return redirect('/user_dashboard')
+            return redirect('/admin')
 
         return "Wrong credentials"
 
@@ -333,7 +327,7 @@ def logout():
 @app.route('/admin')
 def admin():
 
-    if 'role' not in session:
+    if 'admin' not in session:
         return redirect('/login')
 
     role = session.get("role")
@@ -360,15 +354,16 @@ def admin():
     # =========================
     query = {}
 
+# 🔐 صلاحيات
     if role != "admin":
-        allowed_locations = session.get("locations", [])
-        if allowed_locations:
-            query["location"] = {"$in": allowed_locations}
+        query["location"] = {"$in": allowed_locations}
 
+# 🌟 branch filter (أقوى من location)
     if active_branch:
         query["branch"] = active_branch
 
-    if selected_location:
+# 🌟 location فقط إذا ما فيه branch ولا role restriction
+    elif selected_location:
         query["location"] = selected_location
 
 
@@ -440,8 +435,6 @@ def add_user():
         username = request.form['username']
         password = request.form['password']
         role = request.form['role']
-        branch = request.form.get("branch")
-        location = request.form.get("location")
 
         # ⭐ هذا الجديد
         locations = request.form.getlist('locations')
@@ -450,18 +443,12 @@ def add_user():
             "username": username,
             "password": password,
             "role": role,
-            "branch": branch,
-            "location": location,
             "locations": locations
         })
 
         return redirect('/manage_users')
 
-    return render_template(
-        "add_user.html",
-        branches=branches,
-        room_names=room_names
-    )
+    return render_template("add_user.html")
 
 #حذف مستخدمين 
 @app.route('/delete_user/<username>')
