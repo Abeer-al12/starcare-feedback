@@ -359,12 +359,7 @@ def admin():
 
 # 🔐 صلاحيات
     if role != "admin":
-
-        if user.get("branch"):
-            query["branch"] = user.get("branch")
-
-        if allowed_locations:
-            query["location"] = {"$in": allowed_locations}
+        query["location"] = {"$in": allowed_locations}
 
 # 🌟 branch filter (أقوى من location)
     if active_branch:
