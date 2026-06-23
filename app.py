@@ -32,7 +32,7 @@ from flask import Response
 
 app = Flask(__name__)
 app.secret_key = "starcare_secret"
-
+app.config['SESSION_COOKIE_SAMESITE'] = "Lax"
 # font_path = os.path.join(app.root_path, "static/fonts/NotoNaskhArabic-Regular.ttf")
 
 # pdfmetrics.registerFont(
@@ -304,18 +304,16 @@ def login():
 
     if request.method == 'POST':
 
-        username = request.form['username']
-        password = request.form['password']
+        username = request.form.get('username', '').strip()
+        password = request.form.get('password', '').strip()
 
-        user = db.users.find_one({
-            "username": username,
-            "password": password
-        })
+        user = db.users.find_one({"username": username})
 
-        if user:
+        if user and user.get("password") == password:
 
+            session.clear()
             session['admin'] = True
-            session['role'] = user["role"]
+            session['role'] = user.get("role", "user")
             session['username'] = username
 
             return redirect('/admin')
