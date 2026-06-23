@@ -307,7 +307,7 @@ def login():
 
         if user:
 
-            session['admin'] = True
+            session['admin'] = (user["role"] == "admin")
             session['role'] = user["role"]
             session['username'] = username
             session["branch"] = user.get("branch")
@@ -330,7 +330,7 @@ def logout():
 @app.route('/admin')
 def admin():
 
-    if 'admin' not in session:
+    if 'role' not in session:
         return redirect('/login')
 
     role = session.get("role")
