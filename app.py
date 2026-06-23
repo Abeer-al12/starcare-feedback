@@ -350,7 +350,7 @@ def admin():
         active_branch = None
 
     user = db.users.find_one({"username": username})
-    allowed_locations = user.get("locations", []) if user else []
+    allowed_locations = session.get("locations", []) if user else []
 
     # =========================
     # 🔥 QUERY الأساسي
