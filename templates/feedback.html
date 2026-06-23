@@ -571,17 +571,27 @@
                 }
             }
 
-            fetch("/save_low_rating", {
+            fetch("/save_feedback", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
                     location: "{{ room }}",
+                    branch: "{{ branch }}",
                     rating: tempRating,
                     comment: tempComment,
-                    name: name || null,
-                    phone: phone || null
+
+                    answers: {
+                        category: document.querySelector('input[name="category"]:checked')?.value,
+                        speed: document.querySelector('input[name="speed"]:checked')?.value,
+                        behavior: document.querySelector('input[name="behavior"]:checked')?.value
+                    },
+
+                    user: {
+                        name: name || null,
+                        phone: phone || null
+                    }
                 })
             })
                 .then(res => res.json())
@@ -599,7 +609,7 @@
                 return;
             }
 
-            fetch("/save_low_rating", {
+            fetch("/save_feedback", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

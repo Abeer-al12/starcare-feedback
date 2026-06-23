@@ -239,7 +239,14 @@ def feedback(branch, room):
                 "comment": comment,
                 "phone": None,
                 "name": None,
-                "date": datetime.now()
+                "date": datetime.now(),
+
+    # ⭐ الجديد
+                "answers": {
+                    "category": request.get_json().get("category"),
+                    "speed": request.get_json().get("speed"),
+                    "behavior": request.get_json().get("behavior")
+                }
             })
 
             return jsonify({
@@ -262,22 +269,22 @@ def feedback(branch, room):
     )
 
 
-@app.route('/save_low_rating', methods=['POST'])
-def save_low_rating():
+@app.route('/save_feedback', methods=['POST'])
+def save_feedback():
 
-    data = request.get_json()
+    data = request.json
 
     collection.insert_one({
-        "location": data["location"],
-        "branch": get_branch_from_location(data["location"]),
-        "rating": int(data["rating"]),
-        "comment": data["comment"],
-        "name": data.get("name"),
-        "phone": data.get("phone"),
-        "date": datetime.now()
+        "location": data.get("location"),
+        "branch": data.get("branch"),
+        "rating": data.get("rating"),
+        "comment": data.get("comment"),
+        "answers": data.get("answers", {}),
+        "user": data.get("user", {}),
+        "created_at": datetime.now()
     })
 
-    return jsonify({"success": True})
+    return {"success": True}
 
 
 @app.route('/thankyou/<branch>/<room>')
@@ -718,7 +725,10 @@ def download_pdf():
             str(item["rating"]),
             item.get("comment", ""),
             item.get("name", "-"),
-            item.get("phone", "-")
+            item.get("phone", "-"),
+            item.get("answers", {}).get("category"),
+            item.get("answers", {}).get("speed"),
+            item.get("answers", {}).get("behavior")
         ])
 
     details_table = Table(details)
@@ -873,7 +883,10 @@ def download_excel():
             item.get("category", "-"),
             item.get("comment", ""),
             item.get("name", "-"),
-            item.get("phone", "-")
+            item.get("phone", "-"),
+            item.get("answers", {}).get("category"),
+            item.get("answers", {}).get("speed"),
+            item.get("answers", {}).get("behavior")
         ])
 
     # save in memory
