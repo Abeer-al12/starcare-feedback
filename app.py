@@ -307,14 +307,17 @@ def login():
 
         if user:
 
-            session['admin'] = (user["role"] == "admin")
             session['role'] = user["role"]
             session['username'] = username
             session["branch"] = user.get("branch")
             session["location"] = user.get("location")
             session["locations"] = user.get("locations", [])
 
-            return redirect('/admin')
+    # 👇 مهم جدًا
+            if user["role"] == "admin":
+                return redirect('/admin')
+            else:
+                return redirect('/user_dashboard')
 
         return "Wrong credentials"
 
