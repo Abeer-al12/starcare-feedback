@@ -582,16 +582,12 @@
                     rating: tempRating,
                     comment: tempComment,
 
-                    answers: {
-                        category: document.querySelector('input[name="category"]:checked')?.value,
-                        speed: document.querySelector('input[name="speed"]:checked')?.value,
-                        behavior: document.querySelector('input[name="behavior"]:checked')?.value
-                    },
+                    category: document.querySelector('input[name="category"]:checked')?.value,
+                    speed: document.querySelector('input[name="speed"]:checked')?.value,
+                    behavior: document.querySelector('input[name="behavior"]:checked')?.value,
 
-                    user: {
-                        name: name || null,
-                        phone: phone || null
-                    }
+                    name: name || null,
+                    phone: phone || null
                 })
             })
                 .then(res => res.json())

@@ -275,14 +275,20 @@ def save_feedback():
     data = request.json
 
     collection.insert_one({
-        "location": data.get("location"),
         "branch": data.get("branch"),
+        "location": data.get("location"),
+
         "rating": data.get("rating"),
         "comment": data.get("comment"),
-        "answers": data.get("answers", {}),
-        "user": data.get("user", {}),
-        "date": datetime.now(),
-        "created_at": datetime.now()
+
+        "category": data.get("category"),
+        "speed": data.get("speed"),
+        "behavior": data.get("behavior"),
+
+        "name": data.get("name"),
+        "phone": data.get("phone"),
+
+        "date": datetime.now()
     })
 
     return {"success": True}
