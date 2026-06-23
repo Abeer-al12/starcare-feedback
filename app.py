@@ -391,8 +391,19 @@ def admin():
     # 📈 الإحصائيات
     # =========================
     total = len(data)
-    avg = round(sum(i["rating"] for i in data) / total, 2) if total else 0
+   
 
+# ---------------- AVG SAFE ----------------
+    valid_ratings = [
+        i.get("rating")
+        for i in data
+        if isinstance(i.get("rating"), (int, float))
+    ]
+
+    avg = round(sum(valid_ratings) / len(valid_ratings), 2) if valid_ratings else 0
+
+
+# ---------------- STATS ----------------
     stats = {}
 
     for i in data:
@@ -402,13 +413,18 @@ def admin():
             stats[loc] = {"count": 0, "total": 0}
 
         stats[loc]["count"] += 1
-        stats[loc]["total"] += i["rating"]
 
+        r = i.get("rating")
+        if isinstance(r, (int, float)):
+            stats[loc]["total"] += r
+
+
+# ---------------- STATS LIST ----------------
     stats_list = [
         {
             "location": l,
             "count": v["count"],
-            "avg": round(v["total"] / v["count"], 2)
+            "avg": round(v["total"] / v["count"], 2) if v["count"] else 0
         }
         for l, v in stats.items()
     ]
