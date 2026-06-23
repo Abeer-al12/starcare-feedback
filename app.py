@@ -281,6 +281,7 @@ def save_feedback():
         "comment": data.get("comment"),
         "answers": data.get("answers", {}),
         "user": data.get("user", {}),
+        "date": datetime.now(),
         "created_at": datetime.now()
     })
 

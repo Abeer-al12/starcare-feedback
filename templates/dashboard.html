@@ -377,11 +377,19 @@
                 </td>
 
                 <td class="date">
+                    {% if item.get('date') %}
                     {{ item.date.strftime('%Y-%m-%d') }}
+                    {% else %}
+                    -
+                    {% endif %}
                 </td>
 
                 <td class="time">
-                    {{ item.date.strftime("%I:%M %p") }}
+                    {% if item.get('date') %}
+                    {{ item.date.strftime('%I:%M %p') }}
+                    {% else %}
+                    -
+                    {% endif %}
                 </td>
                 <td>{{ item.name or "-" }}</td>
 
