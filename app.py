@@ -918,6 +918,8 @@ def download_excel():
     )
 
 
+from collections import Counter
+
 @app.route('/question_analytics')
 def question_analytics():
 
@@ -926,33 +928,32 @@ def question_analytics():
 
     data = list(collection.find())
 
-    category = {}
-    speed = {}
-    behavior = {}
-
-    total = len(data)
+    category_list = []
+    speed_list = []
+    behavior_list = []
 
     for i in data:
         a = i.get("answers", {})
 
-        c = a.get("category")
-        s = a.get("speed")
-        b = a.get("behavior")
+        if a.get("category"):
+            category_list.append(a.get("category"))
 
-        if c:
-            category[c] = category.get(c, 0) + 1
-        if s:
-            speed[s] = speed.get(s, 0) + 1
-        if b:
-            behavior[b] = behavior.get(b, 0) + 1
+        if a.get("speed"):
+            speed_list.append(a.get("speed"))
+
+        if a.get("behavior"):
+            behavior_list.append(a.get("behavior"))
+
+    category_count = Counter(category_list)
+    speed_count = Counter(speed_list)
+    behavior_count = Counter(behavior_list)
 
     return render_template(
         "question_analytics.html",
         data=data,
-        category=category,
-        speed=speed,
-        behavior=behavior,
-        total=total
+        category_count=category_count,
+        speed_count=speed_count,
+        behavior_count=behavior_count
     )
 # ---------------- ANALYTICS ----------------
 @app.route('/analytics')

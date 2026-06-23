@@ -2,123 +2,229 @@
 <html>
 
 <head>
-<title>Smart Analytics</title>
+    <meta charset="UTF-8">
+    <title>Question Analytics</title>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial;
+            background: #f4f7fb;
+        }
 
-<style>
+        .header {
+            background: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        }
 
-body{
-    margin:0;
-    font-family:Arial;
-    background:#f4f7fb;
-}
+        .title {
+            font-size: 20px;
+            font-weight: bold;
+        }
 
-.header{
-    background:white;
-    padding:15px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-}
+        .container {
+            padding: 20px;
+        }
 
-.container{
-    padding:20px;
-}
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        }
 
-.grid{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:15px;
-}
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
 
-.card{
-    background:white;
-    padding:20px;
-    border-radius:15px;
-    box-shadow:0 2px 10px rgba(0,0,0,0.08);
-}
+        th,
+        td {
+            padding: 10px;
+            border: 1px solid #eee;
+            text-align: center;
+        }
 
-canvas{
-    width:100% !important;
-    height:300px !important;
-}
+        th {
+            background: #00A79B;
+            color: white;
+        }
 
-.back{
-    text-decoration:none;
-    color:white;
-    background:#1b2a41;
-    padding:8px 12px;
-    border-radius:8px;
-}
+        .btn {
+            padding: 8px 14px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
 
-.badge{
-    background:#e8fffb;
-    color:#00A79B;
-    padding:5px 10px;
-    border-radius:10px;
-}
+        .back {
+            background: #1b2a41;
+            color: white;
+            text-decoration: none;
+        }
 
-</style>
+        .lang {
+            background: #00A79B;
+            color: white;
+        }
+
+        .badge {
+            background: #e8fffb;
+            color: #00A79B;
+            padding: 5px 10px;
+            border-radius: 10px;
+        }
+    </style>
 
 </head>
 
 <body>
 
-<div class="header">
-    <a class="back" href="/admin">← Back</a>
-    <h2>Smart Question Analytics</h2>
-    <div class="badge">Total: {{ total }}</div>
-</div>
+    <!-- HEADER -->
+    <div class="header">
 
-<div class="container">
+        <a href="/admin" class="btn back" id="backBtn">← Back</a>
 
-<div class="grid">
+        <div class="title" id="title">Question Analytics</div>
 
-<div class="card">
-<h3>Category</h3>
-<canvas id="catChart"></canvas>
-</div>
+        <div>
+            <button class="btn lang" onclick="setLang('en')">EN</button>
+            <button class="btn lang" onclick="setLang('ar')">AR</button>
+        </div>
 
-<div class="card">
-<h3>Speed</h3>
-<canvas id="speedChart"></canvas>
-</div>
+    </div>
 
-<div class="card">
-<h3>Behavior</h3>
-<canvas id="behChart"></canvas>
-</div>
+    <div class="container">
 
-</div>
+        <div class="card">
+            <h3>Category Statistics</h3>
 
-</div>
+            <table>
+                <tr>
+                    <th>Option</th>
+                    <th>Count</th>
+                    <th>%</th>
+                </tr>
 
-<script>
+                {% for k,v in category_count.items() %}
+                <tr>
+                    <td>{{ k }}</td>
+                    <td>{{ v }}</td>
+                    <td>{{ (v / data|length * 100) | round(1) }}%</td>
+                </tr>
+                {% endfor %}
 
-const catData = {{ category | tojson }};
-const speedData = {{ speed | tojson }};
-const behData = {{ behavior | tojson }};
+            </table>
+        </div>
 
-function buildChart(id, data, color){
+        <div class="card">
+            <h3>Speed Statistics</h3>
 
-    new Chart(document.getElementById(id), {
-        type: 'bar',
-        data: {
-            labels: Object.keys(data),
-            datasets: [{
-                data: Object.values(data),
-                backgroundColor: color
-            }]
+            <table>
+                <tr>
+                    <th>Option</th>
+                    <th>Count</th>
+                    <th>%</th>
+                </tr>
+
+                {% for k,v in speed_count.items() %}
+                <tr>
+                    <td>{{ k }}</td>
+                    <td>{{ v }}</td>
+                    <td>{{ (v / data|length * 100) | round(1) }}%</td>
+                </tr>
+                {% endfor %}
+
+            </table>
+        </div>
+
+        <div class="card">
+            <h3>Behavior Statistics</h3>
+
+            <table>
+                <tr>
+                    <th>Option</th>
+                    <th>Count</th>
+                    <th>%</th>
+                </tr>
+
+                {% for k,v in behavior_count.items() %}
+                <tr>
+                    <td>{{ k }}</td>
+                    <td>{{ v }}</td>
+                    <td>{{ (v / data|length * 100) | round(1) }}%</td>
+                </tr>
+                {% endfor %}
+
+            </table>
+        </div>
+
+        <div class="card">
+            <h3>All Feedback Details</h3>
+
+            <table>
+
+                <tr>
+                    <th>Date</th>
+                    <th>Location</th>
+                    <th>Category</th>
+                    <th>Speed</th>
+                    <th>Behavior</th>
+                    <th>Rating</th>
+                </tr>
+
+                {% for i in data %}
+                {% set a = i.get("answers", {}) %}
+
+                <tr>
+                    <td>{{ i.date.strftime("%Y-%m-%d") if i.date else "-" }}</td>
+                    <td>{{ i.location or "-" }}</td>
+                    <td>{{ a.get("category") or "-" }}</td>
+                    <td>{{ a.get("speed") or "-" }}</td>
+                    <td>{{ a.get("behavior") or "-" }}</td>
+                    <td>{{ i.rating or "-" }}</td>
+                </tr>
+
+                {% endfor %}
+
+            </table>
+
+        </div>
+
+    </div>
+
+    <script>
+
+        let currentLang = "en";
+
+        function setLang(lang) {
+
+            currentLang = lang;
+
+            document.documentElement.dir = (lang === "ar") ? "rtl" : "ltr";
+
+            const text = {
+                en: {
+                    title: "Question Analytics",
+                    back: "Back"
+                },
+                ar: {
+                    title: "تحليل الأسئلة",
+                    back: "رجوع"
+                }
+            };
+
+            document.getElementById("title").innerText = text[lang].title;
+            document.getElementById("backBtn").innerText = text[lang].back;
         }
-    });
-}
 
-buildChart("catChart", catData, "#00A79B");
-buildChart("speedChart", speedData, "#1b2a41");
-buildChart("behChart", behData, "#ff6b6b");
-
-</script>
+    </script>
 
 </body>
+
 </html>
