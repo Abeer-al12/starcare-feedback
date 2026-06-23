@@ -359,10 +359,7 @@ def admin():
 
 # 🔐 صلاحيات
     if role != "admin":
-        if allowed_locations:
-            query["location"] = {"$in": allowed_locations}
-        else:
-            return render_template("dashboard.html", data=[], stats=[], total_feedback=0, avg_rating=0)
+        query["location"] = {"$in": allowed_locations}
 
 # 🌟 branch filter (أقوى من location)
     if active_branch:
