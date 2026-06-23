@@ -310,6 +310,9 @@ def login():
             session['admin'] = True
             session['role'] = user["role"]
             session['username'] = username
+            session["branch"] = user.get("branch")
+            session["location"] = user.get("location")
+            session["locations"] = user.get("locations", [])
 
             return redirect('/admin')
 
@@ -356,7 +359,12 @@ def admin():
 
 # 🔐 صلاحيات
     if role != "admin":
-        query["location"] = {"$in": allowed_locations}
+
+        if user.get("branch"):
+            query["branch"] = user.get("branch")
+
+        if allowed_locations:
+            query["location"] = {"$in": allowed_locations}
 
 # 🌟 branch filter (أقوى من location)
     if active_branch:
@@ -446,7 +454,8 @@ def add_user():
             "password": password,
             "role": role,
             "branch": branch,
-            "location": location
+            "location": location,
+            "locations": locations
         })
 
         return redirect('/manage_users')
