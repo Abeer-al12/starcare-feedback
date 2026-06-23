@@ -350,7 +350,7 @@ def admin():
         active_branch = None
 
     user = db.users.find_one({"username": username})
-    allowed_locations = session.get("locations", []) if user else []
+    allowed_locations = user.get("locations", []) if user else []
 
     # =========================
     # 🔥 QUERY الأساسي
@@ -359,7 +359,10 @@ def admin():
 
 # 🔐 صلاحيات
     if role != "admin":
-        query["location"] = {"$in": allowed_locations}
+        if allowed_locations:
+            query["location"] = {"$in": allowed_locations}
+        else:
+            return render_template("dashboard.html", data=[], stats=[], total_feedback=0, avg_rating=0)
 
 # 🌟 branch filter (أقوى من location)
     if active_branch:
