@@ -137,6 +137,18 @@
             background: #00A79B;
         }
 
+        .question-block {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        .question-title {
+            font-size: 15px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #1b2a41;
+        }
+
         .category-options {
             display: flex;
             flex-wrap: wrap;
@@ -147,18 +159,14 @@
             display: flex;
             align-items: center;
             gap: 6px;
-
             padding: 8px 12px;
             border: 2px solid #ddd;
             border-radius: 20px;
-
             cursor: pointer;
             font-size: 13px;
-
             transition: 0.2s;
         }
 
-        /* selected */
         .category-item:has(input:checked) {
             border-color: #00A79B;
             background: #e6fffb;
@@ -194,110 +202,134 @@
 
         <form id="feedbackForm">
 
-            <div class="category-options">
+            <div class="question-block">
 
-                <label class="category-item">
-                    <input type="radio" name="category" value="facility">
-                    <span></span>
-                    <div data-key="catFacility">Facility / Maintenance</div>
-                </label>
+                <div class="question-title" data-key="qCategory">
+                    What would you like to rate?
+                </div>
 
-                <label class="category-item">
-                    <input type="radio" name="category" value="it">
-                    <span></span>
-                    <div data-key="catIT">IT</div>
-                </label>
+                <div class="category-options">
 
-                <label class="category-item">
-                    <input type="radio" name="category" value="medical">
-                    <span></span>
-                    <div data-key="catMedical">Medical Equipment</div>
-                </label>
+                    <label class="category-item">
+                        <input type="radio" name="category" value="facility">
+                        <span></span>
+                        <div data-key="catFacility">Facility / Maintenance</div>
+                    </label>
 
-                <label class="category-item">
-                    <input type="radio" name="category" value="nursing">
-                    <span></span>
-                    <div data-key="catNursing">Nursing</div>
-                </label>
+                    <label class="category-item">
+                        <input type="radio" name="category" value="it">
+                        <span></span>
+                        <div data-key="catIT">IT</div>
+                    </label>
 
-                <label class="category-item">
-                    <input type="radio" name="category" value="other">
-                    <span></span>
-                    <div data-key="catOther">Other</div>
-                </label>
+                    <label class="category-item">
+                        <input type="radio" name="category" value="medical">
+                        <span></span>
+                        <div data-key="catMedical">Medical Equipment</div>
+                    </label>
 
+                    <label class="category-item">
+                        <input type="radio" name="category" value="nursing">
+                        <span></span>
+                        <div data-key="catNursing">Nursing</div>
+                    </label>
+
+                    <label class="category-item">
+                        <input type="radio" name="category" value="other">
+                        <span></span>
+                        <div data-key="catOther">Other</div>
+                    </label>
+
+                </div>
             </div>
 
-            <h3 data-key="qSpeed">Service Speed</h3>
+            <div class="question-block">
 
-            <div class="category-options">
+                <div class="question-title" data-key="qSpeed">
+                    Service Speed
+                </div>
 
-                <label class="category-item">
-                    <input type="radio" name="speed" value="fast">
-                    <span></span>
-                    <div data-key="speedFast">Fast</div>
-                </label>
+                <div class="category-options">
 
-                <label class="category-item">
-                    <input type="radio" name="speed" value="average">
-                    <span></span>
-                    <div data-key="speedAverage">Average</div>
-                </label>
+                    <label class="category-item">
+                        <input type="radio" name="speed" value="fast">
+                        <span></span>
+                        <div data-key="speedFast">Fast</div>
+                    </label>
 
-                <label class="category-item">
-                    <input type="radio" name="speed" value="slow">
-                    <span></span>
-                    <div data-key="speedSlow">Slow</div>
-                </label>
+                    <label class="category-item">
+                        <input type="radio" name="speed" value="average">
+                        <span></span>
+                        <div data-key="speedAverage">Average</div>
+                    </label>
 
+                    <label class="category-item">
+                        <input type="radio" name="speed" value="slow">
+                        <span></span>
+                        <div data-key="speedSlow">Slow</div>
+                    </label>
+
+                </div>
             </div>
 
-            <h3 data-key="qBehavior">Staff Behavior</h3>
+            <div class="question-block">
 
-            <div class="category-options">
+                <div class="question-title" data-key="qBehavior">
+                    Staff Behavior
+                </div>
 
-                <label class="category-item">
-                    <input type="radio" name="behavior" value="excellent">
-                    <span></span>
-                    <div data-key="behExcellent">Excellent</div>
-                </label>
+                <div class="category-options">
 
-                <label class="category-item">
-                    <input type="radio" name="behavior" value="good">
-                    <span></span>
-                    <div data-key="behGood">Good</div>
-                </label>
+                    <label class="category-item">
+                        <input type="radio" name="behavior" value="excellent">
+                        <span></span>
+                        <div data-key="behExcellent">Excellent</div>
+                    </label>
 
-                <label class="category-item">
-                    <input type="radio" name="behavior" value="bad">
-                    <span></span>
-                    <div data-key="behBad">Bad</div>
-                </label>
+                    <label class="category-item">
+                        <input type="radio" name="behavior" value="good">
+                        <span></span>
+                        <div data-key="behGood">Good</div>
+                    </label>
 
+                    <label class="category-item">
+                        <input type="radio" name="behavior" value="bad">
+                        <span></span>
+                        <div data-key="behBad">Bad</div>
+                    </label>
+
+                </div>
             </div>
-            <div class="stars">
+            <div class="question-block">
 
-                <input type="radio" name="rating" value="5" id="5" required>
-                <label for="5">★</label>
+                <div class="question-title">
+                    Rating
+                </div>
 
-                <input type="radio" name="rating" value="4" id="4">
-                <label for="4">★</label>
+                <div class="stars">
+                    <input type="radio" name="rating" value="5" id="5" required>
+                    <label for="5">★</label>
 
-                <input type="radio" name="rating" value="3" id="3">
-                <label for="3">★</label>
+                    <input type="radio" name="rating" value="4" id="4">
+                    <label for="4">★</label>
 
-                <input type="radio" name="rating" value="2" id="2">
-                <label for="2">★</label>
+                    <input type="radio" name="rating" value="3" id="3">
+                    <label for="3">★</label>
 
-                <input type="radio" name="rating" value="1" id="1">
-                <label for="1">★</label>
+                    <input type="radio" name="rating" value="2" id="2">
+                    <label for="2">★</label>
 
+                    <input type="radio" name="rating" value="1" id="1">
+                    <label for="1">★</label>
+                </div>
+
+                <!-- <p id="starText">Tap a star to rate</p> -->
             </div>
 
             <!-- <input type="text" name="phone" placeholder="Optional phone number"> -->
-            <p id="starText">
+            <!-- <p id="starText">
                 Tap a star to rate
-            </p>
+            </p> -->
 
             <textarea name="comment" id="commentBox" placeholder="Share your thoughts...">
         </textarea>
@@ -317,42 +349,91 @@
         const i18n = {
             en: {
                 skip: "Skip",
+                submit: "Submit",
+
                 nameRequired: "Name is required",
                 phoneRequired: "Phone number must be 8 digits",
+
                 contactTitle: "Contact Information",
                 contactText: "We are sorry your experience was not satisfactory. Please enter your phone number so we can contact you.",
-                submit: "Submit",
+
+                // ⭐ Questions
+                qCategory: "What would you like to rate?",
+                qSpeed: "Service Speed",
+                qBehavior: "Staff Behavior",
+                qComment: "Your Comment",
+
+                // ⭐ Options - Category
+                catFacility: "Facility / Maintenance",
+                catIT: "IT",
+                catMedical: "Medical Equipment",
+                catNursing: "Nursing",
+                catOther: "Other",
+
+                // ⭐ Speed
                 speedFast: "Fast",
                 speedAverage: "Average",
                 speedSlow: "Slow",
 
+                // ⭐ Behavior
                 behExcellent: "Excellent",
                 behGood: "Good",
-                behBad: "Bad",
-
-                qSpeed: "Service Speed",
-                qBehavior: "Staff Behavior",
+                behBad: "Bad"
             },
+
             ar: {
                 skip: "تخطي",
+                submit: "إرسال",
+
                 nameRequired: "الاسم مطلوب",
                 phoneRequired: "يجب أن يتكون رقم الهاتف من 8 أرقام",
+
                 contactTitle: "معلومات التواصل",
                 contactText: "نعتذر أن تجربتك لم تكن بالمستوى المطلوب، يرجى إدخال رقم الهاتف للتواصل معك.",
-                submit: "إرسال",
+
+                // ⭐ Questions
+                qCategory: "ماذا تريد أن تقيم؟",
+                qSpeed: "سرعة الخدمة",
+                qBehavior: "تعامل الموظفين",
+                qComment: "ملاحظاتك",
+
+                // ⭐ Options - Category
+                catFacility: "المرافق والصيانة",
+                catIT: "تقنية المعلومات",
+                catMedical: "الأجهزة الطبية",
+                catNursing: "التمريض",
+                catOther: "أخرى",
+
+                // ⭐ Speed
                 speedFast: "سريع",
                 speedAverage: "متوسط",
                 speedSlow: "بطيء",
 
+                // ⭐ Behavior
                 behExcellent: "ممتاز",
                 behGood: "جيد",
-                behBad: "سيئ",
+                behBad: "سيئ"
+            },
+            popupTitle: {
+                en: "Contact Information",
+                ar: "معلومات التواصل"
+            },
 
-                qSpeed: "سرعة الخدمة",
-                qBehavior: "تعامل الموظفين",
+            popupText: {
+                en: "We are sorry your experience was not satisfactory. Please enter your phone number so we can contact you.",
+                ar: "نعتذر أن تجربتك لم تكن بالمستوى المطلوب، يرجى إدخال رقم الهاتف للتواصل معك."
+            },
+
+            fullName: {
+                en: "Full Name",
+                ar: "الاسم الكامل"
+            },
+
+            phoneNumber: {
+                en: "Phone Number",
+                ar: "رقم الهاتف"
             }
         };
-
         let currentLang = "en";
         function setLang(lang) {
 
@@ -372,100 +453,72 @@
             document.getElementById("btnText").innerHTML =
                 lang === "ar" ? "إرسال التقييم" : "Submit Feedback";
 
+            document.getElementById("popupTitle").innerText =
+                i18n.popupTitle[lang];
+
+            document.getElementById("popupText").innerText =
+                i18n.popupText[lang];
+
+            document.getElementById("popupName").placeholder =
+                i18n.fullName[lang];
+
+            document.getElementById("popupPhone").placeholder =
+                i18n.phoneNumber[lang];
+
+            document.getElementById("popupBtn").innerText =
+                i18n.submit[lang];
+
+            document.getElementById("skipBtn").innerText =
+                i18n.skip[lang];
+
             const skipBtn = document.getElementById("skipBtn");
             if (skipBtn) skipBtn.innerText = i18n[lang].skip;
 
             // ⭐ الترجمة الجديدة الصح
-            const map = {
-                catFacility: ["Facility / Maintenance", "المرافق والصيانة"],
-                catIT: ["IT", "تقنية المعلومات"],
-                catMedical: ["Medical Equipment", "الأجهزة الطبية"],
-                catNursing: ["Nursing", "التمريض"],
-                catOther: ["Other", "أخرى"]
-            };
-
             document.querySelectorAll("[data-key]").forEach(el => {
                 const key = el.getAttribute("data-key");
-                if (map[key]) {
-                    el.innerText = (lang === "ar") ? map[key][1] : map[key][0];
+
+                if (i18n[key]) {
+                    el.innerText = i18n[key][lang];
                 }
             });
         }
 
     </script>
     <div id="phonePopup" style="display:none;
-            position:fixed;
-            top:0;
-            left:0;
-            width:100%;
-            height:100%;
-            background:rgba(0,0,0,0.45);
-            justify-content:center;
-            align-items:center;
-            z-index:999;">
+        position:fixed;
+        top:0;
+        left:0;
+        width:100%;
+        height:100%;
+        background:rgba(0,0,0,0.45);
+        justify-content:center;
+        align-items:center;
+        z-index:999;">
 
         <div style="
-        background:white;
-        width:350px;
-        padding:30px;
-        border-radius:25px;
-        text-align:center;
-        box-shadow:0 10px 30px rgba(0,0,0,0.15);">
+    background:white;
+    width:350px;
+    padding:30px;
+    border-radius:25px;
+    text-align:center;
+    box-shadow:0 10px 30px rgba(0,0,0,0.15);">
 
-            <h2 id="popupTitle" style="color:#00A79B;margin-top:0;">
-                Contact Information
-            </h2>
+            <h2 id="popupTitle"></h2>
 
-            <p id="popupText" style="color:#666;font-size:14px;margin-bottom:20px;">
-                We are sorry your experience was not satisfactory.
-                Please enter your phone number so we can contact you.
-            </p>
+            <p id="popupText"></p>
 
-            <input type="text" id="popupName" placeholder="Full Name" style="
-                width:100%;
-                padding:14px;
-                border:1px solid #ddd;
-                border-radius:15px;
-                font-size:15px;
-                box-sizing:border-box;
-                outline:none;
-                margin-bottom:10px;">
+            <input type="text" id="popupName" placeholder="">
 
-            <input type="text" id="popupPhone" placeholder="Phone Number" style="
-                width:100%;
-                padding:14px;
-                border:1px solid #ddd;
-                border-radius:15px;
-                font-size:15px;
-                box-sizing:border-box;
-                outline:none;">
+            <input type="text" id="popupPhone" placeholder="">
 
-            <button id="popupBtn" onclick="submitLowRating()" style="
-                width:100%;
-                margin-top:15px;
-                padding:14px;
-                border:none;
-                border-radius:15px;
-                background:#00A79B;
-                color:white;
-                font-size:16px;
-                font-weight:bold;
-                cursor:pointer;">
-                Submit
-            </button>
+            <button id="popupBtn" onclick="submitLowRating()"></button>
 
-            <button id="skipBtn" onclick="skipContact()" style="
-                width:100%;
-                margin-top:10px;
-                padding:14px;
-                border:none;
-                border-radius:15px;
-                background:#ddd;
-                cursor:pointer;">
-                Skip
-            </button>
+            <button id="skipBtn" onclick="skipContact()"></button>
+
         </div>
     </div>
+
     <script>
 
         let tempRating = 0;
@@ -541,7 +594,6 @@
         // ---------------- SKIP BUTTON ----------------
         function skipContact() {
 
-            // ❌ ممنوع skip إذا 1–3
             if (isLowRating) {
                 alert("الاسم والرقم إجباري");
                 return;
