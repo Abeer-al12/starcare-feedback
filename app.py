@@ -357,15 +357,24 @@ def admin():
     # =========================
     query = {}
 
-# 🔐 صلاحيات
+# ======================
+# ROLE FILTER
+# ======================
     if role != "admin":
-        query["location"] = {"$in": allowed_locations}
+        if allowed_locations:
+            query["location"] = {"$in": allowed_locations}
+        else:
+            query["location"] = "__none__"
 
-# 🌟 branch filter (أقوى من location)
+# ======================
+# BRANCH FILTER
+# ======================
     if active_branch:
         query["branch"] = active_branch
 
-# 🌟 location فقط إذا ما فيه branch ولا role restriction
+# ======================
+# LOCATION FILTER (ONLY IF NOT OVERRIDDEN BY ROLE)
+# ======================
     elif selected_location:
         query["location"] = selected_location
 
