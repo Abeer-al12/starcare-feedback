@@ -132,25 +132,31 @@
                 <option value="mabella">Mabella</option>
             </select>
 
-           
-
-            <select name="branch" required>
-                <option value="">Select Branch</option>
-                {% for b in branches %}
-                <option value="{{ b }}">{{ b.upper() }}</option>
-                {% endfor %}
-            </select>
 
 
-           
+            <form method="get">
 
-            <select name="location" required>
-                <option value="">Select Location</option>
-                {% for key, value in room_names.items() %}
-                <option value="{{ key }}">{{ value }}</option>
-                {% endfor %}
-            </select>
+                <!-- Branch Filter -->
+                <select name="branch" onchange="this.form.submit()">
+                    <option value="">All Branches</option>
+                    {% for b in branches %}
+                    <option value="{{ b }}" {% if active_branch==b %}selected{% endif %}>
+                        {{ b }}
+                    </option>
+                    {% endfor %}
+                </select>
 
+                <!-- Location Filter -->
+                <select name="location" onchange="this.form.submit()">
+                    <option value="">All Locations</option>
+                    {% for key, value in room_names.items() %}
+                    <option value="{{ key }}" {% if request.args.get('location')==key %}selected{% endif %}>
+                        {{ value }}
+                    </option>
+                    {% endfor %}
+                </select>
+
+            </form>
             <button id="btn" type="submit">Add User</button>
 
         </form>
