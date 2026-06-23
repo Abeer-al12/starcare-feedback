@@ -394,16 +394,11 @@ def admin():
    
 
 # ---------------- AVG SAFE ----------------
-    valid_ratings = [
-        i.get("rating")
-        for i in data
-        if isinstance(i.get("rating"), (int, float))
-    ]
+    valid_ratings = [i.get("rating") for i in data if isinstance(i.get("rating"), (int, float))]
 
     avg = round(sum(valid_ratings) / len(valid_ratings), 2) if valid_ratings else 0
 
 
-# ---------------- STATS ----------------
     stats = {}
 
     for i in data:
@@ -417,7 +412,6 @@ def admin():
         r = i.get("rating")
         if isinstance(r, (int, float)):
             stats[loc]["total"] += r
-
 
 # ---------------- STATS LIST ----------------
     stats_list = [
