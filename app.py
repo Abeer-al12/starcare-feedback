@@ -932,9 +932,11 @@ def question_analytics():
 
     for item in data:
 
-        category = item.get("answers", {}).get("category")
-        speed = item.get("answers", {}).get("speed")
-        behavior = item.get("answers", {}).get("behavior")
+        answers = item.get("answers", {})
+
+        category = answers.get("category")
+        speed = answers.get("speed")
+        behavior = answers.get("behavior")
 
         if category:
             category_counts[category] = category_counts.get(category, 0) + 1
