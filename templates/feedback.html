@@ -139,48 +139,29 @@
 
         .category-options {
             display: flex;
-            justify-content: center;
-            align-items: center;
             flex-wrap: wrap;
-            gap: 12px;
-            margin: 18px 0;
+            gap: 8px;
         }
 
         .category-item {
             display: flex;
             align-items: center;
             gap: 6px;
-            padding: 6px 10px;
-            border: 1.5px solid #ddd;
+
+            padding: 8px 12px;
+            border: 2px solid #ddd;
             border-radius: 20px;
+
             cursor: pointer;
             font-size: 13px;
-            transition: .3s;
-            user-select: none;
+
+            transition: 0.2s;
         }
 
-        .category-item input {
-            display: none;
-        }
-
-        /* الدائرة */
-        .category-item span {
-            width: 14px;
-            height: 14px;
-            border: 2px solid #00A79B;
-            border-radius: 50%;
-            display: inline-block;
-            position: relative;
-        }
-
-        /* لما ينختار */
-        .category-item input:checked+span {
-            background: #00A79B;
-            box-shadow: 0 0 0 3px rgba(0, 167, 155, 0.2);
-        }
-
-        .category-item:hover {
+        /* selected */
+        .category-item:has(input:checked) {
             border-color: #00A79B;
+            background: #e6fffb;
         }
     </style>
 </head>
@@ -246,6 +227,54 @@
                 </label>
 
             </div>
+
+            <h3 data-key="qSpeed">Service Speed</h3>
+
+            <div class="category-options">
+
+                <label class="category-item">
+                    <input type="radio" name="speed" value="fast">
+                    <span></span>
+                    <div data-key="speedFast">Fast</div>
+                </label>
+
+                <label class="category-item">
+                    <input type="radio" name="speed" value="average">
+                    <span></span>
+                    <div data-key="speedAverage">Average</div>
+                </label>
+
+                <label class="category-item">
+                    <input type="radio" name="speed" value="slow">
+                    <span></span>
+                    <div data-key="speedSlow">Slow</div>
+                </label>
+
+            </div>
+
+            <h3 data-key="qBehavior">Staff Behavior</h3>
+
+            <div class="category-options">
+
+                <label class="category-item">
+                    <input type="radio" name="behavior" value="excellent">
+                    <span></span>
+                    <div data-key="behExcellent">Excellent</div>
+                </label>
+
+                <label class="category-item">
+                    <input type="radio" name="behavior" value="good">
+                    <span></span>
+                    <div data-key="behGood">Good</div>
+                </label>
+
+                <label class="category-item">
+                    <input type="radio" name="behavior" value="bad">
+                    <span></span>
+                    <div data-key="behBad">Bad</div>
+                </label>
+
+            </div>
             <div class="stars">
 
                 <input type="radio" name="rating" value="5" id="5" required>
@@ -292,7 +321,17 @@
                 phoneRequired: "Phone number must be 8 digits",
                 contactTitle: "Contact Information",
                 contactText: "We are sorry your experience was not satisfactory. Please enter your phone number so we can contact you.",
-                submit: "Submit"
+                submit: "Submit",
+                speedFast: "Fast",
+                speedAverage: "Average",
+                speedSlow: "Slow",
+
+                behExcellent: "Excellent",
+                behGood: "Good",
+                behBad: "Bad",
+
+                qSpeed: "Service Speed",
+                qBehavior: "Staff Behavior",
             },
             ar: {
                 skip: "تخطي",
@@ -300,7 +339,17 @@
                 phoneRequired: "يجب أن يتكون رقم الهاتف من 8 أرقام",
                 contactTitle: "معلومات التواصل",
                 contactText: "نعتذر أن تجربتك لم تكن بالمستوى المطلوب، يرجى إدخال رقم الهاتف للتواصل معك.",
-                submit: "إرسال"
+                submit: "إرسال",
+                speedFast: "سريع",
+                speedAverage: "متوسط",
+                speedSlow: "بطيء",
+
+                behExcellent: "ممتاز",
+                behGood: "جيد",
+                behBad: "سيئ",
+
+                qSpeed: "سرعة الخدمة",
+                qBehavior: "تعامل الموظفين",
             }
         };
 
