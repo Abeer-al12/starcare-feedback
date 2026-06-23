@@ -134,7 +134,7 @@
 
 
 
-            <form method="get">
+            <form method="GET" action="/admin">
 
                 <select name="branch">
                     <option value="">All Branches</option>
@@ -147,18 +147,18 @@
 
                 <select name="location">
                     <option value="">All Locations</option>
-                    {% for key, value in room_names.items() %}
-                    <option value="{{ key }}" {% if request.args.get('location')==key %}selected{% endif %}>
-                        {{ value }}
+                    {% for s in stats %}
+                    <option value="{{ s.location }}" {% if request.args.get('location')==s.location %}selected{% endif
+                        %}>
+                        {{ s.location }}
                     </option>
                     {% endfor %}
                 </select>
 
-            <button id="btn" type="submit">Add User</button>
+                <button type="submit">Add User</button>
 
-        </form>
-
-        <a id="back" href="/manage_users" class="back">⬅ Back to Users</a>
+            </form>
+            <a id="back" href="/manage_users" class="back">⬅ Back to Users</a>
 
     </div>
 

@@ -357,25 +357,15 @@ def admin():
     # =========================
     query = {}
 
-# ======================
-# ROLE FILTER
-# ======================
     if role != "admin":
+        allowed_locations = session.get("locations", [])
         if allowed_locations:
             query["location"] = {"$in": allowed_locations}
-        else:
-            query["location"] = "__none__"
 
-# ======================
-# BRANCH FILTER
-# ======================
     if active_branch:
         query["branch"] = active_branch
 
-# ======================
-# LOCATION FILTER (ONLY IF NOT OVERRIDDEN BY ROLE)
-# ======================
-    elif selected_location:
+    if selected_location:
         query["location"] = selected_location
 
 
