@@ -926,33 +926,33 @@ def question_analytics():
 
     data = list(collection.find())
 
-    category_counts = {}
-    speed_counts = {}
-    behavior_counts = {}
+    category = {}
+    speed = {}
+    behavior = {}
 
-    for item in data:
+    total = len(data)
 
-        answers = item.get("answers", {})
+    for i in data:
+        a = i.get("answers", {})
 
-        category = answers.get("category")
-        speed = answers.get("speed")
-        behavior = answers.get("behavior")
+        c = a.get("category")
+        s = a.get("speed")
+        b = a.get("behavior")
 
-        if category:
-            category_counts[category] = category_counts.get(category, 0) + 1
-
-        if speed:
-            speed_counts[speed] = speed_counts.get(speed, 0) + 1
-
-        if behavior:
-            behavior_counts[behavior] = behavior_counts.get(behavior, 0) + 1
+        if c:
+            category[c] = category.get(c, 0) + 1
+        if s:
+            speed[s] = speed.get(s, 0) + 1
+        if b:
+            behavior[b] = behavior.get(b, 0) + 1
 
     return render_template(
         "question_analytics.html",
         data=data,
-        category_counts=category_counts,
-        speed_counts=speed_counts,
-        behavior_counts=behavior_counts
+        category=category,
+        speed=speed,
+        behavior=behavior,
+        total=total
     )
 # ---------------- ANALYTICS ----------------
 @app.route('/analytics')
