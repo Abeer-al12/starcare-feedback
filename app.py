@@ -910,6 +910,42 @@ def download_excel():
             "Content-Disposition": "attachment; filename=feedback_report.xlsx"
         }
     )
+
+
+@app.route('/question_analytics')
+def question_analytics():
+
+    if 'admin' not in session:
+        return redirect('/login')
+
+    data = list(collection.find())
+
+    category_counts = {}
+    speed_counts = {}
+    behavior_counts = {}
+
+    for item in data:
+
+        category = item.get("answers", {}).get("category")
+        speed = item.get("answers", {}).get("speed")
+        behavior = item.get("answers", {}).get("behavior")
+
+        if category:
+            category_counts[category] = category_counts.get(category, 0) + 1
+
+        if speed:
+            speed_counts[speed] = speed_counts.get(speed, 0) + 1
+
+        if behavior:
+            behavior_counts[behavior] = behavior_counts.get(behavior, 0) + 1
+
+    return render_template(
+        "question_analytics.html",
+        data=data,
+        category_counts=category_counts,
+        speed_counts=speed_counts,
+        behavior_counts=behavior_counts
+    )
 # ---------------- ANALYTICS ----------------
 @app.route('/analytics')
 def analytics():
