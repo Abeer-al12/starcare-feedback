@@ -255,42 +255,53 @@
             }
         }
 
-        
+
 
         .category-options {
-            display: none;
-            flex-direction: row;
+            display: flex;
             flex-wrap: wrap;
-            gap: 12px;
+            gap: 10px;
         }
 
         .category-item {
             display: flex;
             align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
             cursor: pointer;
             font-size: 14px;
-            gap: 6px;
+            transition: 0.2s;
+            white-space: nowrap;
         }
 
-        /* نخفي radio الحقيقي */
         .category-item input {
             display: none;
         }
 
-        /* الدائرة الوحيدة */
-        .category-item span {
+        /* الدائرة */
+        .category-item::before {
+            content: "";
             width: 14px;
             height: 14px;
             border: 2px solid #aaa;
             border-radius: 50%;
             display: inline-block;
-            transition: 0.2s;
         }
 
-        /* لما ينختار */
-        .category-item input:checked+span {
-            background: #00A79B;
-            border-color: #00A79B;
+        /* لما يختار */
+        .category-item input:checked+span,
+        .category-item input:checked~span {
+            color: #00A79B;
+        }
+
+        .category-item input:checked~* {
+            color: #00A79B;
+        }
+
+        .category-item input:checked {
+            accent-color: #00A79B;
         }
     </style>
 </head>
@@ -343,31 +354,31 @@
 
                     <label class="category-item">
                         <input type="radio" name="category" value="facility">
-                        <span></span>
+                        
                         <span data-key="catFacility">Facility / Maintenance</span>
                     </label>
 
                     <label class="category-item">
                         <input type="radio" name="category" value="it">
-                        <span></span>
+                        
                         <span data-key="catIT">IT</span>
                     </label>
 
                     <label class="category-item">
                         <input type="radio" name="category" value="medical">
-                        <span></span>
+                        
                         <span data-key="catMedical">Medical Equipment</span>
                     </label>
 
                     <label class="category-item">
                         <input type="radio" name="category" value="nursing">
-                        <span></span>
+                        
                         <span data-key="catNursing">Nursing</span>
                     </label>
 
                     <label class="category-item">
                         <input type="radio" name="category" value="other">
-                        <span></span>
+                        
                         <span data-key="catOther">Other</span>
                     </label>
 
@@ -384,19 +395,19 @@
 
                     <label class="category-item">
                         <input type="radio" name="speed" value="fast">
-                        <span></span>
+                        
                         <span data-key="speedFast">Fast</span>
                     </label>
 
                     <label class="category-item">
                         <input type="radio" name="speed" value="average">
-                        <span></span>
+                        
                         <span data-key="speedAverage">Average</span>
                     </label>
 
                     <label class="category-item">
                         <input type="radio" name="speed" value="slow">
-                        <span></span>
+                        
                         <span data-key="speedSlow">Slow</span>
                     </label>
 
@@ -413,19 +424,19 @@
 
                     <label class="category-item">
                         <input type="radio" name="behavior" value="excellent">
-                        <span></span>
+                        
                         <span data-key="behExcellent">Excellent</span>
                     </label>
 
                     <label class="category-item">
                         <input type="radio" name="behavior" value="good">
-                        <span></span>
+                        
                         <span data-key="behGood">Good</span>
                     </label>
 
                     <label class="category-item">
                         <input type="radio" name="behavior" value="bad">
-                        <span></span>
+                        
                         <span data-key="behBad">Bad</span>
                     </label>
 
