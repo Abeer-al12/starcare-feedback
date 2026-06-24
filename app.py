@@ -931,6 +931,21 @@ def question_analytics():
 
     data = list(collection.find())
 
+    avg_rating = round(
+        sum(i.get("rating",0) for i in data) / len(data),
+        2
+    ) if data else 0
+
+    excellent_count = len([
+        i for i in data
+        if i.get("behavior") == "excellent"
+    ])
+
+    bad_count = len([
+        i for i in data
+        if i.get("behavior") == "bad"
+    ])
+
     category_list = []
     speed_list = []
     behavior_list = []
@@ -956,7 +971,10 @@ def question_analytics():
         data=data,
         category_count=category_count,
         speed_count=speed_count,
-        behavior_count=behavior_count
+        behavior_count=behavior_count,
+        avg_rating=avg_rating,
+        excellent_count=excellent_count,
+        bad_count=bad_count
     )
 # ---------------- ANALYTICS ----------------
 @app.route('/analytics')
