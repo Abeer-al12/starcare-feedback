@@ -160,45 +160,46 @@
             <input type="date" name="start_date" value="{{ start_date or '' }}">
             <input type="date" name="end_date" value="{{ end_date or '' }}">
 
-            <select name="branch">
-                <option value="">All Branches</option>
+            <select name="branch" id="branchSelect">
+                <option value="" id="optAllBranches">All Branches</option>
                 {% for b in branches %}
-                <option value="{{ b }}" {% if selected_branch==b %}selected{% endif %}>{{ b }}</option>
+                <option value="{{ b }}">{{ b }}</option>
                 {% endfor %}
             </select>
 
-            <select name="location">
-                <option value="">All Rooms</option>
+            <select name="location" id="roomSelect">
+                <option value="" id="optAllRooms">All Rooms</option>
                 {% for r in rooms %}
-                <option value="{{ r }}" {% if selected_location==r %}selected{% endif %}>{{ r }}</option>
+                <option value="{{ r }}">{{ r }}</option>
                 {% endfor %}
             </select>
 
-            <button type="submit" class="btn lang">Filter</button>
-            <a href="/question_analytics" class="btn back">Reset</a>
+            <button type="submit" class="btn lang" id="btnFilter">Filter</button>
+
+            <a href="/question_analytics" class="btn back" id="btnReset">Reset</a>
 
         </form>
         <!-- STATS -->
         <div class="stats-grid">
 
             <div class="card stat">
-                <h2>{{ data|length }}</h2>
-                <p id="t1">Total Feedback</p>
+                <h2 id="txtTotal">{{ data|length }}</h2>
+                <p id="labelTotal">Total Feedback</p>
             </div>
 
             <div class="card stat">
-                <h2>{{ avg_rating }}</h2>
-                <p id="t2">Average Rating</p>
+                <h2 id="txtAvg">{{ avg_rating }}</h2>
+                <p id="labelAvg">Average Rating</p>
             </div>
 
             <div class="card stat">
-                <h2>{{ excellent_count }}</h2>
-                <p>Excellent</p>
+                <h2 id="txtExcellent">{{ excellent_count }}</h2>
+                <p id="txtExcellentLabel">Excellent</p>
             </div>
 
             <div class="card stat">
-                <h2>{{ bad_count }}</h2>
-                <p>Bad</p>
+                <h2 id="txtBad">{{ bad_count }}</h2>
+                <p id="txtBadLabel">Bad</p>
             </div>
 
         </div>
@@ -353,7 +354,11 @@
                     category: "Category",
                     speed: "Speed",
                     behavior: "Behavior",
-                    rating: "Rating"
+                    rating: "Rating",
+                    total: "Total Feedback",
+                    avg: "Average Rating",
+                    excellent: "Excellent",
+                    bad: "Bad"
                 },
                 ar: {
                     title: "تحليل التقييمات",
@@ -370,7 +375,11 @@
                     category: "التصنيف",
                     speed: "السرعة",
                     behavior: "السلوك",
-                    rating: "التقييم"
+                    rating: "التقييم",
+                    total: "إجمالي التقييمات",
+                    avg: "متوسط التقييم",
+                    excellent: "ممتاز",
+                    bad: "سيء"
                 }
             };
 
@@ -389,6 +398,12 @@
             document.getElementById("thSpeed").innerText = t[l].speed;
             document.getElementById("thBehavior").innerText = t[l].behavior;
             document.getElementById("thRating").innerText = t[l].rating;
+
+            document.getElementById("labelTotal").innerText = t[l].total;
+            document.getElementById("labelAvg").innerText = t[l].avg;
+
+            document.getElementById("txtExcellentLabel").innerText = t[l].excellent;
+            document.getElementById("txtBadLabel").innerText = t[l].bad;
         }
 
         setLang("en");
