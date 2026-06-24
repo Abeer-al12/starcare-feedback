@@ -102,7 +102,7 @@
     <div class="container">
 
         <div class="card">
-            <h3>Category Statistics</h3>
+            <h3 id="catTitle">Category Statistics</h3>
 
             <table>
                 <tr>
@@ -123,7 +123,7 @@
         </div>
 
         <div class="card">
-            <h3>Speed Statistics</h3>
+            <h3 id="speedTitle">Speed Statistics</h3>
 
             <table>
                 <tr>
@@ -144,7 +144,7 @@
         </div>
 
         <div class="card">
-            <h3>Behavior Statistics</h3>
+            <h3 id="behaviorTitle">Behavior Statistics</h3>
 
             <table>
                 <tr>
@@ -165,31 +165,34 @@
         </div>
 
         <div class="card">
-            <h3>All Feedback Details</h3>
+
+            <h3 id="detailsTitle">All Feedback Details</h3>
 
             <table>
 
                 <tr>
-                    <th>Date</th>
-                    <th>Location</th>
-                    <th>Category</th>
-                    <th>Speed</th>
-                    <th>Behavior</th>
-                    <th>Rating</th>
+                    <th id="thDate">Date</th>
+                    <th id="thLocation">Location</th>
+                    <th id="thCategory">Category</th>
+                    <th id="thSpeed">Speed</th>
+                    <th id="thBehavior">Behavior</th>
+                    <th id="thRating">Rating</th>
                 </tr>
 
                 {% for i in data %}
-                {% set a = i.get("answers", {}) %}
-
                 <tr>
-                    <td>{{ i.date.strftime("%Y-%m-%d") if i.date else "-" }}</td>
-                    <td>{{ i.location or "-" }}</td>
-                    <td>{{ a.get("category") or "-" }}</td>
-                    <td>{{ a.get("speed") or "-" }}</td>
-                    <td>{{ a.get("behavior") or "-" }}</td>
-                    <td>{{ i.rating or "-" }}</td>
-                </tr>
+                    <td>{{ i.date.strftime("%Y-%m-%d") if i.get("date") else "-" }}</td>
 
+                    <td>{{ i.get("location","-") }}</td>
+
+                    <td>{{ i.get("category","-") }}</td>
+
+                    <td>{{ i.get("speed","-") }}</td>
+
+                    <td>{{ i.get("behavior","-") }}</td>
+
+                    <td>{{ i.get("rating","-") }}</td>
+                </tr>
                 {% endfor %}
 
             </table>
@@ -200,28 +203,76 @@
 
     <script>
 
-        let currentLang = "en";
-
         function setLang(lang) {
 
-            currentLang = lang;
+            document.documentElement.dir =
+                lang === "ar" ? "rtl" : "ltr";
 
-            document.documentElement.dir = (lang === "ar") ? "rtl" : "ltr";
+            const t = {
 
-            const text = {
                 en: {
                     title: "Question Analytics",
-                    back: "Back"
+                    back: "← Back",
+
+                    cat: "Category Statistics",
+                    speed: "Speed Statistics",
+                    behavior: "Behavior Statistics",
+                    details: "All Feedback Details",
+
+                    date: "Date",
+                    location: "Location",
+                    category: "Category",
+                    rating: "Rating"
                 },
+
                 ar: {
                     title: "تحليل الأسئلة",
-                    back: "رجوع"
+                    back: "← رجوع",
+
+                    cat: "إحصائيات التصنيف",
+                    speed: "إحصائيات سرعة الخدمة",
+                    behavior: "إحصائيات تعامل الموظفين",
+                    details: "جميع التقييمات",
+
+                    date: "التاريخ",
+                    location: "الموقع",
+                    category: "التصنيف",
+                    rating: "التقييم"
                 }
             };
 
-            document.getElementById("title").innerText = text[lang].title;
-            document.getElementById("backBtn").innerText = text[lang].back;
+            document.getElementById("title").innerText =
+                t[lang].title;
+
+            document.getElementById("backBtn").innerText =
+                t[lang].back;
+
+            document.getElementById("catTitle").innerText =
+                t[lang].cat;
+
+            document.getElementById("speedTitle").innerText =
+                t[lang].speed;
+
+            document.getElementById("behaviorTitle").innerText =
+                t[lang].behavior;
+
+            document.getElementById("detailsTitle").innerText =
+                t[lang].details;
+
+            document.getElementById("thDate").innerText =
+                t[lang].date;
+
+            document.getElementById("thLocation").innerText =
+                t[lang].location;
+
+            document.getElementById("thCategory").innerText =
+                t[lang].category;
+
+            document.getElementById("thRating").innerText =
+                t[lang].rating;
         }
+
+        setLang("en");
 
     </script>
 
