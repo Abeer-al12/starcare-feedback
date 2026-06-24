@@ -155,27 +155,28 @@
 
     <div class="container">
 
-        <form method="GET" class="card filter-bar">
+        <form method="GET" class="card filter-box">
 
-            <input type="date" name="start_date" value="{{ start_date or '' }}">
-            <input type="date" name="end_date" value="{{ end_date or '' }}">
+            <input type="date" name="start_date" placeholder="من تاريخ">
+            <input type="date" name="end_date" placeholder="إلى تاريخ">
 
             <select name="branch">
-                <option value="">All Branches</option>
+                <option value="">كل الفروع</option>
                 {% for b in branches %}
-                <option value="{{ b }}" {% if selected_branch==b %}selected{% endif %}>{{ b }}</option>
+                <option value="{{ b }}">{{ b }}</option>
                 {% endfor %}
             </select>
 
             <select name="location">
-                <option value="">All Rooms</option>
+                <option value="">كل الغرف</option>
                 {% for r in rooms %}
-                <option value="{{ r }}" {% if selected_location==r %}selected{% endif %}>{{ r }}</option>
+                <option value="{{ r }}">{{ r }}</option>
                 {% endfor %}
             </select>
 
-            <button type="submit" class="btn lang">Filter</button>
-            <a href="/question_analytics" class="btn back">Reset</a>
+            <button type="submit" class="btn lang">تصفية</button>
+
+            <a href="/question_analytics" class="btn back">إعادة</a>
 
         </form>
         <!-- STATS -->
