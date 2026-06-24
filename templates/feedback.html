@@ -354,7 +354,66 @@
                     What would you like to rate?
                 </div>
 
-                <div class="category-options">
+                <div class="category-ratings">
+
+                    <div class="rating-row">
+                        <span>Facility / Maintenance</span>
+                        <div class="stars">
+                            <input type="radio" name="facility" value="1">⭐
+                            <input type="radio" name="facility" value="2">⭐
+                            <input type="radio" name="facility" value="3">⭐
+                            <input type="radio" name="facility" value="4">⭐
+                            <input type="radio" name="facility" value="5">⭐
+                        </div>
+                    </div>
+
+                    <div class="rating-row">
+                        <span>IT</span>
+                        <div class="stars">
+                            <input type="radio" name="it" value="1">⭐
+                            <input type="radio" name="it" value="2">⭐
+                            <input type="radio" name="it" value="3">⭐
+                            <input type="radio" name="it" value="4">⭐
+                            <input type="radio" name="it" value="5">⭐
+                        </div>
+                    </div>
+
+                    <div class="rating-row">
+                        <span>Medical Equipment</span>
+                        <div class="stars">
+                            <input type="radio" name="medical" value="1">⭐
+                            <input type="radio" name="medical" value="2">⭐
+                            <input type="radio" name="medical" value="3">⭐
+                            <input type="radio" name="medical" value="4">⭐
+                            <input type="radio" name="medical" value="5">⭐
+                        </div>
+                    </div>
+
+                    <div class="rating-row">
+                        <span>Nursing</span>
+                        <div class="stars">
+                            <input type="radio" name="nursing" value="1">⭐
+                            <input type="radio" name="nursing" value="2">⭐
+                            <input type="radio" name="nursing" value="3">⭐
+                            <input type="radio" name="nursing" value="4">⭐
+                            <input type="radio" name="nursing" value="5">⭐
+                        </div>
+                    </div>
+
+                    <div class="rating-row">
+                        <span>Other</span>
+                        <div class="stars">
+                            <input type="radio" name="other" value="1">⭐
+                            <input type="radio" name="other" value="2">⭐
+                            <input type="radio" name="other" value="3">⭐
+                            <input type="radio" name="other" value="4">⭐
+                            <input type="radio" name="other" value="5">⭐
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- <div class="category-options">
 
                     <label class="category-item">
                         <input type="radio" name="category" value="facility">
@@ -387,9 +446,9 @@
                     </label>
 
                 </div>
-            </div>
+            </div> -->
 
-            <div class="question-block">
+                <!-- <div class="question-block">
 
                 <div class="question-title" data-key="qSpeed">
                     Service Speed
@@ -445,53 +504,53 @@
                     </label>
 
                 </div>
-            </div>
-            <div class="question-block">
+            </div> -->
+                <!-- <div class="question-block">
 
-                <div class="question-title" data-key="qRating">
-                    Rating
-                </div>
+                    <div class="question-title" data-key="qRating">
+                        Rating
+                    </div>
 
-                <div class="stars">
-                    <input type="radio" name="rating" value="5" id="5" required>
-                    <label for="5">★</label>
+                    <div class="stars">
+                        <input type="radio" name="rating" value="5" id="5" required>
+                        <label for="5">★</label>
 
-                    <input type="radio" name="rating" value="4" id="4">
-                    <label for="4">★</label>
+                        <input type="radio" name="rating" value="4" id="4">
+                        <label for="4">★</label>
 
-                    <input type="radio" name="rating" value="3" id="3">
-                    <label for="3">★</label>
+                        <input type="radio" name="rating" value="3" id="3">
+                        <label for="3">★</label>
 
-                    <input type="radio" name="rating" value="2" id="2">
-                    <label for="2">★</label>
+                        <input type="radio" name="rating" value="2" id="2">
+                        <label for="2">★</label>
 
-                    <input type="radio" name="rating" value="1" id="1">
-                    <label for="1">★</label>
-                </div>
+                        <input type="radio" name="rating" value="1" id="1">
+                        <label for="1">★</label>
+                    </div>
 
-                <!-- <p id="starText">Tap a star to rate</p> -->
-            </div>
+                    <p id="starText">Tap a star to rate</p> -->
+                <!-- </div> -->
 
-            <!-- <input type="text" name="phone" placeholder="Optional phone number"> -->
-            <!-- <p id="starText">
+                <!-- <input type="text" name="phone" placeholder="Optional phone number"> -->
+                <!-- <p id="starText">
                 Tap a star to rate
             </p> -->
 
-            <div class="question-block">
+                <div class="question-block">
 
-                <div class="question-title" data-key="qComment">
-                    Your Comment
+                    <div class="question-title" data-key="qComment">
+                        Your Comment
+                    </div>
+
+                    <textarea name="comment" id="commentBox" data-placeholder="qComment"></textarea>
+
                 </div>
 
-                <textarea name="comment" id="commentBox" data-placeholder="qComment"></textarea>
-
-            </div>
-
-            <button class="submit-btn" type="submit">
-                <span id="btnText">
-                    Submit Feedback
-                </span>
-            </button>
+                <button class="submit-btn" type="submit">
+                    <span id="btnText">
+                        Submit Feedback
+                    </span>
+                </button>
 
         </form>
 
