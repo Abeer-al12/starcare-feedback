@@ -360,73 +360,27 @@
     <script>
 
         const i18n = {
-            en: {
-                skip: "Skip",
-                submit: "Submit",
+            qCategory: { en: "What would you like to rate?", ar: "ماذا تريد أن تقيم؟" },
+            qSpeed: { en: "Service Speed", ar: "سرعة الخدمة" },
+            qBehavior: { en: "Staff Behavior", ar: "سلوك الموظفين" },
+            qRating: { en: "Rating", ar: "التقييم" },
 
-                nameRequired: "Name is required",
-                phoneRequired: "Phone number must be 8 digits",
+            catFacility: { en: "Facility / Maintenance", ar: "المرافق / الصيانة" },
+            catIT: { en: "IT", ar: "تقنية المعلومات" },
+            catMedical: { en: "Medical Equipment", ar: "الأجهزة الطبية" },
+            catNursing: { en: "Nursing", ar: "التمريض" },
+            catOther: { en: "Other", ar: "أخرى" },
 
-                contactTitle: "Contact Information",
-                contactText: "We are sorry your experience was not satisfactory. Please enter your phone number so we can contact you.",
+            speedFast: { en: "Fast", ar: "سريع" },
+            speedAverage: { en: "Average", ar: "متوسط" },
+            speedSlow: { en: "Slow", ar: "بطيء" },
 
-                // ⭐ Questions
-                qCategory: "What would you like to rate?",
-                qSpeed: "Service Speed",
-                qBehavior: "Staff Behavior",
-                qComment: "Your Comment",
+            behExcellent: { en: "Excellent", ar: "ممتاز" },
+            behGood: { en: "Good", ar: "جيد" },
+            behBad: { en: "Bad", ar: "سيئ" },
 
-                // ⭐ Options - Category
-                catFacility: "Facility / Maintenance",
-                catIT: "IT",
-                catMedical: "Medical Equipment",
-                catNursing: "Nursing",
-                catOther: "Other",
+            submit: { en: "Submit Feedback", ar: "إرسال التقييم" },
 
-                // ⭐ Speed
-                speedFast: "Fast",
-                speedAverage: "Average",
-                speedSlow: "Slow",
-
-                // ⭐ Behavior
-                behExcellent: "Excellent",
-                behGood: "Good",
-                behBad: "Bad"
-            },
-
-            ar: {
-                skip: "تخطي",
-                submit: "إرسال",
-
-                nameRequired: "الاسم مطلوب",
-                phoneRequired: "يجب أن يتكون رقم الهاتف من 8 أرقام",
-
-                contactTitle: "معلومات التواصل",
-                contactText: "نعتذر أن تجربتك لم تكن بالمستوى المطلوب، يرجى إدخال رقم الهاتف للتواصل معك.",
-
-                // ⭐ Questions
-                qCategory: "ماذا تريد أن تقيم؟",
-                qSpeed: "سرعة الخدمة",
-                qBehavior: "تعامل الموظفين",
-                qComment: "ملاحظاتك",
-
-                // ⭐ Options - Category
-                catFacility: "المرافق والصيانة",
-                catIT: "تقنية المعلومات",
-                catMedical: "الأجهزة الطبية",
-                catNursing: "التمريض",
-                catOther: "أخرى",
-
-                // ⭐ Speed
-                speedFast: "سريع",
-                speedAverage: "متوسط",
-                speedSlow: "بطيء",
-
-                // ⭐ Behavior
-                behExcellent: "ممتاز",
-                behGood: "جيد",
-                behBad: "سيئ"
-            },
             popupTitle: {
                 en: "Contact Information",
                 ar: "معلومات التواصل"
@@ -447,54 +401,60 @@
                 ar: "رقم الهاتف"
             },
 
-            qRating: {
-                en: "Rating",
-                ar: "التقييم"
+            skip: {
+                en: "Skip",
+                ar: "تخطي"
             }
         };
+
         let currentLang = "en";
-        function setLang(lang) {
+        const i18n = {
+            qCategory: { en: "What would you like to rate?", ar: "ماذا تريد أن تقيم؟" },
+            qSpeed: { en: "Service Speed", ar: "سرعة الخدمة" },
+            qBehavior: { en: "Staff Behavior", ar: "سلوك الموظفين" },
+            qRating: { en: "Rating", ar: "التقييم" },
 
-            currentLang = lang;
+            catFacility: { en: "Facility / Maintenance", ar: "المرافق / الصيانة" },
+            catIT: { en: "IT", ar: "تقنية المعلومات" },
+            catMedical: { en: "Medical Equipment", ar: "الأجهزة الطبية" },
+            catNursing: { en: "Nursing", ar: "التمريض" },
+            catOther: { en: "Other", ar: "أخرى" },
 
-            document.documentElement.dir = (lang === "ar") ? "rtl" : "ltr";
+            speedFast: { en: "Fast", ar: "سريع" },
+            speedAverage: { en: "Average", ar: "متوسط" },
+            speedSlow: { en: "Slow", ar: "بطيء" },
 
-            document.getElementById("titleText").innerText =
-                lang === "ar" ? "قيّم خدمتنا" : "Rate our Service";
+            behExcellent: { en: "Excellent", ar: "ممتاز" },
+            behGood: { en: "Good", ar: "جيد" },
+            behBad: { en: "Bad", ar: "سيئ" },
 
-            document.getElementById("commentBox").placeholder =
-                lang === "ar" ? "اكتب ملاحظاتك..." : "Share your thoughts...";
+            submit: { en: "Submit Feedback", ar: "إرسال التقييم" },
 
-            document.getElementById("btnText").innerText =
-                lang === "ar" ? "إرسال التقييم" : "Submit Feedback";
+            popupTitle: {
+                en: "Contact Information",
+                ar: "معلومات التواصل"
+            },
 
-            document.getElementById("popupTitle").innerText =
-                i18n.popupTitle[lang];
+            popupText: {
+                en: "We are sorry your experience was not satisfactory. Please enter your phone number so we can contact you.",
+                ar: "نعتذر أن تجربتك لم تكن بالمستوى المطلوب، يرجى إدخال رقم الهاتف للتواصل معك."
+            },
 
-            document.getElementById("popupText").innerText =
-                i18n.popupText[lang];
+            fullName: {
+                en: "Full Name",
+                ar: "الاسم الكامل"
+            },
 
-            document.getElementById("popupName").placeholder =
-                i18n.fullName[lang];
+            phoneNumber: {
+                en: "Phone Number",
+                ar: "رقم الهاتف"
+            },
 
-            document.getElementById("popupPhone").placeholder =
-                i18n.phoneNumber[lang];
-
-            document.getElementById("popupBtn").innerText =
-                i18n.submit[lang];
-
-            document.getElementById("skipBtn").innerText =
-                i18n.skip[lang];
-
-            // ⭐ FIX: هذا هو المهم
-            document.querySelectorAll("[data-key]").forEach(el => {
-                const key = el.dataset.key;
-
-                if (i18n[key] && i18n[key][lang]) {
-                    el.innerText = i18n[key][lang];
-                }
-            });
-        }
+            skip: {
+                en: "Skip",
+                ar: "تخطي"
+            }
+        };
 
     </script>
     <div id="phonePopup" style="display:none;
