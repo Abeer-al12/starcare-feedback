@@ -234,6 +234,16 @@
         }
     </style>
 </head>
+<div id="errorMsg" style="
+    display:none;
+    background:#ffdddd;
+    color:#b30000;
+    padding:10px;
+    margin-bottom:15px;
+    border-radius:10px;
+    text-align:center;
+    font-weight:bold;
+"></div>
 
 <body>
 
@@ -392,8 +402,15 @@
                 Tap a star to rate
             </p> -->
 
-            <textarea name="comment" id="commentBox" placeholder="Share your thoughts...">
-        </textarea>
+            <div class="question-block">
+
+                <div class="question-title" data-key="qComment">
+                    Your Comment
+                </div>
+
+                <textarea name="comment" id="commentBox" placeholder="Share your thoughts..."></textarea>
+
+            </div>
 
             <button class="submit-btn" type="submit">
                 <span id="btnText">
@@ -530,6 +547,16 @@
         let tempComment = "";
         let isLowRating = false;
 
+        function showError(msg) {
+            const box = document.getElementById("errorMsg");
+            box.innerText = msg;
+            box.style.display = "block";
+
+            setTimeout(() => {
+                box.style.display = "none";
+            }, 3000);
+        }
+
         document.getElementById("feedbackForm").addEventListener("submit", function (e) {
             e.preventDefault();
 
@@ -538,9 +565,9 @@
             let behavior = document.querySelector('input[name="behavior"]:checked');
             let rating = document.querySelector('input[name="rating"]:checked');
 
-            // ❌ منع الإرسال إذا أي شيء ناقص
+            // 🚨 إذا ناقص شيء
             if (!category || !speed || !behavior || !rating) {
-                alert("Please answer all questions");
+                showError("⚠️ Please answer all questions");
                 return;
             }
 
@@ -549,7 +576,6 @@
             tempRating = ratingValue;
             tempComment = document.getElementById("commentBox").value;
 
-            // popup logic
             if (ratingValue <= 3) {
                 isLowRating = true;
             } else {
@@ -558,7 +584,6 @@
 
             document.getElementById("phonePopup").style.display = "flex";
         });
-
 
         // ---------------- SUBMIT LOW RATING ----------------
         function submitLowRating() {
