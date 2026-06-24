@@ -9,19 +9,15 @@
             margin: 0;
             font-family: Arial;
             background: #f6fbfc;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
         }
 
         .card {
             background: white;
             width: 430px;
+            margin: 40px auto;
             padding: 35px;
             border-radius: 30px;
             text-align: center;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, .10);
         }
 
         .logo {
@@ -139,7 +135,7 @@
 
         .question-block {
             margin-bottom: 25px;
-            text-align: left;
+            text-align: start;
         }
 
         .question-title {
@@ -156,6 +152,7 @@
         }
 
         .category-item {
+            justify-content: flex-start;
             display: flex;
             align-items: center;
             gap: 6px;
@@ -183,6 +180,19 @@
 
         input:focus {
             border-color: #00A79B;
+        }
+
+        #phonePopup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.45);
+            z-index: 9999;
         }
     </style>
 </head>
