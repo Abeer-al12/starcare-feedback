@@ -308,20 +308,22 @@
             box-shadow: inset 0 0 0 3px white;
         }
 
-        .category-ratings {
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
-        }
-
         .rating-group {
-            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
         }
 
         .rating-group h4 {
-            margin-bottom: 10px;
-            color: #333;
+            margin: 0;
+            font-size: 16px;
             font-weight: 600;
+        }
+
+        .rating-group .stars {
+            margin: 0;
         }
     </style>
 </head>
