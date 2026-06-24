@@ -183,16 +183,54 @@
         }
 
         #phonePopup {
+            display: none;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            display: none;
+            background: rgba(0, 0, 0, 0.45);
             justify-content: center;
             align-items: center;
-            background: rgba(0, 0, 0, 0.45);
             z-index: 9999;
+        }
+
+        #phonePopup>div {
+            background: white;
+            width: 350px;
+            padding: 30px;
+            border-radius: 25px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        #popupName,
+        #popupPhone {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            outline: none;
+        }
+
+        #popupBtn,
+        #skipBtn {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        #popupBtn {
+            background: #00A79B;
+            color: white;
+        }
+
+        #skipBtn {
+            background: #eee;
         }
     </style>
 </head>
@@ -495,26 +533,30 @@
         document.getElementById("feedbackForm").addEventListener("submit", function (e) {
             e.preventDefault();
 
-            let ratingEl = document.querySelector('input[name="rating"]:checked');
-            if (!ratingEl) return alert("اختر تقييم");
+            let category = document.querySelector('input[name="category"]:checked');
+            let speed = document.querySelector('input[name="speed"]:checked');
+            let behavior = document.querySelector('input[name="behavior"]:checked');
+            let rating = document.querySelector('input[name="rating"]:checked');
 
-            let rating = parseInt(ratingEl.value);
-            let comment = document.getElementById("commentBox").value;
+            // ❌ منع الإرسال إذا أي شيء ناقص
+            if (!category || !speed || !behavior || !rating) {
+                alert("Please answer all questions");
+                return;
+            }
 
-            tempRating = rating;
-            tempComment = comment;
+            let ratingValue = parseInt(rating.value);
 
-            // ⭐ LOW rating (1-3) = إجباري popup
-            if (rating <= 3) {
+            tempRating = ratingValue;
+            tempComment = document.getElementById("commentBox").value;
+
+            // popup logic
+            if (ratingValue <= 3) {
                 isLowRating = true;
-                document.getElementById("phonePopup").style.display = "flex";
+            } else {
+                isLowRating = false;
             }
 
-            // ⭐ HIGH rating (4-5) = اختياري popup
-            else {
-                isLowRating = false;
-                document.getElementById("phonePopup").style.display = "flex";
-            }
+            document.getElementById("phonePopup").style.display = "flex";
         });
 
 
@@ -524,45 +566,47 @@
             let name = document.getElementById("popupName").value.trim();
             let phone = document.getElementById("popupPhone").value.trim();
 
-            // ⭐ 1-3 إجباري
+            // لو منخفض (1-3) لازم الاسم والرقم
             if (isLowRating) {
-
-                if (!name || name.length < 2) {
+                if (!name) {
                     alert("Name required");
                     return;
                 }
 
-                if (phone.length !== 8 || isNaN(phone)) {
+                if (!/^\d{8}$/.test(phone)) {
                     alert("Phone must be 8 digits");
                     return;
                 }
             }
 
-            fetch("/save_feedback", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    location: "{{ room }}",
-                    branch: "{{ branch }}",
-                    rating: tempRating,
-                    comment: tempComment,
+            sendData(name, phone);
+        }
 
-                    category: document.querySelector('input[name="category"]:checked')?.value,
-                    speed: document.querySelector('input[name="speed"]:checked')?.value,
-                    behavior: document.querySelector('input[name="behavior"]:checked')?.value,
+        fetch("/save_feedback", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                location: "{{ room }}",
+                branch: "{{ branch }}",
+                rating: tempRating,
+                comment: tempComment,
 
-                    name: name || null,
-                    phone: phone || null
-                })
+                category: document.querySelector('input[name="category"]:checked')?.value,
+                speed: document.querySelector('input[name="speed"]:checked')?.value,
+                behavior: document.querySelector('input[name="behavior"]:checked')?.value,
+
+                name: name || null,
+                phone: phone || null
             })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success) {
-                        window.location.href = `/thankyou/{{ branch }}/{{ room }}`;
-                    }
-                });
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = `/thankyou/{{ branch }}/{{ room }}`;
+                }
+            });
         }
         // ---------------- SKIP BUTTON ----------------
         function skipContact() {
