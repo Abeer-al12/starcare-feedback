@@ -257,29 +257,45 @@
 
         .category-options {
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
+            flex-wrap: wrap;
             gap: 10px;
+            margin-top: 10px;
         }
 
         .category-item {
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            border-radius: 12px;
+            gap: 6px;
             cursor: pointer;
+            font-size: 14px;
+            padding: 6px 10px;
+        }
+
+        /* نخفي الدائرة الافتراضية */
+        .category-item input {
+            display: none;
+        }
+
+        /* شكل الاختيار (بدون حواف ثقيلة) */
+        .category-item span {
+            width: 14px;
+            height: 14px;
+            border: 2px solid #aaa;
+            border-radius: 50%;
+            display: inline-block;
             transition: 0.2s;
         }
 
-        .category-item input {
-            accent-color: #00A79B;
-            transform: scale(1.2);
+        /* لما ينختار */
+        .category-item input:checked+span {
+            background: #00A79B;
+            border-color: #00A79B;
         }
 
-        .category-item:has(input:checked) {
-            border-color: #00A79B;
-            background: #e9fffb;
+        /* النص */
+        .category-item div {
+            margin-left: 4px;
         }
     </style>
 </head>
