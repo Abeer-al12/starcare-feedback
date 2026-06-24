@@ -612,8 +612,15 @@
                 },
                 body: JSON.stringify({
                     location: "{{ room }}",
+                    branch: "{{ branch }}",
+
                     rating: tempRating,
                     comment: tempComment,
+
+                    category: document.querySelector('input[name="category"]:checked')?.value,
+                    speed: document.querySelector('input[name="speed"]:checked')?.value,
+                    behavior: document.querySelector('input[name="behavior"]:checked')?.value,
+
                     name: null,
                     phone: null
                 })
