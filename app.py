@@ -274,6 +274,9 @@ def save_feedback():
 
     data = request.json
 
+    print(data)
+
+
     collection.insert_one({
         "branch": data.get("branch"),
         "location": data.get("location"),
