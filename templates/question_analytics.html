@@ -161,14 +161,14 @@
             <input type="date" name="end_date" value="{{ end_date or '' }}">
 
             <select name="branch" id="branchSelect">
-                <option value="" id="optAllBranches">All Branches</option>
+                <option value="" id="optBranches">All Branches</option>
                 {% for b in branches %}
                 <option value="{{ b }}">{{ b }}</option>
                 {% endfor %}
             </select>
 
             <select name="location" id="roomSelect">
-                <option value="" id="optAllRooms">All Rooms</option>
+                <option value="" id="optRooms">All Rooms</option>
                 {% for r in rooms %}
                 <option value="{{ r }}">{{ r }}</option>
                 {% endfor %}
@@ -231,7 +231,7 @@
 
         <div class="card">
 
-            <h3>📋 All Feedback Details</h3>
+            <h3 id="detailsTitle">📋 All Feedback Details</h3>
 
             <table>
 
@@ -358,7 +358,12 @@
                     total: "Total Feedback",
                     avg: "Average Rating",
                     excellent: "Excellent",
-                    bad: "Bad"
+                    bad: "Bad",
+                    branches: "All Branches",
+                    rooms: "All Rooms",
+                    filter: "Filter",
+                    reset: "Reset",
+                    details: "All Feedback Details"
                 },
                 ar: {
                     title: "تحليل التقييمات",
@@ -379,7 +384,12 @@
                     total: "إجمالي التقييمات",
                     avg: "متوسط التقييم",
                     excellent: "ممتاز",
-                    bad: "سيء"
+                    bad: "سيء",
+                    branches: "كل الفروع",
+                    rooms: "كل الغرف",
+                    filter: "تصفية",
+                    reset: "إعادة",
+                    details: "جميع تفاصيل التقييم"
                 }
             };
 
@@ -404,6 +414,14 @@
 
             document.getElementById("txtExcellentLabel").innerText = t[l].excellent;
             document.getElementById("txtBadLabel").innerText = t[l].bad;
+
+            document.getElementById("optBranches").innerText = t[l].branches;
+            document.getElementById("optRooms").innerText = t[l].rooms;
+
+            document.getElementById("btnFilter").innerText = t[l].filter;
+            document.getElementById("btnReset").innerText = t[l].reset;
+
+            document.getElementById("detailsTitle").innerText = t[l].details;
         }
 
         setLang("en");
