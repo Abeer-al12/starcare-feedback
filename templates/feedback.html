@@ -307,6 +307,22 @@
             border-color: #00A79B;
             box-shadow: inset 0 0 0 3px white;
         }
+
+        .category-ratings {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .rating-group {
+            text-align: center;
+        }
+
+        .rating-group h4 {
+            margin-bottom: 10px;
+            color: #333;
+            font-weight: 600;
+        }
     </style>
 </head>
 <div id="errorMsg" style="
@@ -354,65 +370,120 @@
                     What would you like to rate?
                 </div>
 
+
                 <div class="category-ratings">
 
-                    <div class="rating-row">
-                        <span>Facility / Maintenance</span>
+                    <!-- Facility -->
+                    <div class="rating-group">
+                        <h4>Facility / Maintenance</h4>
+
                         <div class="stars">
-                            <input type="radio" name="facility" value="1">⭐
-                            <input type="radio" name="facility" value="2">⭐
-                            <input type="radio" name="facility" value="3">⭐
-                            <input type="radio" name="facility" value="4">⭐
-                            <input type="radio" name="facility" value="5">⭐
+                            <input type="radio" name="facility" value="5" id="facility5" required>
+                            <label for="facility5">★</label>
+
+                            <input type="radio" name="facility" value="4" id="facility4">
+                            <label for="facility4">★</label>
+
+                            <input type="radio" name="facility" value="3" id="facility3">
+                            <label for="facility3">★</label>
+
+                            <input type="radio" name="facility" value="2" id="facility2">
+                            <label for="facility2">★</label>
+
+                            <input type="radio" name="facility" value="1" id="facility1">
+                            <label for="facility1">★</label>
                         </div>
                     </div>
 
-                    <div class="rating-row">
-                        <span>IT</span>
+                    <!-- IT -->
+                    <div class="rating-group">
+                        <h4>IT</h4>
+
                         <div class="stars">
-                            <input type="radio" name="it" value="1">⭐
-                            <input type="radio" name="it" value="2">⭐
-                            <input type="radio" name="it" value="3">⭐
-                            <input type="radio" name="it" value="4">⭐
-                            <input type="radio" name="it" value="5">⭐
+                            <input type="radio" name="it" value="5" id="it5" required>
+                            <label for="it5">★</label>
+
+                            <input type="radio" name="it" value="4" id="it4">
+                            <label for="it4">★</label>
+
+                            <input type="radio" name="it" value="3" id="it3">
+                            <label for="it3">★</label>
+
+                            <input type="radio" name="it" value="2" id="it2">
+                            <label for="it2">★</label>
+
+                            <input type="radio" name="it" value="1" id="it1">
+                            <label for="it1">★</label>
                         </div>
                     </div>
 
-                    <div class="rating-row">
-                        <span>Medical Equipment</span>
+                    <!-- Medical Equipment -->
+                    <div class="rating-group">
+                        <h4>Medical Equipment</h4>
+
                         <div class="stars">
-                            <input type="radio" name="medical" value="1">⭐
-                            <input type="radio" name="medical" value="2">⭐
-                            <input type="radio" name="medical" value="3">⭐
-                            <input type="radio" name="medical" value="4">⭐
-                            <input type="radio" name="medical" value="5">⭐
+                            <input type="radio" name="medical" value="5" id="medical5" required>
+                            <label for="medical5">★</label>
+
+                            <input type="radio" name="medical" value="4" id="medical4">
+                            <label for="medical4">★</label>
+
+                            <input type="radio" name="medical" value="3" id="medical3">
+                            <label for="medical3">★</label>
+
+                            <input type="radio" name="medical" value="2" id="medical2">
+                            <label for="medical2">★</label>
+
+                            <input type="radio" name="medical" value="1" id="medical1">
+                            <label for="medical1">★</label>
                         </div>
                     </div>
 
-                    <div class="rating-row">
-                        <span>Nursing</span>
+                    <!-- Nursing -->
+                    <div class="rating-group">
+                        <h4>Nursing</h4>
+
                         <div class="stars">
-                            <input type="radio" name="nursing" value="1">⭐
-                            <input type="radio" name="nursing" value="2">⭐
-                            <input type="radio" name="nursing" value="3">⭐
-                            <input type="radio" name="nursing" value="4">⭐
-                            <input type="radio" name="nursing" value="5">⭐
+                            <input type="radio" name="nursing" value="5" id="nursing5" required>
+                            <label for="nursing5">★</label>
+
+                            <input type="radio" name="nursing" value="4" id="nursing4">
+                            <label for="nursing4">★</label>
+
+                            <input type="radio" name="nursing" value="3" id="nursing3">
+                            <label for="nursing3">★</label>
+
+                            <input type="radio" name="nursing" value="2" id="nursing2">
+                            <label for="nursing2">★</label>
+
+                            <input type="radio" name="nursing" value="1" id="nursing1">
+                            <label for="nursing1">★</label>
                         </div>
                     </div>
 
-                    <div class="rating-row">
-                        <span>Other</span>
+                    <!-- Other -->
+                    <div class="rating-group">
+                        <h4>Other</h4>
+
                         <div class="stars">
-                            <input type="radio" name="other" value="1">⭐
-                            <input type="radio" name="other" value="2">⭐
-                            <input type="radio" name="other" value="3">⭐
-                            <input type="radio" name="other" value="4">⭐
-                            <input type="radio" name="other" value="5">⭐
+                            <input type="radio" name="other" value="5" id="other5" required>
+                            <label for="other5">★</label>
+
+                            <input type="radio" name="other" value="4" id="other4">
+                            <label for="other4">★</label>
+
+                            <input type="radio" name="other" value="3" id="other3">
+                            <label for="other3">★</label>
+
+                            <input type="radio" name="other" value="2" id="other2">
+                            <label for="other2">★</label>
+
+                            <input type="radio" name="other" value="1" id="other1">
+                            <label for="other1">★</label>
                         </div>
                     </div>
 
                 </div>
-
                 <!-- <div class="category-options">
 
                     <label class="category-item">
