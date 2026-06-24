@@ -51,14 +51,16 @@
             margin: 0;
         }
 
-        canvas {
-            width: 100% !important;
-            height: 260px !important;
+        /* ⭐ مهم: هذا اللي يكبر الرسومات */
+        .chart-box {
+            height: 420px;
+            padding: 10px;
         }
 
-        /* .card canvas {
-            height: 250px !important;
-        } */
+        canvas {
+            width: 100% !important;
+            height: 100% !important;
+        }
 
         table {
             width: 100%;
@@ -76,6 +78,25 @@
             background: #00A79B;
             color: white;
         }
+
+        .btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 0 3px;
+        }
+
+        .back {
+            background: #1b2a41;
+            color: white;
+            text-decoration: none;
+        }
+
+        .lang {
+            background: #00A79B;
+            color: white;
+        }
     </style>
 </head>
 
@@ -83,14 +104,18 @@
 
     <!-- HEADER -->
     <div class="header">
-        <h2 id="title">📊 Question Analytics</h2>
+
+        <a href="/admin" class="btn back" id="backBtn">← Back</a>
+
+        <div id="title">📊 Question Analytics</div>
 
         <div>
-            <button onclick="setLang('en')">EN</button>
-            <button onclick="setLang('ar')">AR</button>
-            <a href="/admin">← Back</a>
+            <button class="btn lang" onclick="setLang('en')">EN</button>
+            <button class="btn lang" onclick="setLang('ar')">AR</button>
         </div>
+
     </div>
+
     <div class="container">
 
         <!-- STATS -->
@@ -98,12 +123,12 @@
 
             <div class="card stat">
                 <h2>{{ data|length }}</h2>
-                <p>Total Feedback</p>
+                <p id="t1">Total Feedback</p>
             </div>
 
             <div class="card stat">
                 <h2>{{ avg_rating }}</h2>
-                <p>Average Rating</p>
+                <p id="t2">Average Rating</p>
             </div>
 
             <div class="card stat">
@@ -118,63 +143,42 @@
 
         </div>
 
-        <!-- PIE CHART -->
-        <div class="card">
-            <h3>Category Distribution</h3>
-            <canvas id="pieChart"></canvas>
-        </div>
+        <!-- CHARTS GRID (⭐ جديد مهم) -->
+        <div style="display:grid; grid-template-columns: repeat(2, 1fr); gap:20px;">
 
-        <!-- SPEED -->
-        <div class="card">
-            <h3>Speed Distribution</h3>
-            <canvas id="speedChart"></canvas>
-        </div>
+            <div class="card chart-box">
+                <h3 id="catTitle">Category</h3>
+                <canvas id="pieChart"></canvas>
+            </div>
 
-        <!-- BEHAVIOR -->
-        <div class="card">
-            <h3>Behavior Distribution</h3>
-            <canvas id="behaviorChart"></canvas>
-        </div>
+            <div class="card chart-box">
+                <h3 id="speedTitle">Speed</h3>
+                <canvas id="speedChart"></canvas>
+            </div>
 
-        <!-- ROOM COMPARISON -->
-        <div class="card">
-            <h3>Room Comparison</h3>
-            <canvas id="barChart"></canvas>
-        </div>
+            <div class="card chart-box">
+                <h3 id="behaviorTitle">Behavior</h3>
+                <canvas id="behaviorChart"></canvas>
+            </div>
 
-        <!-- TABLE -->
-        <div class="card">
-            <h3>All Feedback</h3>
-
-            <table>
-                <tr>
-                    <th>Date</th>
-                    <th>Location</th>
-                    <th>Category</th>
-                    <th>Speed</th>
-                    <th>Behavior</th>
-                    <th>Rating</th>
-                </tr>
-
-                {% for i in data %}
-                <tr>
-                    <td>{{ i.get("date") }}</td>
-                    <td>{{ i.get("location","-") }}</td>
-                    <td>{{ i.get("category","-") }}</td>
-                    <td>{{ i.get("speed","-") }}</td>
-                    <td>{{ i.get("behavior","-") }}</td>
-                    <td>{{ i.get("rating","-") }}</td>
-                </tr>
-                {% endfor %}
-            </table>
+            <div class="card chart-box">
+                <h3 id="roomTitle">Rooms</h3>
+                <canvas id="barChart"></canvas>
+            </div>
 
         </div>
 
     </div>
 
+    <!-- CHARTS -->
     <script>
+        function opt() {
+            return {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        }
 
-        // ================= PIE =================
         new Chart(document.getElementById("pieChart"), {
             type: "pie",
             data: {
@@ -182,23 +186,23 @@
             datasets: [{
                 data: {{ category_count.values() | list | tojson }},
             backgroundColor: ["#00A79B", "#1b2a41", "#ffb703", "#ef476f"]
-            }]
-        }
-    });
+        }]
+    },
+            options: opt()
+});
 
-        // ================= SPEED =================
         new Chart(document.getElementById("speedChart"), {
             type: "pie",
             data: {
                 labels: {{ speed_count.keys() | list | tojson }},
             datasets: [{
                 data: {{ speed_count.values() | list | tojson }},
-            backgroundColor: ["#06d6a0", "#118ab2", "#ffd166", "#ef476f"]
-            }]
-        }
-    });
+            backgroundColor: ["#06d6a0", "#118ab2", "#ffd166"]
+        }]
+    },
+            options: opt()
+});
 
-        // ================= BEHAVIOR =================
         new Chart(document.getElementById("behaviorChart"), {
             type: "pie",
             data: {
@@ -206,47 +210,66 @@
             datasets: [{
                 data: {{ behavior_count.values() | list | tojson }},
             backgroundColor: ["#00A79B", "#1b2a41", "#ef476f"]
-            }]
-        }
-    });
+        }]
+    },
+            options: opt()
+});
 
-        // ================= ROOMS BAR =================
         new Chart(document.getElementById("barChart"), {
             type: "bar",
             data: {
                 labels: {{ room_labels | tojson }},
             datasets: [{
-                label: "Feedback Count",
+                label: "Feedback",
                 data: {{ room_counts | tojson }},
             backgroundColor: "#00A79B"
-            }]
-        }
-    });
-
+        }]
+    },
+            options: opt()
+});
     </script>
-    <script>
-        function setLang(lang) {
 
-            document.documentElement.dir = (lang === "ar") ? "rtl" : "ltr";
+    <!-- LANGUAGE (نفس كودك بدون حذف) -->
+    <script>
+        function setLang(l) {
+
+            document.documentElement.dir = (l === "ar") ? "rtl" : "ltr";
 
             const t = {
                 en: {
                     title: "Question Analytics",
                     back: "Back",
                     total: "Total Feedback",
-                    avg: "Average Rating"
+                    avg: "Average Rating",
+                    cat: "Category",
+                    speed: "Speed",
+                    behavior: "Behavior",
+                    room: "Rooms"
                 },
                 ar: {
                     title: "تحليل التقييمات",
                     back: "رجوع",
-                    total: "إجمالي التقييمات",
-                    avg: "متوسط التقييم"
+                    total: "الإجمالي",
+                    avg: "المتوسط",
+                    cat: "التصنيف",
+                    speed: "السرعة",
+                    behavior: "السلوك",
+                    room: "الغرف"
                 }
             };
 
-            document.querySelector("h2").innerText = t[lang].title;
+            document.getElementById("title").innerText = t[l].title;
+            document.getElementById("backBtn").innerText = t[l].back;
+
+            document.getElementById("catTitle").innerText = t[l].cat;
+            document.getElementById("speedTitle").innerText = t[l].speed;
+            document.getElementById("behaviorTitle").innerText = t[l].behavior;
+            document.getElementById("roomTitle").innerText = t[l].room;
         }
+
+        setLang("en");
     </script>
+
 </body>
 
 </html>
