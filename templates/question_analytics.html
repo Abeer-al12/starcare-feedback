@@ -52,8 +52,13 @@
         }
 
         canvas {
-            max-width: 100%;
+            width: 100% !important;
+            height: 260px !important;
         }
+
+        /* .card canvas {
+            height: 250px !important;
+        } */
 
         table {
             width: 100%;
@@ -78,10 +83,14 @@
 
     <!-- HEADER -->
     <div class="header">
-        <h2>📊 Question Analytics</h2>
-        <a href="/admin">← Back</a>
-    </div>
+        <h2 id="title">📊 Question Analytics</h2>
 
+        <div>
+            <button onclick="setLang('en')">EN</button>
+            <button onclick="setLang('ar')">AR</button>
+            <a href="/admin">← Back</a>
+        </div>
+    </div>
     <div class="container">
 
         <!-- STATS -->
@@ -215,7 +224,29 @@
     });
 
     </script>
+    <script>
+        function setLang(lang) {
 
+            document.documentElement.dir = (lang === "ar") ? "rtl" : "ltr";
+
+            const t = {
+                en: {
+                    title: "Question Analytics",
+                    back: "Back",
+                    total: "Total Feedback",
+                    avg: "Average Rating"
+                },
+                ar: {
+                    title: "تحليل التقييمات",
+                    back: "رجوع",
+                    total: "إجمالي التقييمات",
+                    avg: "متوسط التقييم"
+                }
+            };
+
+            document.querySelector("h2").innerText = t[lang].title;
+        }
+    </script>
 </body>
 
 </html>
