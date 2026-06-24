@@ -235,12 +235,13 @@
             <table>
 
                 <tr>
-                    <td>{{ i.get("date").strftime("%Y-%m-%d %H:%M") if i.get("date") else "-" }}</td>
-                    <td>{{ i.get("location") or "-" }}</td>
-                    <td>{{ i.get("category") or "-" }}</td>
-                    <td>{{ i.get("speed") or "-" }}</td>
-                    <td>{{ i.get("behavior") or "-" }}</td>
-                    <td>{{ i.get("rating") or "-" }}</td>
+                    <th>Date</th>
+                    <th>Branch</th>
+                    <th>Location</th>
+                    <th>Category</th>
+                    <th>Speed</th>
+                    <th>Behavior</th>
+                    <th>Rating</th>
                 </tr>
 
                 {% for i in data %}

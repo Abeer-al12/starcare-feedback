@@ -268,7 +268,7 @@ def feedback(branch, room):
         room_name=room_names.get(room, room)
     )
 
-from datetime import datetime
+
 @app.route('/save_feedback', methods=['POST'])
 def save_feedback():
 
@@ -291,7 +291,7 @@ def save_feedback():
         "name": data.get("name"),
         "phone": data.get("phone"),
 
-        "date": datetime.utcnow()
+        "date": datetime.now()
     })
 
     return {"success": True}
