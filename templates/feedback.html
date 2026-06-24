@@ -408,53 +408,38 @@
         };
 
         let currentLang = "en";
-        const i18n = {
-            qCategory: { en: "What would you like to rate?", ar: "ماذا تريد أن تقيم؟" },
-            qSpeed: { en: "Service Speed", ar: "سرعة الخدمة" },
-            qBehavior: { en: "Staff Behavior", ar: "سلوك الموظفين" },
-            qRating: { en: "Rating", ar: "التقييم" },
+        function setLang(lang) {
 
-            catFacility: { en: "Facility / Maintenance", ar: "المرافق / الصيانة" },
-            catIT: { en: "IT", ar: "تقنية المعلومات" },
-            catMedical: { en: "Medical Equipment", ar: "الأجهزة الطبية" },
-            catNursing: { en: "Nursing", ar: "التمريض" },
-            catOther: { en: "Other", ar: "أخرى" },
+            document.documentElement.dir = (lang === "ar") ? "rtl" : "ltr";
 
-            speedFast: { en: "Fast", ar: "سريع" },
-            speedAverage: { en: "Average", ar: "متوسط" },
-            speedSlow: { en: "Slow", ar: "بطيء" },
+            // 🔥 كل عناصر الصفحة
+            document.querySelectorAll("[data-key]").forEach(el => {
+                const key = el.dataset.key;
 
-            behExcellent: { en: "Excellent", ar: "ممتاز" },
-            behGood: { en: "Good", ar: "جيد" },
-            behBad: { en: "Bad", ar: "سيئ" },
+                if (i18n[key] && i18n[key][lang]) {
+                    el.innerText = i18n[key][lang];
+                }
+            });
 
-            submit: { en: "Submit Feedback", ar: "إرسال التقييم" },
+            // 🔥 popup elements (مهم جداً)
+            const popupTitle = document.getElementById("popupTitle");
+            const popupText = document.getElementById("popupText");
+            const popupName = document.getElementById("popupName");
+            const popupPhone = document.getElementById("popupPhone");
+            const popupBtn = document.getElementById("popupBtn");
+            const skipBtn = document.getElementById("skipBtn");
 
-            popupTitle: {
-                en: "Contact Information",
-                ar: "معلومات التواصل"
-            },
+            if (popupTitle) popupTitle.innerText = i18n.popupTitle[lang];
+            if (popupText) popupText.innerText = i18n.popupText[lang];
+            if (popupName) popupName.placeholder = i18n.fullName[lang];
+            if (popupPhone) popupPhone.placeholder = i18n.phoneNumber[lang];
+            if (popupBtn) popupBtn.innerText = i18n.submit[lang];
+            if (skipBtn) skipBtn.innerText = i18n.skip[lang];
 
-            popupText: {
-                en: "We are sorry your experience was not satisfactory. Please enter your phone number so we can contact you.",
-                ar: "نعتذر أن تجربتك لم تكن بالمستوى المطلوب، يرجى إدخال رقم الهاتف للتواصل معك."
-            },
-
-            fullName: {
-                en: "Full Name",
-                ar: "الاسم الكامل"
-            },
-
-            phoneNumber: {
-                en: "Phone Number",
-                ar: "رقم الهاتف"
-            },
-
-            skip: {
-                en: "Skip",
-                ar: "تخطي"
-            }
-        };
+            // 🔥 main button (submit)
+            const btnText = document.getElementById("btnText");
+            if (btnText) btnText.innerText = i18n.submit[lang];
+        }
 
     </script>
     <div id="phonePopup" style="display:none;
