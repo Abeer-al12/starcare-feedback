@@ -786,13 +786,24 @@
         document.getElementById("feedbackForm").addEventListener("submit", function (e) {
             e.preventDefault();
 
-            let category = document.querySelector('input[name="category"]:checked');
-            let speed = document.querySelector('input[name="speed"]:checked');
-            let behavior = document.querySelector('input[name="behavior"]:checked');
-            let rating = document.querySelector('input[name="rating"]:checked');
+            // let category = document.querySelector('input[name="category"]:checked');
+            // let speed = document.querySelector('input[name="speed"]:checked');
+            // let behavior = document.querySelector('input[name="behavior"]:checked');
 
+            // ⭐ الجديد بدل rating الواحد
+            let facility = document.querySelector('input[name="facility"]:checked');
+            let it = document.querySelector('input[name="it"]:checked');
+            let medical = document.querySelector('input[name="medical"]:checked');
+            let nursing = document.querySelector('input[name="nursing"]:checked');
+            let other = document.querySelector('input[name="other"]:checked');
             // 🚨 إذا ناقص شيء
-            if (!rating || !category || !speed || !behavior) {
+            if (
+                !facility ||
+                !it ||
+                !medical ||
+                !nursing ||
+                !other
+            ) {
                 showToast(i18n.messages[currentLang].required);
                 return;
             }
