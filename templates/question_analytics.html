@@ -155,28 +155,27 @@
 
     <div class="container">
 
-        <form method="GET" class="card filter-box">
+        <form method="GET" class="card filter-bar">
 
-            <input type="date" name="start_date" placeholder="من تاريخ">
-            <input type="date" name="end_date" placeholder="إلى تاريخ">
+            <input type="date" name="start_date" value="{{ start_date or '' }}">
+            <input type="date" name="end_date" value="{{ end_date or '' }}">
 
             <select name="branch">
-                <option value="">كل الفروع</option>
+                <option value="">All Branches</option>
                 {% for b in branches %}
-                <option value="{{ b }}">{{ b }}</option>
+                <option value="{{ b }}" {% if selected_branch==b %}selected{% endif %}>{{ b }}</option>
                 {% endfor %}
             </select>
 
             <select name="location">
-                <option value="">كل الغرف</option>
+                <option value="">All Rooms</option>
                 {% for r in rooms %}
-                <option value="{{ r }}">{{ r }}</option>
+                <option value="{{ r }}" {% if selected_location==r %}selected{% endif %}>{{ r }}</option>
                 {% endfor %}
             </select>
 
-            <button type="submit" class="btn lang">تصفية</button>
-
-            <a href="/question_analytics" class="btn back">إعادة</a>
+            <button type="submit" class="btn lang">Filter</button>
+            <a href="/question_analytics" class="btn back">Reset</a>
 
         </form>
         <!-- STATS -->
@@ -236,13 +235,13 @@
             <table>
 
                 <tr>
-                    <th>Date</th>
-                    <th>Branch</th>
-                    <th>Location</th>
-                    <th>Category</th>
-                    <th>Speed</th>
-                    <th>Behavior</th>
-                    <th>Rating</th>
+                    <th id="thDate"></th>
+                    <th id="thBranch"></th>
+                    <th id="thLocation"></th>
+                    <th id="thCategory"></th>
+                    <th id="thSpeed"></th>
+                    <th id="thBehavior"></th>
+                    <th id="thRating"></th>
                 </tr>
 
                 {% for i in data %}
@@ -347,7 +346,14 @@
                     cat: "Category",
                     speed: "Speed",
                     behavior: "Behavior",
-                    room: "Rooms"
+                    room: "Rooms",
+                    date: "Date",
+                    branch: "Branch",
+                    location: "Location",
+                    category: "Category",
+                    speed: "Speed",
+                    behavior: "Behavior",
+                    rating: "Rating"
                 },
                 ar: {
                     title: "تحليل التقييمات",
@@ -357,7 +363,14 @@
                     cat: "التصنيف",
                     speed: "السرعة",
                     behavior: "السلوك",
-                    room: "الغرف"
+                    room: "الغرف",
+                    date: "التاريخ",
+                    branch: "الفرع",
+                    location: "الغرفة",
+                    category: "التصنيف",
+                    speed: "السرعة",
+                    behavior: "السلوك",
+                    rating: "التقييم"
                 }
             };
 
@@ -368,6 +381,14 @@
             document.getElementById("speedTitle").innerText = t[l].speed;
             document.getElementById("behaviorTitle").innerText = t[l].behavior;
             document.getElementById("roomTitle").innerText = t[l].room;
+
+            document.getElementById("thDate").innerText = t[l].date;
+            document.getElementById("thBranch").innerText = t[l].branch;
+            document.getElementById("thLocation").innerText = t[l].location;
+            document.getElementById("thCategory").innerText = t[l].category;
+            document.getElementById("thSpeed").innerText = t[l].speed;
+            document.getElementById("thBehavior").innerText = t[l].behavior;
+            document.getElementById("thRating").innerText = t[l].rating;
         }
 
         setLang("en");
