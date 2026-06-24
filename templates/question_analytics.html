@@ -53,7 +53,7 @@
 
         /* ⭐ مهم: هذا اللي يكبر الرسومات */
         .chart-box {
-            height: 420px;
+            height: 400px;
             padding: 10px;
         }
 
@@ -65,6 +65,9 @@
         table {
             width: 100%;
             border-collapse: collapse;
+            overflow-x: auto;
+            display: block;
+            white-space: nowrap;
         }
 
         th,
@@ -165,6 +168,48 @@
                 <h3 id="roomTitle">Rooms</h3>
                 <canvas id="barChart"></canvas>
             </div>
+
+        </div>
+
+        <div class="card">
+
+            <h3>📋 All Feedback Details</h3>
+
+            <table>
+
+                <tr>
+                    <th>Date</th>
+                    <th>Branch</th>
+                    <th>Location</th>
+                    <th>Category</th>
+                    <th>Speed</th>
+                    <th>Behavior</th>
+                    <th>Rating</th>
+                </tr>
+
+                {% for i in data %}
+
+                <tr>
+                    <td>
+                        {% if i.get("date") %}
+                        {{ i["date"].strftime("%Y-%m-%d") }}
+                        {% else %}
+                        -
+                        {% endif %}
+                    </td>
+
+                    <td>{{ i.get("branch","-") }}</td>
+                    <td>{{ i.get("location","-") }}</td>
+                    <td>{{ i.get("category","-") }}</td>
+                    <td>{{ i.get("speed","-") }}</td>
+                    <td>{{ i.get("behavior","-") }}</td>
+                    <td>{{ i.get("rating","-") }}</td>
+
+                </tr>
+
+                {% endfor %}
+
+            </table>
 
         </div>
 
