@@ -226,31 +226,31 @@
                     <label class="category-item">
                         <input type="radio" name="category" value="facility">
                         <span></span>
-                        <div data-key="catFacility">Facility / Maintenance</div>
+                        <span data-key="catFacility">Facility / Maintenance</span>
                     </label>
 
                     <label class="category-item">
                         <input type="radio" name="category" value="it">
                         <span></span>
-                        <div data-key="catIT">IT</div>
+                        <span data-key="catIT">IT</span>
                     </label>
 
                     <label class="category-item">
                         <input type="radio" name="category" value="medical">
                         <span></span>
-                        <div data-key="catMedical">Medical Equipment</div>
+                        <span data-key="catMedical">Medical Equipment</span>
                     </label>
 
                     <label class="category-item">
                         <input type="radio" name="category" value="nursing">
                         <span></span>
-                        <div data-key="catNursing">Nursing</div>
+                        <span data-key="catNursing">Nursing</span>
                     </label>
 
                     <label class="category-item">
                         <input type="radio" name="category" value="other">
                         <span></span>
-                        <div data-key="catOther">Other</div>
+                        <span data-key="catOther">Other</span>
                     </label>
 
                 </div>
@@ -267,19 +267,19 @@
                     <label class="category-item">
                         <input type="radio" name="speed" value="fast">
                         <span></span>
-                        <div data-key="speedFast">Fast</div>
+                        <span data-key="speedFast">Fast</span>
                     </label>
 
                     <label class="category-item">
                         <input type="radio" name="speed" value="average">
                         <span></span>
-                        <div data-key="speedAverage">Average</div>
+                        <span data-key="speedAverage">Average</span>
                     </label>
 
                     <label class="category-item">
                         <input type="radio" name="speed" value="slow">
                         <span></span>
-                        <div data-key="speedSlow">Slow</div>
+                        <span data-key="speedSlow">Slow</span>
                     </label>
 
                 </div>
@@ -296,26 +296,26 @@
                     <label class="category-item">
                         <input type="radio" name="behavior" value="excellent">
                         <span></span>
-                        <div data-key="behExcellent">Excellent</div>
+                        <span data-key="behExcellent">Excellent</span>
                     </label>
 
                     <label class="category-item">
                         <input type="radio" name="behavior" value="good">
                         <span></span>
-                        <div data-key="behGood">Good</div>
+                        <span data-key="behGood">Good</span>
                     </label>
 
                     <label class="category-item">
                         <input type="radio" name="behavior" value="bad">
                         <span></span>
-                        <div data-key="behBad">Bad</div>
+                        <span data-key="behBad">Bad</span>
                     </label>
 
                 </div>
             </div>
             <div class="question-block">
 
-                <div class="question-title">
+                <div class="question-title" data-key="qRating">
                     Rating
                 </div>
 
@@ -445,6 +445,11 @@
             phoneNumber: {
                 en: "Phone Number",
                 ar: "رقم الهاتف"
+            },
+
+            qRating: {
+                en: "Rating",
+                ar: "التقييم"
             }
         };
         let currentLang = "en";
@@ -483,9 +488,9 @@
 
             // ⭐ FIX: هذا هو المهم
             document.querySelectorAll("[data-key]").forEach(el => {
-                const key = el.getAttribute("data-key");
+                const key = el.dataset.key;
 
-                if (i18n[key]) {
+                if (i18n[key] && i18n[key][lang]) {
                     el.innerText = i18n[key][lang];
                 }
             });
