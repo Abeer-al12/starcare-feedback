@@ -921,6 +921,8 @@ def download_excel():
     )
 
 
+from flask import request, render_template, redirect, session
+from datetime import datetime
 from collections import Counter
 
 @app.route('/question_analytics')
@@ -929,23 +931,58 @@ def question_analytics():
     if 'admin' not in session:
         return redirect('/login')
 
+    # ================= GET FILTERS =================
+    start_date = request.args.get("start_date")
+    end_date = request.args.get("end_date")
+    branch = request.args.get("branch")
+    location = request.args.get("location")
+
     data = list(collection.find())
 
-    # ================= AVG =================
-    ratings = [
-        i.get("rating", 0)
-        for i in data
-        if isinstance(i.get("rating"), (int, float))
-    ]
+    filtered = []
 
+    for i in data:
+
+        # ================= DATE FIX =================
+        db_date = i.get("date")
+
+        if isinstance(db_date, str):
+            try:
+                db_date = datetime.strptime(db_date, "%Y-%m-%d")
+            except:
+                db_date = None
+
+        i["date"] = db_date
+
+        # ================= FILTER CHECK =================
+        if start_date:
+            start = datetime.strptime(start_date, "%Y-%m-%d")
+            if not db_date or db_date < start:
+                continue
+
+        if end_date:
+            end = datetime.strptime(end_date, "%Y-%m-%d")
+            if not db_date or db_date > end:
+                continue
+
+        if branch and i.get("branch") != branch:
+            continue
+
+        if location and i.get("location") != location:
+            continue
+
+        filtered.append(i)
+
+    data = filtered
+
+    # ================= STATS =================
+    ratings = [i.get("rating", 0) for i in data if isinstance(i.get("rating"), (int, float))]
     avg_rating = round(sum(ratings) / len(ratings), 2) if ratings else 0
 
-    # ================= COUNTS =================
     category_count = Counter(i.get("category", "unknown") for i in data)
     speed_count = Counter(i.get("speed", "unknown") for i in data)
     behavior_count = Counter(i.get("behavior", "unknown") for i in data)
 
-    # ================= EXTRA STATS =================
     excellent_count = len([i for i in data if i.get("behavior") == "excellent"])
     bad_count = len([i for i in data if i.get("behavior") == "bad"])
 
@@ -956,9 +993,7 @@ def question_analytics():
         room = i.get("location", "unknown")
         rating = i.get("rating", 0)
 
-        if room not in room_stats:
-            room_stats[room] = {"count": 0, "total": 0}
-
+        room_stats.setdefault(room, {"count": 0, "total": 0})
         room_stats[room]["count"] += 1
 
         if isinstance(rating, (int, float)):
@@ -966,10 +1001,11 @@ def question_analytics():
 
     room_labels = list(room_stats.keys())
     room_counts = [v["count"] for v in room_stats.values()]
-    room_avgs = [
-        round(v["total"] / v["count"], 2) if v["count"] else 0
-        for v in room_stats.values()
-    ]
+    room_avgs = [round(v["total"] / v["count"], 2) if v["count"] else 0 for v in room_stats.values()]
+
+    # ================= FILTER OPTIONS =================
+    branches = sorted(set(i.get("branch") for i in collection.find() if i.get("branch")))
+    rooms = sorted(set(i.get("location") for i in collection.find() if i.get("location")))
 
     return render_template(
         "question_analytics.html",
@@ -982,7 +1018,13 @@ def question_analytics():
         bad_count=bad_count,
         room_labels=room_labels,
         room_counts=room_counts,
-        room_avgs=room_avgs
+        room_avgs=room_avgs,
+        branches=branches,
+        rooms=rooms,
+        selected_branch=branch,
+        selected_location=location,
+        start_date=start_date,
+        end_date=end_date
     )
 # ---------------- ANALYTICS ----------------
 @app.route('/analytics')
