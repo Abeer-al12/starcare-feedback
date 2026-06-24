@@ -584,43 +584,57 @@
                     el.placeholder = i18n[key][lang];
                 }
             });
+            setPopupLang(lang);
         }
 
     </script>
     <div id="phonePopup" style="display:none;
-        position:fixed;
-        top:0;
-        left:0;
-        width:100%;
-        height:100%;
-        background:rgba(0,0,0,0.45);
-        justify-content:center;
-        align-items:center;
-        z-index:999;">
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.45);
+    justify-content:center;
+    align-items:center;
+    z-index:999;">
 
         <div style="
-    background:white;
-    width:350px;
-    padding:30px;
-    border-radius:25px;
-    text-align:center;
-    box-shadow:0 10px 30px rgba(0,0,0,0.15);">
+        background:white;
+        width:90%;
+        max-width:350px;
+        padding:25px;
+        border-radius:25px;
+        text-align:center;
+        box-shadow:0 10px 30px rgba(0,0,0,0.15);
+    ">
 
-            <h2 id="popupTitle"></h2>
+            <h2 id="popupTitle">
+                Contact Information
+            </h2>
 
-            <p id="popupText"></p>
+            <p id="popupText">
+                Please enter your details to continue
+            </p>
 
-            <input type="text" id="popupName" placeholder="">
+            <input type="text" id="popupName" placeholder="Full Name"
+                style="width:100%;padding:10px;margin:8px 0;border:1px solid #ddd;border-radius:10px;">
 
-            <input type="text" id="popupPhone" placeholder="">
+            <input type="text" id="popupPhone" placeholder="Phone Number"
+                style="width:100%;padding:10px;margin:8px 0;border:1px solid #ddd;border-radius:10px;">
 
-            <button id="popupBtn" onclick="submitLowRating()"></button>
+            <button id="popupBtn" onclick="submitLowRating()"
+                style="width:100%;padding:12px;margin-top:10px;background:#00A79B;color:white;border:none;border-radius:10px;">
+                Submit
+            </button>
 
-            <button id="skipBtn" onclick="skipContact()"></button>
+            <button id="skipBtn" onclick="skipContact()"
+                style="width:100%;padding:10px;margin-top:8px;background:#eee;border:none;border-radius:10px;">
+                Skip
+            </button>
 
         </div>
     </div>
-
     <script>
 
         let tempRating = 0;
@@ -768,6 +782,27 @@
             setTimeout(() => {
                 toast.remove();
             }, 2500);
+        }
+
+        function setPopupLang(lang) {
+
+            document.getElementById("popupTitle").innerText =
+                i18n.popupTitle[lang];
+
+            document.getElementById("popupText").innerText =
+                i18n.popupText[lang];
+
+            document.getElementById("popupName").placeholder =
+                i18n.fullName[lang];
+
+            document.getElementById("popupPhone").placeholder =
+                i18n.phoneNumber[lang];
+
+            document.getElementById("popupBtn").innerText =
+                i18n.submit[lang];
+
+            document.getElementById("skipBtn").innerText =
+                i18n.skip[lang];
         }
     </script>
     <div id="toast"></div>
