@@ -931,50 +931,58 @@ def question_analytics():
 
     data = list(collection.find())
 
-    avg_rating = round(
-        sum(i.get("rating",0) for i in data) / len(data),
-        2
-    ) if data else 0
+    # ================= AVG =================
+    ratings = [
+        i.get("rating", 0)
+        for i in data
+        if isinstance(i.get("rating"), (int, float))
+    ]
 
-    excellent_count = len([
-        i for i in data
-        if i.get("behavior") == "excellent"
-    ])
+    avg_rating = round(sum(ratings) / len(ratings), 2) if ratings else 0
 
-    bad_count = len([
-        i for i in data
-        if i.get("behavior") == "bad"
-    ])
+    # ================= COUNTS =================
+    category_count = Counter(i.get("category", "unknown") for i in data)
+    speed_count = Counter(i.get("speed", "unknown") for i in data)
+    behavior_count = Counter(i.get("behavior", "unknown") for i in data)
 
-    category_list = []
-    speed_list = []
-    behavior_list = []
+    # ================= EXTRA STATS =================
+    excellent_count = len([i for i in data if i.get("behavior") == "excellent"])
+    bad_count = len([i for i in data if i.get("behavior") == "bad"])
+
+    # ================= ROOMS =================
+    room_stats = {}
 
     for i in data:
-        a = i.get("answers", {})
+        room = i.get("location", "unknown")
+        rating = i.get("rating", 0)
 
-        if a.get("category"):
-            category_list.append(a.get("category"))
+        if room not in room_stats:
+            room_stats[room] = {"count": 0, "total": 0}
 
-        if a.get("speed"):
-            speed_list.append(a.get("speed"))
+        room_stats[room]["count"] += 1
 
-        if a.get("behavior"):
-            behavior_list.append(a.get("behavior"))
+        if isinstance(rating, (int, float)):
+            room_stats[room]["total"] += rating
 
-    category_count = Counter(category_list)
-    speed_count = Counter(speed_list)
-    behavior_count = Counter(behavior_list)
+    room_labels = list(room_stats.keys())
+    room_counts = [v["count"] for v in room_stats.values()]
+    room_avgs = [
+        round(v["total"] / v["count"], 2) if v["count"] else 0
+        for v in room_stats.values()
+    ]
 
     return render_template(
         "question_analytics.html",
         data=data,
+        avg_rating=avg_rating,
         category_count=category_count,
         speed_count=speed_count,
         behavior_count=behavior_count,
-        avg_rating=avg_rating,
         excellent_count=excellent_count,
-        bad_count=bad_count
+        bad_count=bad_count,
+        room_labels=room_labels,
+        room_counts=room_counts,
+        room_avgs=room_avgs
     )
 # ---------------- ANALYTICS ----------------
 @app.route('/analytics')

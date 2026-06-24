@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <title>Question Analytics</title>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <style>
         body {
             margin: 0;
@@ -21,21 +23,36 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
         }
 
-        .title {
-            font-size: 20px;
-            font-weight: bold;
-        }
-
         .container {
             padding: 20px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
         }
 
         .card {
             background: white;
             padding: 20px;
             border-radius: 15px;
-            margin-bottom: 20px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            margin-bottom: 20px;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat h2 {
+            color: #00A79B;
+            margin: 0;
+        }
+
+        canvas {
+            max-width: 100%;
         }
 
         table {
@@ -54,192 +71,92 @@
             background: #00A79B;
             color: white;
         }
-
-        .btn {
-            padding: 8px 14px;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-        }
-
-        .back {
-            background: #1b2a41;
-            color: white;
-            text-decoration: none;
-        }
-
-        .lang {
-            background: #00A79B;
-            color: white;
-        }
-
-        .badge {
-            background: #e8fffb;
-            color: #00A79B;
-            padding: 5px 10px;
-            border-radius: 10px;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-            margin-bottom: 25px;
-        }
-
-        .stat-card {
-            background: white;
-            padding: 25px;
-            border-radius: 15px;
-            text-align: center;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, .08);
-        }
-
-        .stat-card h2 {
-            color: #00A79B;
-            font-size: 32px;
-            margin: 0;
-        }
     </style>
-
 </head>
 
 <body>
 
     <!-- HEADER -->
     <div class="header">
-
-        <a href="/admin" class="btn back" id="backBtn">← Back</a>
-
-        <div class="title" id="title">Question Analytics</div>
-
-        <div>
-            <button class="btn lang" onclick="setLang('en')">EN</button>
-            <button class="btn lang" onclick="setLang('ar')">AR</button>
-        </div>
-
+        <h2>📊 Question Analytics</h2>
+        <a href="/admin">← Back</a>
     </div>
 
     <div class="container">
 
+        <!-- STATS -->
         <div class="stats-grid">
 
-            <div class="stat-card">
+            <div class="card stat">
                 <h2>{{ data|length }}</h2>
-                <p>Total Responses</p>
+                <p>Total Feedback</p>
             </div>
 
-            <div class="stat-card">
+            <div class="card stat">
                 <h2>{{ avg_rating }}</h2>
                 <p>Average Rating</p>
             </div>
 
-            <div class="stat-card">
+            <div class="card stat">
                 <h2>{{ excellent_count }}</h2>
                 <p>Excellent</p>
             </div>
 
-            <div class="stat-card">
+            <div class="card stat">
                 <h2>{{ bad_count }}</h2>
                 <p>Bad</p>
             </div>
 
         </div>
 
+        <!-- PIE CHART -->
         <div class="card">
-            <h3 id="catTitle">Category Statistics</h3>
-
-            <table>
-                <tr>
-                    <th>Option</th>
-                    <th>Count</th>
-                    <th>%</th>
-                </tr>
-
-                {% for k,v in category_count.items() %}
-                <tr>
-                    <td>{{ k }}</td>
-                    <td>{{ v }}</td>
-                    <td>{{ (v / data|length * 100) | round(1) }}%</td>
-                </tr>
-                {% endfor %}
-
-            </table>
+            <h3>Category Distribution</h3>
+            <canvas id="pieChart"></canvas>
         </div>
 
+        <!-- SPEED -->
         <div class="card">
-            <h3 id="speedTitle">Speed Statistics</h3>
-
-            <table>
-                <tr>
-                    <th>Option</th>
-                    <th>Count</th>
-                    <th>%</th>
-                </tr>
-
-                {% for k,v in speed_count.items() %}
-                <tr>
-                    <td>{{ k }}</td>
-                    <td>{{ v }}</td>
-                    <td>{{ (v / data|length * 100) | round(1) }}%</td>
-                </tr>
-                {% endfor %}
-
-            </table>
+            <h3>Speed Distribution</h3>
+            <canvas id="speedChart"></canvas>
         </div>
 
+        <!-- BEHAVIOR -->
         <div class="card">
-            <h3 id="behaviorTitle">Behavior Statistics</h3>
-
-            <table>
-                <tr>
-                    <th>Option</th>
-                    <th>Count</th>
-                    <th>%</th>
-                </tr>
-
-                {% for k,v in behavior_count.items() %}
-                <tr>
-                    <td>{{ k }}</td>
-                    <td>{{ v }}</td>
-                    <td>{{ (v / data|length * 100) | round(1) }}%</td>
-                </tr>
-                {% endfor %}
-
-            </table>
+            <h3>Behavior Distribution</h3>
+            <canvas id="behaviorChart"></canvas>
         </div>
 
+        <!-- ROOM COMPARISON -->
         <div class="card">
+            <h3>Room Comparison</h3>
+            <canvas id="barChart"></canvas>
+        </div>
 
-            <h3 id="detailsTitle">All Feedback Details</h3>
+        <!-- TABLE -->
+        <div class="card">
+            <h3>All Feedback</h3>
 
             <table>
-
                 <tr>
-                    <th id="thDate">Date</th>
-                    <th id="thLocation">Location</th>
-                    <th id="thCategory">Category</th>
-                    <th id="thSpeed">Speed</th>
-                    <th id="thBehavior">Behavior</th>
-                    <th id="thRating">Rating</th>
+                    <th>Date</th>
+                    <th>Location</th>
+                    <th>Category</th>
+                    <th>Speed</th>
+                    <th>Behavior</th>
+                    <th>Rating</th>
                 </tr>
 
                 {% for i in data %}
                 <tr>
-                    <td>{{ i.date.strftime("%Y-%m-%d") if i.get("date") else "-" }}</td>
-
+                    <td>{{ i.get("date") }}</td>
                     <td>{{ i.get("location","-") }}</td>
-
                     <td>{{ i.get("category","-") }}</td>
-
                     <td>{{ i.get("speed","-") }}</td>
-
                     <td>{{ i.get("behavior","-") }}</td>
-
                     <td>{{ i.get("rating","-") }}</td>
                 </tr>
                 {% endfor %}
-
             </table>
 
         </div>
@@ -248,76 +165,54 @@
 
     <script>
 
-        function setLang(lang) {
-
-            document.documentElement.dir =
-                lang === "ar" ? "rtl" : "ltr";
-
-            const t = {
-
-                en: {
-                    title: "Question Analytics",
-                    back: "← Back",
-
-                    cat: "Category Statistics",
-                    speed: "Speed Statistics",
-                    behavior: "Behavior Statistics",
-                    details: "All Feedback Details",
-
-                    date: "Date",
-                    location: "Location",
-                    category: "Category",
-                    rating: "Rating"
-                },
-
-                ar: {
-                    title: "تحليل الأسئلة",
-                    back: "← رجوع",
-
-                    cat: "إحصائيات التصنيف",
-                    speed: "إحصائيات سرعة الخدمة",
-                    behavior: "إحصائيات تعامل الموظفين",
-                    details: "جميع التقييمات",
-
-                    date: "التاريخ",
-                    location: "الموقع",
-                    category: "التصنيف",
-                    rating: "التقييم"
-                }
-            };
-
-            document.getElementById("title").innerText =
-                t[lang].title;
-
-            document.getElementById("backBtn").innerText =
-                t[lang].back;
-
-            document.getElementById("catTitle").innerText =
-                t[lang].cat;
-
-            document.getElementById("speedTitle").innerText =
-                t[lang].speed;
-
-            document.getElementById("behaviorTitle").innerText =
-                t[lang].behavior;
-
-            document.getElementById("detailsTitle").innerText =
-                t[lang].details;
-
-            document.getElementById("thDate").innerText =
-                t[lang].date;
-
-            document.getElementById("thLocation").innerText =
-                t[lang].location;
-
-            document.getElementById("thCategory").innerText =
-                t[lang].category;
-
-            document.getElementById("thRating").innerText =
-                t[lang].rating;
+        // ================= PIE =================
+        new Chart(document.getElementById("pieChart"), {
+            type: "pie",
+            data: {
+                labels: {{ category_count.keys() | list | tojson }},
+            datasets: [{
+                data: {{ category_count.values() | list | tojson }},
+            backgroundColor: ["#00A79B", "#1b2a41", "#ffb703", "#ef476f"]
+            }]
         }
+    });
 
-        setLang("en");
+        // ================= SPEED =================
+        new Chart(document.getElementById("speedChart"), {
+            type: "pie",
+            data: {
+                labels: {{ speed_count.keys() | list | tojson }},
+            datasets: [{
+                data: {{ speed_count.values() | list | tojson }},
+            backgroundColor: ["#06d6a0", "#118ab2", "#ffd166", "#ef476f"]
+            }]
+        }
+    });
+
+        // ================= BEHAVIOR =================
+        new Chart(document.getElementById("behaviorChart"), {
+            type: "pie",
+            data: {
+                labels: {{ behavior_count.keys() | list | tojson }},
+            datasets: [{
+                data: {{ behavior_count.values() | list | tojson }},
+            backgroundColor: ["#00A79B", "#1b2a41", "#ef476f"]
+            }]
+        }
+    });
+
+        // ================= ROOMS BAR =================
+        new Chart(document.getElementById("barChart"), {
+            type: "bar",
+            data: {
+                labels: {{ room_labels | tojson }},
+            datasets: [{
+                label: "Feedback Count",
+                data: {{ room_counts | tojson }},
+            backgroundColor: "#00A79B"
+            }]
+        }
+    });
 
     </script>
 
