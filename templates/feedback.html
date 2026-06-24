@@ -786,39 +786,40 @@
         document.getElementById("feedbackForm").addEventListener("submit", function (e) {
             e.preventDefault();
 
-            // let category = document.querySelector('input[name="category"]:checked');
-            // let speed = document.querySelector('input[name="speed"]:checked');
-            // let behavior = document.querySelector('input[name="behavior"]:checked');
-
-            // ⭐ الجديد بدل rating الواحد
             let facility = document.querySelector('input[name="facility"]:checked');
             let it = document.querySelector('input[name="it"]:checked');
             let medical = document.querySelector('input[name="medical"]:checked');
             let nursing = document.querySelector('input[name="nursing"]:checked');
             let other = document.querySelector('input[name="other"]:checked');
-            // 🚨 إذا ناقص شيء
-            if (
-                !facility ||
-                !it ||
-                !medical ||
-                !nursing ||
-                !other
-            ) {
+
+            if (!facility || !it || !medical || !nursing || !other) {
                 showToast(i18n.messages[currentLang].required);
                 return;
             }
-            let ratingValue = parseInt(rating.value);
 
-            tempRating = ratingValue;
+            // نحول القيم لأرقام
+            facility = parseInt(facility.value);
+            it = parseInt(it.value);
+            medical = parseInt(medical.value);
+            nursing = parseInt(nursing.value);
+            other = parseInt(other.value);
+
             tempComment = document.getElementById("commentBox").value;
 
-            if (ratingValue <= 3) {
-                isLowRating = true;
-            } else {
-                isLowRating = false;
-            }
+            // 🔥 نحسب إذا فيه تقييم منخفض
+            isLowRating =
+                facility <= 3 ||
+                it <= 3 ||
+                medical <= 3 ||
+                nursing <= 3 ||
+                other <= 3;
 
-            document.getElementById("phonePopup").style.display = "flex";
+            // إذا منخفض → يطلع popup
+            if (isLowRating) {
+                document.getElementById("phonePopup").style.display = "flex";
+            } else {
+                sendData(null, null); // بدون اسم ورقم
+            }
         });
 
         // ---------------- SUBMIT LOW RATING ----------------
@@ -843,31 +844,36 @@
             sendData(name, phone);
         }
 
-        fetch("/save_feedback", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                location: "{{ room }}",
-                branch: "{{ branch }}",
-                rating: tempRating,
-                comment: tempComment,
+        function sendData(name, phone) {
 
-                category: document.querySelector('input[name="category"]:checked')?.value,
-                speed: document.querySelector('input[name="speed"]:checked')?.value,
-                behavior: document.querySelector('input[name="behavior"]:checked')?.value,
+            fetch("/save_feedback", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    location: "{{ room }}",
+                    branch: "{{ branch }}",
 
-                name: name || null,
-                phone: phone || null
+                    facility,
+                    it,
+                    medical,
+                    nursing,
+                    other,
+
+                    comment: tempComment,
+
+                    name: name || null,
+                    phone: phone || null
+                })
             })
-        })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    window.location.href = `/thankyou/{{ branch }}/{{ room }}`;
-                }
-            });
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.href = `/thankyou/{{ branch }}/{{ room }}`;
+                    }
+                });
+        }
 
         // ---------------- SKIP BUTTON ----------------
         function skipContact() {
