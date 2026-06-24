@@ -619,6 +619,7 @@
 
                 </div>
 
+
                 <button class="submit-btn" type="submit">
                     <span id="btnText">
                         Submit Feedback
@@ -772,6 +773,11 @@
         let tempRating = 0;
         let tempComment = "";
         let isLowRating = false;
+        let facility = 0;
+        let it = 0;
+        let medical = 0;
+        let nursing = 0;
+        let other = 0;
 
         function showError(msg) {
             const box = document.getElementById("errorMsg");
@@ -786,11 +792,11 @@
         document.getElementById("feedbackForm").addEventListener("submit", function (e) {
             e.preventDefault();
 
-            let facility = document.querySelector('input[name="facility"]:checked');
-            let it = document.querySelector('input[name="it"]:checked');
-            let medical = document.querySelector('input[name="medical"]:checked');
-            let nursing = document.querySelector('input[name="nursing"]:checked');
-            let other = document.querySelector('input[name="other"]:checked');
+            facility = document.querySelector('input[name="facility"]:checked')?.value;
+            it = document.querySelector('input[name="it"]:checked')?.value;
+            medical = document.querySelector('input[name="medical"]:checked')?.value;
+            nursing = document.querySelector('input[name="nursing"]:checked')?.value;
+            other = document.querySelector('input[name="other"]:checked')?.value;
 
             if (!facility || !it || !medical || !nursing || !other) {
                 showToast(i18n.messages[currentLang].required);
@@ -798,11 +804,11 @@
             }
 
             // نحول القيم لأرقام
-            facility = parseInt(facility.value);
-            it = parseInt(it.value);
-            medical = parseInt(medical.value);
-            nursing = parseInt(nursing.value);
-            other = parseInt(other.value);
+            facility = parseInt(facility);
+            it = parseInt(it);
+            medical = parseInt(medical);
+            nursing = parseInt(nursing);
+            other = parseInt(other);
 
             tempComment = document.getElementById("commentBox").value;
 
