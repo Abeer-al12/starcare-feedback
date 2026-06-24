@@ -171,6 +171,19 @@
             border-color: #00A79B;
             background: #e6fffb;
         }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #00A79B;
+        }
     </style>
 </head>
 
@@ -435,22 +448,19 @@
             }
         };
         let currentLang = "en";
-        function setLang(lang) {
+        ffunction setLang(lang) {
 
             currentLang = lang;
 
             document.documentElement.dir = (lang === "ar") ? "rtl" : "ltr";
 
-            document.getElementById("titleText").innerHTML =
+            document.getElementById("titleText").innerText =
                 lang === "ar" ? "قيّم خدمتنا" : "Rate our Service";
-
-            document.getElementById("starText").innerHTML =
-                lang === "ar" ? "اضغط على النجوم للتقييم" : "Tap a star to rate";
 
             document.getElementById("commentBox").placeholder =
                 lang === "ar" ? "اكتب ملاحظاتك..." : "Share your thoughts...";
 
-            document.getElementById("btnText").innerHTML =
+            document.getElementById("btnText").innerText =
                 lang === "ar" ? "إرسال التقييم" : "Submit Feedback";
 
             document.getElementById("popupTitle").innerText =
@@ -471,10 +481,7 @@
             document.getElementById("skipBtn").innerText =
                 i18n.skip[lang];
 
-            const skipBtn = document.getElementById("skipBtn");
-            if (skipBtn) skipBtn.innerText = i18n[lang].skip;
-
-            // ⭐ الترجمة الجديدة الصح
+            // ⭐ FIX: هذا هو المهم
             document.querySelectorAll("[data-key]").forEach(el => {
                 const key = el.getAttribute("data-key");
 
