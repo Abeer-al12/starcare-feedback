@@ -232,6 +232,80 @@
         #skipBtn {
             background: #eee;
         }
+
+        #toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1b2a41;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-size: 14px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            display: none;
+            z-index: 9999;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
+        }
+
+
+        @media (max-width: 600px) {
+
+    .card {
+        width: 92% !important;
+        padding: 20px;
+        border-radius: 20px;
+    }
+
+    h1 {
+        font-size: 20px;
+    }
+
+    .room {
+        font-size: 16px;
+    }
+
+    .question-title {
+        font-size: 14px;
+    }
+
+    .category-options {
+        flex-direction: column; /* يخلي الخيارات تحت بعض بدل جنب */
+        gap: 10px;
+    }
+
+    .category-item {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .stars label {
+        font-size: 38px; /* تصغير النجوم في الهاتف */
+    }
+
+    textarea {
+        height: 90px;
+        font-size: 14px;
+    }
+
+    .submit-btn {
+        font-size: 15px;
+        padding: 12px;
+    }
+}
     </style>
 </head>
 <div id="errorMsg" style="
@@ -429,7 +503,7 @@
             qSpeed: { en: "Service Speed", ar: "سرعة الخدمة" },
             qBehavior: { en: "Staff Behavior", ar: "سلوك الموظفين" },
             qRating: { en: "Rating", ar: "التقييم" },
-            qComment:{ en:"Your Comment",ar:"ملاحظاتك" },
+            qComment: { en: "Your Comment", ar: "ملاحظاتك" },
 
             catFacility: { en: "Facility / Maintenance", ar: "المرافق / الصيانة" },
             catIT: { en: "IT", ar: "تقنية المعلومات" },
@@ -568,7 +642,11 @@
 
             // 🚨 إذا ناقص شيء
             if (!category || !speed || !behavior || !rating) {
-                showError("⚠️ Please answer all questions");
+                showToast(
+                    currentLang === "ar"
+                        ? "⚠️ لازم تجاوب على كل الأسئلة"
+                        : "⚠️ Please answer all questions"
+                );
                 return;
             }
 
@@ -633,7 +711,7 @@
                     window.location.href = `/thankyou/{{ branch }}/{{ room }}`;
                 }
             });
-        
+
         // ---------------- SKIP BUTTON ----------------
         function skipContact() {
 
@@ -669,8 +747,18 @@
                     }
                 });
         }
-    </script>
 
+        function showToast(message) {
+            const toast = document.getElementById("toast");
+            toast.innerText = message;
+            toast.style.display = "block";
+
+            setTimeout(() => {
+                toast.style.display = "none";
+            }, 2500);
+        }
+    </script>
+    <div id="toast"></div>
 </body>
 
 </html>
