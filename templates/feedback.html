@@ -145,29 +145,6 @@
             color: #1b2a41;
         }
 
-        .category-options {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .category-item {
-            justify-content: flex-start;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding: 8px 12px;
-            border: 2px solid #ddd;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 13px;
-            transition: 0.2s;
-        }
-
-        .category-item:has(input:checked) {
-            border-color: #00A79B;
-            background: #e6fffb;
-        }
 
         input {
             width: 100%;
@@ -265,48 +242,44 @@
         @media (max-width: 600px) {
 
             .card {
-                width: 92% !important;
+                width: 92%;
                 padding: 20px;
-                border-radius: 20px;
-            }
-
-            h1 {
-                font-size: 20px;
-            }
-
-            .room {
-                font-size: 16px;
-            }
-
-            .question-title {
-                font-size: 14px;
-            }
-
-            .category-options {
-                flex-direction: column;
-                /* يخلي الخيارات تحت بعض بدل جنب */
-                gap: 10px;
             }
 
             .category-item {
-                width: 100%;
-                justify-content: flex-start;
-            }
-
-            .stars label {
-                font-size: 38px;
-                /* تصغير النجوم في الهاتف */
-            }
-
-            textarea {
-                height: 90px;
                 font-size: 14px;
             }
 
-            .submit-btn {
-                font-size: 15px;
-                padding: 12px;
+            .stars label {
+                font-size: 40px;
             }
+        }
+
+        .category-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .category-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .category-item input {
+            accent-color: #00A79B;
+            transform: scale(1.2);
+        }
+
+        .category-item:has(input:checked) {
+            border-color: #00A79B;
+            background: #e9fffb;
         }
     </style>
 </head>
@@ -484,7 +457,7 @@
                     Your Comment
                 </div>
 
-                <textarea name="comment" id="commentBox" placeholder="Share your thoughts..."></textarea>
+                <textarea name="comment" id="commentBox" data-placeholder="qComment"></textarea>
 
             </div>
 
@@ -566,36 +539,25 @@
 
         let currentLang = "en";
         function setLang(lang) {
+            currentLang = lang;
 
             document.documentElement.dir = (lang === "ar") ? "rtl" : "ltr";
 
-            // 🔥 كل عناصر الصفحة
+            // النصوص
             document.querySelectorAll("[data-key]").forEach(el => {
-                const key = el.dataset.key;
-
-                if (i18n[key] && i18n[key][lang]) {
+                const key = el.getAttribute("data-key");
+                if (i18n[key]) {
                     el.innerText = i18n[key][lang];
                 }
             });
 
-            // 🔥 popup elements (مهم جداً)
-            const popupTitle = document.getElementById("popupTitle");
-            const popupText = document.getElementById("popupText");
-            const popupName = document.getElementById("popupName");
-            const popupPhone = document.getElementById("popupPhone");
-            const popupBtn = document.getElementById("popupBtn");
-            const skipBtn = document.getElementById("skipBtn");
-
-            if (popupTitle) popupTitle.innerText = i18n.popupTitle[lang];
-            if (popupText) popupText.innerText = i18n.popupText[lang];
-            if (popupName) popupName.placeholder = i18n.fullName[lang];
-            if (popupPhone) popupPhone.placeholder = i18n.phoneNumber[lang];
-            if (popupBtn) popupBtn.innerText = i18n.submit[lang];
-            if (skipBtn) skipBtn.innerText = i18n.skip[lang];
-
-            // 🔥 main button (submit)
-            const btnText = document.getElementById("btnText");
-            if (btnText) btnText.innerText = i18n.submit[lang];
+            // placeholders
+            document.querySelectorAll("[data-placeholder]").forEach(el => {
+                const key = el.getAttribute("data-placeholder");
+                if (i18n[key]) {
+                    el.placeholder = i18n[key][lang];
+                }
+            });
         }
 
     </script>
