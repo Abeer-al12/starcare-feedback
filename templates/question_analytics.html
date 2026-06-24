@@ -111,6 +111,13 @@
             background: #00A79B;
             color: white;
         }
+
+        input,
+        select {
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
     </style>
 </head>
 
@@ -132,6 +139,34 @@
 
     <div class="container">
 
+        <form method="GET" class="card" style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+
+            <!-- DATE -->
+            <input type="date" name="start_date">
+            <input type="date" name="end_date">
+
+            <!-- BRANCH -->
+            <select name="branch">
+                <option value="">All Branches</option>
+                {% for b in branches %}
+                <option value="{{ b }}">{{ b }}</option>
+                {% endfor %}
+            </select>
+
+            <!-- ROOM -->
+            <select name="location">
+                <option value="">All Rooms</option>
+                {% for r in rooms %}
+                <option value="{{ r }}">{{ r }}</option>
+                {% endfor %}
+            </select>
+
+            <!-- BUTTON -->
+            <button type="submit" class="btn lang">Filter</button>
+
+            <a href="/question_analytics" class="btn back">Reset</a>
+
+        </form>
         <!-- STATS -->
         <div class="stats-grid">
 
