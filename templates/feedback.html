@@ -255,29 +255,29 @@
             }
         }
 
+        
+
         .category-options {
             display: flex;
             flex-direction: row;
             flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 10px;
+            gap: 12px;
         }
 
         .category-item {
             display: flex;
             align-items: center;
-            gap: 6px;
             cursor: pointer;
             font-size: 14px;
-            padding: 6px 10px;
+            gap: 6px;
         }
 
-        /* نخفي الدائرة الافتراضية */
+        /* نخفي radio الحقيقي */
         .category-item input {
             display: none;
         }
 
-        /* شكل الاختيار (بدون حواف ثقيلة) */
+        /* الدائرة الوحيدة */
         .category-item span {
             width: 14px;
             height: 14px;
@@ -291,11 +291,6 @@
         .category-item input:checked+span {
             background: #00A79B;
             border-color: #00A79B;
-        }
-
-        /* النص */
-        .category-item div {
-            margin-left: 4px;
         }
     </style>
 </head>
