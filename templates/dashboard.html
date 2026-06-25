@@ -115,7 +115,7 @@
         <div class="menu">
             <a href="/admin">Dashboard</a>
             <a href="/analytics">Analytics</a>
-            <a href="/qr_dashboard">QR</a>
+            <a href="/qr_dashboard">QR Code</a>
             <a href="/manage_users">Users</a>
             <a href="/logout">Logout</a>
         </div>
@@ -140,13 +140,38 @@
         </div>
 
         <!-- FILTER -->
-        <form method="GET" action="/admin">
+        <form method="GET" action="/admin" style="display:flex; gap:10px; flex-wrap:wrap;">
+
+            <!-- Branch -->
             <select name="branch" onchange="this.form.submit()">
                 <option value="">All Branches</option>
                 {% for b in branches %}
-                <option value="{{ b }}" {% if active_branch==b %}selected{% endif %}>{{ b }}</option>
+                <option value="{{ b }}" {% if active_branch==b %}selected{% endif %}>
+                    {{ b }}
+                </option>
                 {% endfor %}
             </select>
+
+            <!-- Location -->
+            <select name="location" onchange="this.form.submit()">
+                <option value="">All Locations</option>
+                {% for s in stats %}
+                <option value="{{ s.location }}" {% if request.args.get('location')==s.location %}selected{% endif %}>
+                    {{ s.location }}
+                </option>
+                {% endfor %}
+            </select>
+
+            <!-- Category -->
+            <select name="category" onchange="this.form.submit()">
+                <option value="">All Categories</option>
+                <option value="facility">Facility / Maintenance</option>
+                <option value="it">IT</option>
+                <option value="medical">Medical Equipment</option>
+                <option value="nursing">Nursing</option>
+                <option value="other">Other</option>
+            </select>
+
         </form>
 
         <h3>Active Branch: {{ active_branch or "All" }}</h3>

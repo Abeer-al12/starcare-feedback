@@ -360,8 +360,13 @@ def admin():
     role = session.get("role")
     username = session.get("username")
 
-    selected_location = request.args.get("location")
-    active_branch = request.args.get("branch")
+    # selected_location = request.args.get("location")
+    # active_branch = request.args.get("branch")
+
+    branch = request.args.get("branch")
+    location = request.args.get("location")
+    category = request.args.get("category")
+
 
     if active_branch == "all":
         session.pop("active_branch", None)
@@ -386,12 +391,11 @@ def admin():
         query["location"] = {"$in": allowed_locations}
 
 # 🌟 branch filter (أقوى من location)
-    if active_branch:
-        query["branch"] = active_branch
+    if branch:
+        query["branch"] = branch
 
-# 🌟 location فقط إذا ما فيه branch ولا role restriction
-    elif selected_location:
-        query["location"] = selected_location
+    if location:
+        query["location"] = location
 
 
     # =========================
