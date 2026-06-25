@@ -743,15 +743,15 @@ def download_pdf():
     )
 
     details = [[
-        "Date",
-        "Time",
-        "Branch",
-        "Location",
-        "Rating",
-        "Comment",
-        "Name",
-        "Phone"
-    ]]
+    "Date",
+    "Time",
+    "Branch",
+    "Location",
+    "Rating",
+    "Comment",
+    "Name",
+    "Phone"
+]]
 
 for item in data:
 
@@ -779,14 +779,14 @@ for item in data:
         item.get("phone", "-"),
     ])
 
+# 👇 لازم يكون خارج for loop 100%
 details_table = Table(details)
 
-    details_table.setStyle(TableStyle([
-        ('BACKGROUND',(0,0),(-1,0),colors.HexColor("#00A79B")),
-        ('TEXTCOLOR',(0,0),(-1,0),colors.white),
-        ('GRID',(0,0),(-1,-1),1,colors.black),
-        ('FONTSIZE',(0,0),(-1,-1),8)
-    ]))
+details_table.setStyle(TableStyle([
+    ('BACKGROUND', (0,0), (-1,0), colors.HexColor("#00A79B")),
+    ('TEXTCOLOR', (0,0), (-1,0), colors.white),
+    ('GRID', (0,0), (-1,-1), 1, colors.black),
+]))
 
     elements.append(details_table)
 
