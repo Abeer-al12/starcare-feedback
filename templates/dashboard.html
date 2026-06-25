@@ -397,8 +397,9 @@
                     {% set nursing = item.nursing or 0 %}
                     {% set other = item.other or 0 %}
 
-                    {% if facility <= 3 or it <=3 or medical <=3 or nursing <=3 or other <=3 %} <span
-                        class="status-issue">Issue</span>
+                    {% set scores = [facility, it, medical, nursing, other] %}
+
+                    {% if scores|min <= 3 %} <span class="status-issue">Issue</span>
                         {% else %}
                         <span class="status-good">OK</span>
                         {% endif %}

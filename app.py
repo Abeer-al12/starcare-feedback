@@ -43,6 +43,19 @@ app.config['SESSION_COOKIE_SAMESITE'] = "Lax"
 #     if not text:
 #         return text
 #     return get_display(arabic_reshaper.reshape(str(text)))
+
+def safe_int(v):
+    try:
+        return int(v)
+    except:
+        return 0
+
+
+def safe_float(v):
+    try:
+        return float(v)
+    except:
+        return 0
 # ---------------- MONGO (Atlas) ----------------
 MONGO_URI = os.environ.get("MONGO_URI")
 
@@ -397,6 +410,16 @@ def admin():
     # =====================
     data = list(collection.find(query).sort("created_at", -1))
 
+    for i in data:
+        i["facility"] = int(i.get("facility") or 0)
+        i["it"] = int(i.get("it") or 0)
+        i["medical"] = int(i.get("medical") or 0)
+        i["nursing"] = int(i.get("nursing") or 0)
+        i["other"] = int(i.get("other") or 0)
+
+        i["rating"] = safe_float(i.get("rating"))
+
+
     # =====================
     # LOW RATINGS
     # =====================
@@ -410,11 +433,7 @@ def admin():
     # =====================
     total = len(data)
 
-    valid_ratings = [
-        i.get("rating")
-        for i in data
-        if isinstance(i.get("rating"), (int, float))
-    ]
+    valid_ratings = [i["rating"] for i in data if i["rating"] > 0]
 
     avg = round(sum(valid_ratings) / len(valid_ratings), 2) if valid_ratings else 0
 
