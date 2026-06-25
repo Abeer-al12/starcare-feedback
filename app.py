@@ -269,32 +269,45 @@ def feedback(branch, room):
     )
 
 
-@app.route('/save_feedback', methods=['POST'])
-def save_feedback():
+from datetime import datetime
 
-    data = request.json
+now = datetime.now()
 
-    print(data)
+facility = int(data.get("facility") or 0)
+it = int(data.get("it") or 0)
+medical = int(data.get("medical") or 0)
+nursing = int(data.get("nursing") or 0)
+other = int(data.get("other") or 0)
 
+status = "Satisfied"
 
-    collection.insert_one({
-        "branch": data.get("branch"),
-        "location": data.get("location"),
+if (
+    facility <= 3 or
+    it <= 3 or
+    medical <= 3 or
+    nursing <= 3 or
+    other <= 3
+):
+    status = "Issue"
 
-        "rating": data.get("rating"),
-        "comment": data.get("comment"),
+feedback = {
+    "room": data.get("location"),
 
-        "category": data.get("category"),
-        "speed": data.get("speed"),
-        "behavior": data.get("behavior"),
+    "facility": facility,
+    "it": it,
+    "medical": medical,
+    "nursing": nursing,
+    "other": other,
 
-        "name": data.get("name"),
-        "phone": data.get("phone"),
+    "comment": data.get("comment"),
+    "name": data.get("name"),
+    "phone": data.get("phone"),
 
-        "date": datetime.now()
-    })
+    "status": status,
+    "created_at": now.strftime("%d %b %Y %I:%M %p")
+}
 
-    return {"success": True}
+collection.insert_one(feedback)
 
 
 @app.route('/thankyou/<branch>/<room>')

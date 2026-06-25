@@ -236,6 +236,70 @@
             transform: translateY(-2px);
             box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
         }
+
+        .dashboard-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            font-family: Arial;
+        }
+
+        .dashboard-table th {
+            background: #00A79B;
+            color: white;
+            padding: 12px;
+            font-size: 14px;
+        }
+
+        .dashboard-table td {
+            padding: 10px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+            font-size: 13px;
+        }
+
+        .dashboard-table tr:hover {
+            background: #f5fafa;
+        }
+
+        .status-good {
+            color: green;
+            font-weight: bold;
+            background: #eaffea;
+            padding: 5px 10px;
+            border-radius: 8px;
+        }
+
+        .status-issue {
+            color: red;
+            font-weight: bold;
+            background: #ffecec;
+            padding: 5px 10px;
+            border-radius: 8px;
+        }
+
+        .delete-btn {
+            background: #e74c3c;
+            color: white;
+            padding: 6px 10px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 12px;
+        }
+
+        .delete-btn:hover {
+            background: #c0392b;
+        }
+
+        .comment {
+            max-width: 180px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
     </style>
     <!-- <meta http-equiv="refresh" content="10"> -->
     <title>
@@ -358,76 +422,74 @@
 
 
         <!-- Table -->
-        <table>
+        <table class="dashboard-table">
 
             <tr>
-                <th id="thLocation">Location</th>
-                <th id="thRating">Rating</th>
-                <th id="thComment">Comment</th>
-                <th id="thStatus">Status</th>
-                <th id="thDate">Date</th>
-                <th id="thTime">Time</th>
-                <th id="thName">Name</th>
-                <th id="thPhone">Phone</th>
-                <th id="thDelete">Delete</th>
+                <th>Room</th>
+                <th>Facility</th>
+                <th>IT</th>
+                <th>Medical</th>
+                <th>Nursing</th>
+                <th>Other</th>
+                <th>Comment</th>
+                <th>Status</th>
+                <th>Date & Time</th>
+                <th>Name</th>
+                <th>Phone</th>
+                <th>Delete</th>
             </tr>
 
             {% for item in data %}
             <tr class="row">
 
-                <td class="loc" data-loc="{{ item.location }}">
-                    {{ item.location.replace('_',' ').title() }}
-                </td>
+                <!-- Room -->
+                <td>{{ item.location.replace('_',' ').title() }}</td>
 
-                <td class="stars">
-                    {% for i in range(item.rating) %} ⭐ {% endfor %}
-                </td>
+                <!-- Ratings -->
+                <td>{{ item.facility }}</td>
+                <td>{{ item.it }}</td>
+                <td>{{ item.medical }}</td>
+                <td>{{ item.nursing }}</td>
+                <td>{{ item.other }}</td>
 
+                <!-- Comment -->
                 <td class="comment">
                     {{ item.comment }}
                 </td>
 
+                <!-- Status -->
                 <td>
-                    {% if item.rating <= 2 %} <span style="color:red; font-weight:bold;">⚠ Problem</span>
-                        {% elif item.rating == 3 %}
-                        <span style="color:orange; font-weight:bold;">⚠ Medium</span>
+                    {% if item.facility <= 3 or item.it <=3 or item.medical <=3 or item.nursing <=3 or item.other <=3 %}
+                        <span class="status-issue">⚠ Issue</span>
+
                         {% else %}
-                        <span style="color:green; font-weight:bold;">✔ Good</span>
+
+                        <span class="status-good">✔ Satisfied</span>
+
                         {% endif %}
                 </td>
 
-                <td class="date">
-                    {% if item.get('date') %}
-                    {{ item.date.strftime('%Y-%m-%d') }}
-                    {% else %}
-                    -
-                    {% endif %}
+                <!-- Date & Time -->
+                <td>
+                    {{ item.created_at or "-" }}
                 </td>
 
-                <td class="time">
-                    {% if item.get('date') %}
-                    {{ item.date.strftime('%I:%M %p') }}
-                    {% else %}
-                    -
-                    {% endif %}
-                </td>
+                <!-- Name -->
                 <td>{{ item.name or "-" }}</td>
 
-                <td>
-                    {{ item.phone if item.phone else "-" }}
-                </td>
+                <!-- Phone -->
+                <td>{{ item.phone or "-" }}</td>
+
+                <!-- Delete -->
                 <td>
                     {% if role == "admin" %}
-                    <a href="/delete_feedback/{{ item._id }}" onclick="return confirm('Delete this feedback?')" style="
-       background:#e74c3c;
-       color:white;
-       padding:8px 12px;
-       border-radius:8px;
-       text-decoration:none;">
+                    <a href="/delete_feedback/{{ item._id }}" class="delete-btn"
+                        onclick="return confirm('Delete this feedback?')">
                         Delete
                     </a>
                     {% endif %}
                 </td>
+
             </tr>
             {% endfor %}
 
