@@ -676,6 +676,11 @@
                 ar: "رقم الهاتف"
             },
 
+            submit: {
+                en: "Submit",
+                ar: "إرسال"
+            },
+
             skip: {
                 en: "Skip",
                 ar: "تخطي"
@@ -757,12 +762,12 @@
             <input type="text" id="popupPhone" placeholder="Phone Number"
                 style="width:100%;padding:10px;margin:8px 0;border:1px solid #ddd;border-radius:10px;">
 
-            <button id="popupBtn" onclick="submitLowRating()"
+            <button id="popupBtn" data-key="submit" onclick="submitLowRating()"
                 style="width:100%;padding:12px;margin-top:10px;background:#00A79B;color:white;border:none;border-radius:10px;">
                 Submit
             </button>
 
-            <button id="skipBtn" onclick="skipContact()"
+            <button id="skipBtn" data-key="skip" onclick="skipContact()"
                 style="width:100%;padding:10px;margin-top:8px;background:#eee;border:none;border-radius:10px;">
                 Skip
             </button>
