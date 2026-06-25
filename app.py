@@ -277,9 +277,8 @@ def save_feedback():
 
     data = request.get_json()
 
-    # 🔴 حماية من crash
     if not data:
-        return jsonify({"success": False, "error": "No data received"}), 400
+        return jsonify({"success": False, "error": "No data"}), 400
 
     facility = int(data.get("facility") or 0)
     it = int(data.get("it") or 0)
@@ -287,29 +286,22 @@ def save_feedback():
     nursing = int(data.get("nursing") or 0)
     other = int(data.get("other") or 0)
 
-    status = "Satisfied"
-
-    if (
-        facility <= 3 or
-        it <= 3 or
-        medical <= 3 or
-        nursing <= 3 or
-        other <= 3
-    ):
-        status = "Issue"
-
     feedback = {
-        "room": data.get("location"),
+        "location": data.get("location", "-"),
+        "branch": data.get("branch", "-"),
+
+        # ⭐ توحيد الحقول (IMPORTANT)
         "facility": facility,
         "it": it,
         "medical": medical,
         "nursing": nursing,
         "other": other,
-        "comment": data.get("comment"),
-        "name": data.get("name"),
-        "phone": data.get("phone"),
-        "status": status,
-        "created_at": datetime.now().strftime("%d %b %Y %I:%M %p")
+
+        "comment": data.get("comment", ""),
+        "name": data.get("name", "-"),
+        "phone": data.get("phone", "-"),
+
+        "created_at": datetime.now().strftime("%Y-%m-%d %I:%M %p")
     }
 
     collection.insert_one(feedback)
