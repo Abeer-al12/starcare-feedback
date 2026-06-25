@@ -562,6 +562,7 @@ def download_pdf():
     branch = request.args.get("branch") or session.get("active_branch")
     location = request.args.get("location")
     role = session.get("role")
+    category = request.args.get("category")
 
     filters = []
 
@@ -580,6 +581,9 @@ def download_pdf():
 # 🔹 dropdown location
     if location:
         filters.append({"location": location})
+
+    if category:
+        filters.append({"category": category})
 
 # 🔥 combine correctly
     if filters:
@@ -872,6 +876,7 @@ def download_excel():
     branch = request.args.get("branch") or session.get("active_branch")
     location = request.args.get("location")
     role = session.get("role")
+    category = request.args.get("category")
 
     filters = []
 
@@ -886,6 +891,9 @@ def download_excel():
 
     if location:
         filters.append({"location": location})
+
+    if category:
+        filters.append({"category": category})
 
     if filters:
         query = {"$and": filters}

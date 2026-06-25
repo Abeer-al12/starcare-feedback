@@ -218,7 +218,7 @@
             background: #27ae60;
         }
 
-        .delete-btn {
+        /* .delete-btn {
             background: #e74c3c;
             color: white;
             padding: 8px 12px;
@@ -232,7 +232,7 @@
         .delete-btn:hover {
             background: #c0392b;
             transform: scale(1.05);
-        }
+        } */
     </style>
 </head>
 
@@ -262,17 +262,19 @@
     <!-- MAIN -->
     <div class="main">
 
+        <h1 id="title" data-en="Admin Dashboard" data-ar="لوحة التحكم">
+            Admin Dashboard
+        </h1>
+
         <div class="lang-switch">
             <button class="lang-btn" onclick="setLang('en')">English</button>
             <button class="lang-btn" onclick="setLang('ar')">عربي</button>
         </div>
 
-        <h1 id="title" data-en="Admin Dashboard" data-ar="لوحة التحكم">
-            Admin Dashboard
-        </h1>
+
 
         <!-- ACTIVE INFO -->
-        <div id="activeInfo">
+        <div id="activeInfo" style="margin:15px 0; padding:10px 15px; background:white; border-radius:10px;">
 
             <h3 id="activeBranch" data-en="Active Branch: {{ active_branch or 'All Branches' }}"
                 data-ar="الفرع النشط: {{ active_branch or 'كل الفروع' }}">
@@ -440,38 +442,30 @@
         function setLang(lang) {
 
             localStorage.setItem("lang", lang);
-
-            // RTL / LTR
             document.body.dir = (lang === "ar") ? "rtl" : "ltr";
 
-            // كل العناصر اللي فيها data-en / data-ar
             document.querySelectorAll("[data-en]").forEach(el => {
-                el.innerText = el.getAttribute("data-" + lang);
+                const text = el.getAttribute("data-" + lang);
+                if (text) el.innerText = text;
             });
 
-            // options داخل select
             document.querySelectorAll("option[data-en]").forEach(el => {
-                el.textContent = el.getAttribute("data-" + lang);
+                const text = el.getAttribute("data-" + lang);
+                if (text) el.textContent = text;
             });
 
-            // Active Info (مهم جدًا)
             const branch = "{{ active_branch or 'All' }}";
             const category = "{{ active_category or 'All' }}";
 
             document.getElementById("activeBranch").innerText =
                 (lang === "ar")
-                    ? "الفرع الحالي: " + branch
+                    ? "الفرع النشط: " + branch
                     : "Active Branch: " + branch;
 
             document.getElementById("activeCategory").innerText =
                 (lang === "ar")
                     ? "التصنيف: " + category
                     : "Category: " + category;
-
-            // أزرار التحميل
-            document.querySelectorAll(".downloads a").forEach(el => {
-                el.innerText = el.getAttribute("data-" + lang);
-            });
         }
 
         // تشغيل عند فتح الصفحة
