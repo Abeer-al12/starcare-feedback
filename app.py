@@ -743,50 +743,50 @@ def download_pdf():
     )
 
     details = [[
-    "Date",
-    "Time",
-    "Branch",
-    "Location",
-    "Rating",
-    "Comment",
-    "Name",
-    "Phone"
-]]
+        "Date",
+        "Time",
+        "Branch",
+        "Location",
+        "Rating",
+        "Comment",
+        "Name",
+        "Phone"
+    ]]
 
-for item in data:
+    for item in data:
 
-    date_obj = item.get("date")
+        date_obj = item.get("date")
 
-    if not date_obj:
-        date_str = "-"
-        time_str = "-"
-    else:
-        try:
-            date_str = date_obj.strftime("%Y-%m-%d")
-            time_str = date_obj.strftime("%I:%M %p")
-        except:
+        if not date_obj:
             date_str = "-"
             time_str = "-"
+        else:
+            try:
+                date_str = date_obj.strftime("%Y-%m-%d")
+                time_str = date_obj.strftime("%I:%M %p")
+            except:
+                date_str = "-"
+                time_str = "-"
 
-    details.append([
-        date_str,
-        time_str,
-        item.get("branch", "-"),
-        room_names.get(item.get("location", "-"), item.get("location", "-")),
-        str(item.get("rating", "")),
-        item.get("comment", ""),
-        item.get("name", "-"),
-        item.get("phone", "-"),
-    ])
+        details.append([
+            date_str,
+            time_str,
+            item.get("branch", "-"),
+            room_names.get(item.get("location", "-"), item.get("location", "-")),
+            str(item.get("rating", "")),
+            item.get("comment", ""),
+            item.get("name", "-"),
+            item.get("phone", "-"),
+        ])
 
-# 👇 لازم يكون خارج for loop 100%
-details_table = Table(details)
+# 👇 خارج اللوب 100%
+    details_table = Table(details)
 
-details_table.setStyle(TableStyle([
-    ('BACKGROUND', (0,0), (-1,0), colors.HexColor("#00A79B")),
-    ('TEXTCOLOR', (0,0), (-1,0), colors.white),
-    ('GRID', (0,0), (-1,-1), 1, colors.black),
-]))
+    details_table.setStyle(TableStyle([
+        ('BACKGROUND', (0,0), (-1,0), colors.HexColor("#00A79B")),
+        ('TEXTCOLOR', (0,0), (-1,0), colors.white),
+        ('GRID', (0,0), (-1,-1), 1, colors.black),
+    ]))
 
     elements.append(details_table)
 
