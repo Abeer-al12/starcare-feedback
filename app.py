@@ -449,13 +449,14 @@ def admin():
     return render_template(
         "dashboard.html",
         data=data,
-        low_ratings=low_ratings,
         total_feedback=total,
         avg_rating=avg,
+        branches=branches,
         stats=stats_list,
         role=role,
-        branches=branches,
-        active_branch=branch
+        active_branch=branch,
+        active_category=category,
+        active_location=location
     )
 #اضافه مستخدمين
 @app.route('/add_user', methods=['GET', 'POST'])

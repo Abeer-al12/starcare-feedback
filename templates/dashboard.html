@@ -174,39 +174,42 @@
         }
 
         body[dir="rtl"] .sidebar {
-    right: 0;
-    left: auto;
-}
+            right: 0;
+            left: auto;
+        }
 
-body[dir="rtl"] .main {
-    margin-right: 240px;
-    margin-left: 0;
-}
+        body[dir="rtl"] .main {
+            margin-right: 240px;
+            margin-left: 0;
+        }
 
-body[dir="rtl"] .menu a {
-    text-align: right;
-}
+        body[dir="rtl"] .menu a {
+            text-align: right;
+        }
     </style>
 </head>
 
-<body id="body">
+<body dir="ltr" id="pageBody">
+    <h1 id="title" data-en="Admin Dashboard" data-ar="لوحة التحكم">
+        Admin Dashboard
+    </h1>
     <!-- SIDEBAR -->
     <div class="sidebar">
         <img src="{{ url_for('static', filename='logowhite.jpeg') }}" class="logo">
 
         <div class="menu">
 
-    <a data-en="Dashboard" data-ar="لوحة التحكم" href="/admin">Dashboard</a>
+            <a data-en="Dashboard" data-ar="لوحة التحكم" href="/admin">Dashboard</a>
 
-    <a data-en="Analytics" data-ar="التحليلات" href="/analytics">Analytics</a>
+            <a data-en="Analytics" data-ar="التحليلات" href="/analytics">Analytics</a>
 
-    <a data-en="QR Dashboard" data-ar="لوحة QR" href="/qr_dashboard">QR Dashboard</a>
+            <a data-en="QR Dashboard" data-ar="لوحة QR" href="/qr_dashboard">QR Dashboard</a>
 
-    <a data-en="Manage Users" data-ar="إدارة المستخدمين" href="/manage_users">Manage Users</a>
+            <a data-en="Manage Users" data-ar="إدارة المستخدمين" href="/manage_users">Manage Users</a>
 
-    <a data-en="Logout" data-ar="تسجيل الخروج" href="/logout">Logout</a>
+            <a data-en="Logout" data-ar="تسجيل الخروج" href="/logout">Logout</a>
 
-</div>
+        </div>
     </div>
 
 
@@ -232,6 +235,21 @@ body[dir="rtl"] .menu a {
 
         </div>
 
+        <div class="downloads">
+
+            <a class="btn" href="/download_pdf?branch={{ active_branch or '' }}&category={{ active_category or '' }}"
+                data-en="⬇ Download PDF" data-ar="⬇ تحميل PDF">
+
+                ⬇ Download PDF
+            </a>
+
+            <a class="btn" href="/download_excel?branch={{ active_branch or '' }}&category={{ active_category or '' }}"
+                data-en="⬇ Download Excel" data-ar="⬇ تحميل Excel">
+
+                ⬇ Download Excel
+            </a>
+
+        </div>
         <!-- FILTER -->
         <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:15px;">
 
@@ -257,7 +275,9 @@ body[dir="rtl"] .menu a {
                 </select>
 
                 <select name="category" onchange="this.form.submit()">
-                    <option value="">All Categories</option>
+                    <option value="" data-en="All Categories" data-ar="كل التصنيفات">
+                        All Categories
+                    </option>
 
                     <option value="facility" data-en="Facility / Maintenance" data-ar="الصيانة">Facility / Maintenance
                     </option>
@@ -271,7 +291,22 @@ body[dir="rtl"] .menu a {
 
         </div>
 
-        <h3>Active Branch: {{ active_branch or "All" }}</h3>
+        <div id="activeInfo">
+
+            <h3 data-en="Active Branch: {{ active_branch or 'All Branches' }}"
+                data-ar="الفرع النشط: {{ active_branch or 'كل الفروع' }}">
+
+                Active Branch: {{ active_branch or "All Branches" }}
+            </h3>
+
+            <h4 data-en="Category: {{ active_category or 'All Categories' }}"
+                data-ar="التصنيف: {{ active_category or 'كل التصنيفات' }}">
+
+                Category: {{ active_category or "All Categories" }}
+            </h4>
+
+        </div>
+
 
         <!-- TABLE -->
         <table>
@@ -353,6 +388,14 @@ body[dir="rtl"] .menu a {
                 el.textContent = el.getAttribute(
                     lang === "ar" ? "data-ar" : "data-en"
                 );
+            });
+
+            document.querySelectorAll("#activeInfo h3, #activeInfo h4").forEach(el => {
+                el.innerText = (lang === "ar") ? el.dataset.ar : el.dataset.en;
+            });
+
+            document.querySelectorAll(".downloads a").forEach(btn => {
+                btn.innerText = (lang === "ar") ? btn.dataset.ar : btn.dataset.en;
             });
         }
 
