@@ -270,12 +270,16 @@ def feedback(branch, room):
 
 
 from datetime import datetime
-from flask import request, jsonify
+
 
 @app.route("/save_feedback", methods=["POST"])
 def save_feedback():
 
     data = request.get_json()
+
+    # 🔴 حماية من crash
+    if not data:
+        return jsonify({"success": False, "error": "No data received"}), 400
 
     facility = int(data.get("facility") or 0)
     it = int(data.get("it") or 0)
@@ -296,17 +300,14 @@ def save_feedback():
 
     feedback = {
         "room": data.get("location"),
-
         "facility": facility,
         "it": it,
         "medical": medical,
         "nursing": nursing,
         "other": other,
-
         "comment": data.get("comment"),
         "name": data.get("name"),
         "phone": data.get("phone"),
-
         "status": status,
         "created_at": datetime.now().strftime("%d %b %Y %I:%M %p")
     }
