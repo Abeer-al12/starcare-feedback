@@ -103,11 +103,79 @@
             text-decoration: none;
             border-radius: 6px;
         }
+
+        select {
+            padding: 10px 14px;
+            border-radius: 12px;
+            border: 1px solid #ddd;
+            background: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        select:hover {
+            border-color: #00A79B;
+            box-shadow: 0 0 8px rgba(0, 167, 155, 0.2);
+        }
+
+        button,
+        .btn {
+            padding: 10px 14px;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .btn-delete {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+        }
+
+        .lang-btn {
+            background: white;
+            border: 2px solid #00A79B;
+            color: #00A79B;
+        }
+
+        .lang-btn:hover {
+            background: #00A79B;
+            color: white;
+        }
+
+        .lang-switch {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .lang-btn {
+            background: white;
+            border: 2px solid #00A79B;
+            color: #00A79B;
+            padding: 8px 14px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .lang-btn:hover {
+            background: #00A79B;
+            color: white;
+        }
     </style>
 </head>
 
-<body>
-
+<body id="body">
     <!-- SIDEBAR -->
     <div class="sidebar">
         <img src="{{ url_for('static', filename='logowhite.jpeg') }}" class="logo">
@@ -121,19 +189,24 @@
         </div>
     </div>
 
+
     <!-- MAIN -->
     <div class="main">
 
+        <div class="lang-switch">
+            <button class="lang-btn" onclick="setLang('en')">English</button>
+            <button class="lang-btn" onclick="setLang('ar')">عربي</button>
+        </div>
         <!-- CARDS -->
         <div class="cards">
 
             <div class="card">
-                <h3>Total Feedback</h3>
+                <h3 data-en="Total Feedback" data-ar="إجمالي التقييمات">Total Feedback</h3>
                 <h2>{{ total_feedback }}</h2>
             </div>
 
             <div class="card">
-                <h3>Average Rating</h3>
+                <h3 data-en="Average Rating" data-ar="متوسط التقييم">Average Rating</h3>
                 <h2>{{ avg_rating }} ⭐</h2>
             </div>
 
@@ -145,7 +218,7 @@
             <form method="GET" action="/admin" style="display:flex; gap:10px; flex-wrap:wrap;">
 
                 <select name="branch" onchange="this.form.submit()">
-                    <option value="">All Branches</option>
+                    <option value="" data-en="All Branches" data-ar="كل الفروع">All Branches</option>
                     {% for b in branches %}
                     <option value="{{ b }}" {% if active_branch==b %}selected{% endif %}>
                         {{ b }}
@@ -154,7 +227,7 @@
                 </select>
 
                 <select name="location" onchange="this.form.submit()">
-                    <option value="">All Locations</option>
+                    <option value="" data-en="All Locations" data-ar="كل المواقع">All Locations</option>
                     {% for s in stats %}
                     <option value="{{ s.location }}" {% if request.args.get('location')==s.location %}selected{% endif
                         %}>
@@ -166,25 +239,12 @@
                 <select name="category" onchange="this.form.submit()">
                     <option value="">All Categories</option>
 
-                    <option value="facility" {% if request.args.get('category')=='facility' %}selected{% endif %}>
-                        Facility / Maintenance
+                    <option value="facility" data-en="Facility / Maintenance" data-ar="الصيانة">Facility / Maintenance
                     </option>
-
-                    <option value="it" {% if request.args.get('category')=='it' %}selected{% endif %}>
-                        IT
-                    </option>
-
-                    <option value="medical" {% if request.args.get('category')=='medical' %}selected{% endif %}>
-                        Medical Equipment
-                    </option>
-
-                    <option value="nursing" {% if request.args.get('category')=='nursing' %}selected{% endif %}>
-                        Nursing
-                    </option>
-
-                    <option value="other" {% if request.args.get('category')=='other' %}selected{% endif %}>
-                        Other
-                    </option>
+                    <option value="it" data-en="IT" data-ar="تقنية المعلومات">IT</option>
+                    <option value="medical" data-en="Medical Equipment" data-ar="معدات طبية">Medical Equipment</option>
+                    <option value="nursing" data-en="Nursing" data-ar="تمريض">Nursing</option>
+                    <option value="other" data-en="Other" data-ar="أخرى">Other</option>
                 </select>
 
             </form>
@@ -196,18 +256,18 @@
         <!-- TABLE -->
         <table>
             <tr>
-                <th>Room</th>
-                <th>Facility</th>
-                <th>IT</th>
-                <th>Medical</th>
-                <th>Nursing</th>
-                <th>Other</th>
-                <th>Comment</th>
-                <th>Status</th>
-                <th>Date</th>
-                <th>Name</th>
-                <th>Phone</th>
-                <th>Delete</th>
+                <th data-en="Room" data-ar="الغرفة">Room</th>
+                <th data-en="Facility" data-ar="الصيانة">Facility</th>
+                <th data-en="IT" data-ar="تقنية المعلومات">IT</th>
+                <th data-en="Medical" data-ar="المعدات الطبية">Medical</th>
+                <th data-en="Nursing" data-ar="التمريض">Nursing</th>
+                <th data-en="Other" data-ar="أخرى">Other</th>
+                <th data-en="Comment" data-ar="التعليق">Comment</th>
+                <th data-en="Status" data-ar="الحالة">Status</th>
+                <th data-en="Date" data-ar="التاريخ">Date</th>
+                <th data-en="Name" data-ar="الاسم">Name</th>
+                <th data-en="Phone" data-ar="الهاتف">Phone</th>
+                <th data-en="Delete" data-ar="حذف">Delete</th>
             </tr>
 
             {% for item in data %}
@@ -244,7 +304,7 @@
 
                 <td>
                     {% if role == "admin" %}
-                    <a class="btn" href="/delete_feedback/{{ item._id }}">Delete</a>
+                    <a class="btn-delete" data-en="Delete" data-ar="حذف">Delete</a>
                     {% endif %}
                 </td>
             </tr>
@@ -253,7 +313,34 @@
         </table>
 
     </div>
+    <script>
+        function setLang(lang) {
 
+            localStorage.setItem("lang", lang);
+
+            // RTL / LTR
+            document.body.dir = (lang === "ar") ? "rtl" : "ltr";
+
+            // كل النصوص
+            document.querySelectorAll("[data-en]").forEach(el => {
+                el.innerText = el.getAttribute(
+                    lang === "ar" ? "data-ar" : "data-en"
+                );
+            });
+
+            // options داخل select
+            document.querySelectorAll("option[data-en]").forEach(el => {
+                el.textContent = el.getAttribute(
+                    lang === "ar" ? "data-ar" : "data-en"
+                );
+            });
+        }
+
+        window.onload = function () {
+            let lang = localStorage.getItem("lang") || "en";
+            setLang(lang);
+        };
+    </script>
 </body>
 
 </html>
