@@ -924,34 +924,29 @@ def download_excel():
     # Rows
     for item in data:
 
-    date_obj = item.get("date")
+        date_obj = item.get("date")
 
-    if not date_obj:
-        date_str = "-"
-        time_str = "-"
-    else:
-        try:
-            date_str = date_obj.strftime("%Y-%m-%d")
-            time_str = date_obj.strftime("%I:%M %p")
-        except:
+        if not date_obj:
             date_str = "-"
             time_str = "-"
+        else:
+            try:
+                date_str = date_obj.strftime("%Y-%m-%d")
+                time_str = date_obj.strftime("%I:%M %p")
+            except:
+                date_str = "-"
+                time_str = "-"
 
-    ws.append([
-        date_str,
-        time_str,
-        item.get("branch", "-"),
-        room_names.get(item["location"], item["location"]),
-        item.get("rating", ""),
-        item.get("comment", ""),
-        item.get("name", "-"),
-        item.get("phone", "-"),
-
-    # ⭐ هذول الثلاثة
-        # item.get("answers", {}).get("category"),
-        # item.get("answers", {}).get("speed"),
-        # item.get("answers", {}).get("behavior")
-])
+        ws.append([
+            date_str,
+            time_str,
+            item.get("branch", "-"),
+            room_names.get(item["location"], item["location"]),
+            item.get("rating", ""),
+            item.get("comment", ""),
+            item.get("name", "-"),
+            item.get("phone", "-"),
+        ])
     # save in memory
     buffer = BytesIO()
     wb.save(buffer)
