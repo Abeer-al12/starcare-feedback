@@ -1169,6 +1169,11 @@ def qr_dashboard():
 #             )
 
 #     return "DONE"
+
+@app.route('/delete_feedback/<id>')
+def delete_feedback(id):
+    collection.delete_one({"_id": ObjectId(id)})
+    return redirect('/admin')
 # ---------------- RUN ----------------
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
