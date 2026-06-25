@@ -273,21 +273,6 @@
 
 
 
-        <!-- ACTIVE INFO -->
-        <div id="activeInfo" style="margin:15px 0; padding:10px 15px; background:white; border-radius:10px;">
-
-            <h3 id="activeBranch" data-en="Active Branch: {{ active_branch or 'All Branches' }}"
-                data-ar="الفرع النشط: {{ active_branch or 'كل الفروع' }}">
-                Active Branch: {{ active_branch or "All Branches" }}
-            </h3>
-
-            <h4 id="activeCategory" data-en="Category: {{ active_category or 'All Categories' }}"
-                data-ar="التصنيف: {{ active_category or 'كل التصنيفات' }}">
-                Category: {{ active_category or "All Categories" }}
-            </h4>
-
-        </div>
-
         <!-- CARDS -->
         <div class="cards">
 
@@ -359,22 +344,21 @@
 
         </div>
 
-        <!-- <div id="activeInfo">
 
-            <h3 data-en="Active Branch: {{ active_branch or 'All Branches' }}"
+        <!-- ACTIVE INFO -->
+        <div id="activeInfo" style="margin:15px 0; padding:10px 15px; background:white; border-radius:10px;">
+
+            <h3 id="activeBranch" data-en="Active Branch: {{ active_branch or 'All Branches' }}"
                 data-ar="الفرع النشط: {{ active_branch or 'كل الفروع' }}">
-
                 Active Branch: {{ active_branch or "All Branches" }}
             </h3>
 
-            <h4 data-en="Category: {{ active_category or 'All Categories' }}"
+            <h4 id="activeCategory" data-en="Category: {{ active_category or 'All Categories' }}"
                 data-ar="التصنيف: {{ active_category or 'كل التصنيفات' }}">
-
                 Category: {{ active_category or "All Categories" }}
             </h4>
 
-        </div> -->
-
+        </div>
 
         <!-- TABLE -->
         <table>
