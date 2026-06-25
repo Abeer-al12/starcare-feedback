@@ -360,68 +360,63 @@ def admin():
     role = session.get("role")
     username = session.get("username")
 
-    # selected_location = request.args.get("location")
-    # active_branch = request.args.get("branch")
-
+    # =====================
+    # Filters
+    # =====================
     branch = request.args.get("branch")
     location = request.args.get("location")
     category = request.args.get("category")
 
-
-    if active_branch == "all":
-        session.pop("active_branch", None)
-        active_branch = None
-
-    elif active_branch:
-        session["active_branch"] = active_branch
-
-    else:
-        active_branch = None
-
     user = db.users.find_one({"username": username})
     allowed_locations = user.get("locations", []) if user else []
 
-    # =========================
-    # 🔥 QUERY الأساسي
-    # =========================
+    # =====================
+    # QUERY
+    # =====================
     query = {}
 
-# 🔐 صلاحيات
+    # 🔐 permissions
     if role != "admin":
         query["location"] = {"$in": allowed_locations}
 
-# 🌟 branch filter (أقوى من location)
+    # 🌟 branch filter
     if branch:
         query["branch"] = branch
 
+    # 📍 location filter
     if location:
         query["location"] = location
 
+    # 📊 category filter (FIXED)
+    if category:
+    if category in ["facility", "it", "medical", "nursing", "other"]:
+        query[category] = {"$exists": True}
 
-    # =========================
-    # 📊 البيانات الرئيسية
-    # =========================
-    data = list(collection.find(query).sort("date", -1))
+    # =====================
+    # DATA
+    # =====================
+    data = list(collection.find(query).sort("created_at", -1))
 
-    # =========================
-    # ⚠️ Low ratings (مهم)
-    # =========================
+    # =====================
+    # LOW RATINGS
+    # =====================
     low_ratings = list(collection.find({
         **query,
         "rating": {"$lte": 3}
-    }).sort("date", -1))
+    }).sort("created_at", -1))
 
-    # =========================
-    # 📈 الإحصائيات
-    # =========================
+    # =====================
+    # STATS
+    # =====================
     total = len(data)
-   
 
-# ---------------- AVG SAFE ----------------
-    valid_ratings = [i.get("rating") for i in data if isinstance(i.get("rating"), (int, float))]
+    valid_ratings = [
+        i.get("rating")
+        for i in data
+        if isinstance(i.get("rating"), (int, float))
+    ]
 
     avg = round(sum(valid_ratings) / len(valid_ratings), 2) if valid_ratings else 0
-
 
     stats = {}
 
@@ -437,7 +432,6 @@ def admin():
         if isinstance(r, (int, float)):
             stats[loc]["total"] += r
 
-# ---------------- STATS LIST ----------------
     stats_list = [
         {
             "location": l,
@@ -447,9 +441,9 @@ def admin():
         for l, v in stats.items()
     ]
 
-    # =========================
-    # 🚀 branches (حل الخطأ)
-    # =========================
+    # =====================
+    # BRANCHES
+    # =====================
     branches = list(branch_rooms_map.keys())
 
     return render_template(
@@ -461,9 +455,8 @@ def admin():
         stats=stats_list,
         role=role,
         branches=branches,
-        active_branch=active_branch
+        active_branch=branch
     )
-
 #اضافه مستخدمين
 @app.route('/add_user', methods=['GET', 'POST'])
 def add_user():

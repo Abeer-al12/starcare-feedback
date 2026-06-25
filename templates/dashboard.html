@@ -140,39 +140,56 @@
         </div>
 
         <!-- FILTER -->
-        <form method="GET" action="/admin" style="display:flex; gap:10px; flex-wrap:wrap;">
+        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:15px;">
 
-            <!-- Branch -->
-            <select name="branch" onchange="this.form.submit()">
-                <option value="">All Branches</option>
-                {% for b in branches %}
-                <option value="{{ b }}" {% if active_branch==b %}selected{% endif %}>
-                    {{ b }}
-                </option>
-                {% endfor %}
-            </select>
+            <form method="GET" action="/admin" style="display:flex; gap:10px; flex-wrap:wrap;">
 
-            <!-- Location -->
-            <select name="location" onchange="this.form.submit()">
-                <option value="">All Locations</option>
-                {% for s in stats %}
-                <option value="{{ s.location }}" {% if request.args.get('location')==s.location %}selected{% endif %}>
-                    {{ s.location }}
-                </option>
-                {% endfor %}
-            </select>
+                <select name="branch" onchange="this.form.submit()">
+                    <option value="">All Branches</option>
+                    {% for b in branches %}
+                    <option value="{{ b }}" {% if active_branch==b %}selected{% endif %}>
+                        {{ b }}
+                    </option>
+                    {% endfor %}
+                </select>
 
-            <!-- Category -->
-            <select name="category" onchange="this.form.submit()">
-                <option value="">All Categories</option>
-                <option value="facility">Facility / Maintenance</option>
-                <option value="it">IT</option>
-                <option value="medical">Medical Equipment</option>
-                <option value="nursing">Nursing</option>
-                <option value="other">Other</option>
-            </select>
+                <select name="location" onchange="this.form.submit()">
+                    <option value="">All Locations</option>
+                    {% for s in stats %}
+                    <option value="{{ s.location }}" {% if request.args.get('location')==s.location %}selected{% endif
+                        %}>
+                        {{ s.location }}
+                    </option>
+                    {% endfor %}
+                </select>
 
-        </form>
+                <select name="category" onchange="this.form.submit()">
+                    <option value="">All Categories</option>
+
+                    <option value="facility" {% if request.args.get('category')=='facility' %}selected{% endif %}>
+                        Facility / Maintenance
+                    </option>
+
+                    <option value="it" {% if request.args.get('category')=='it' %}selected{% endif %}>
+                        IT
+                    </option>
+
+                    <option value="medical" {% if request.args.get('category')=='medical' %}selected{% endif %}>
+                        Medical Equipment
+                    </option>
+
+                    <option value="nursing" {% if request.args.get('category')=='nursing' %}selected{% endif %}>
+                        Nursing
+                    </option>
+
+                    <option value="other" {% if request.args.get('category')=='other' %}selected{% endif %}>
+                        Other
+                    </option>
+                </select>
+
+            </form>
+
+        </div>
 
         <h3>Active Branch: {{ active_branch or "All" }}</h3>
 
@@ -195,7 +212,9 @@
 
             {% for item in data %}
             <tr>
-                <td>{{ item.location }}</td>
+                <td style="font-weight:bold; color:#00A79B;">
+                    {{ item.location.replace('_',' ') }}
+                </td>
                 <td>{{ item.facility }}</td>
                 <td>{{ item.it }}</td>
                 <td>{{ item.medical }}</td>
