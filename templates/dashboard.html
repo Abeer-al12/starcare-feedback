@@ -178,6 +178,7 @@
                 <td>{{ item.other }}</td>
                 <td>{{ item.comment }}</td>
 
+
                 <td>
                     {% set facility = item.facility or 0 %}
                     {% set it = item.it or 0 %}
@@ -185,17 +186,13 @@
                     {% set nursing = item.nursing or 0 %}
                     {% set other = item.other or 0 %}
 
-                    {% if facility <= 3 or it <=3 or medical <=3 or nursing <=3 or other <=3 %} 
-                    <span
+                    {% if facility <= 3 or it <=3 or medical <=3 or nursing <=3 or other <=3 %} <span
                         class="status-issue">Issue</span>
                         {% else %}
                         <span class="status-good">OK</span>
                         {% endif %}
-                        <span class="status-issue">Issue</span>
-                        {% else %}
-                        <span class="status-good">OK</span>
-                        {% endif %}
                 </td>
+
 
                 <td>{{ item.created_at or item.date or "-" }}</td>
                 <td>{{ item.name or "-" }}</td>
@@ -203,7 +200,7 @@
 
                 <td>
                     {% if role == "admin" %}
-                    <a class="btn" href="/delete_feedback/{{ item._id|string }}">Delete</a>
+                    <a class="btn" href="/delete_feedback/{{ item._id }}">Delete</a>
                     {% endif %}
                 </td>
             </tr>
