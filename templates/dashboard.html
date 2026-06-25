@@ -186,13 +186,72 @@
         body[dir="rtl"] .menu a {
             text-align: right;
         }
+
+        .downloads {
+            display: flex;
+            gap: 10px;
+            flex-wrap: nowrap;
+            /* 👈 مهم يمنع التكسير */
+            margin: 10px 0;
+        }
+
+        .btn {
+            padding: 10px 14px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .btn.pdf {
+            background: #e74c3c;
+        }
+
+        .btn.excel {
+            background: #27ae60;
+        }
+
+        .delete-btn {
+            background: #e74c3c;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 13px;
+            display: inline-block;
+            transition: 0.3s;
+        }
+
+        .delete-btn:hover {
+            background: #c0392b;
+            transform: scale(1.05);
+        }
     </style>
 </head>
 
 <body dir="ltr" id="pageBody">
-    <h1 id="title" data-en="Admin Dashboard" data-ar="لوحة التحكم">
-        Admin Dashboard
-    </h1>
+    <div style="margin-bottom:15px;">
+
+        <h1 id="title" data-en="Admin Dashboard" data-ar="لوحة التحكم" style="margin:0;">
+            Admin Dashboard
+        </h1>
+
+        <div id="activeInfo" style="margin-top:8px; color:#555;">
+
+            <h3 id="activeBranch" data-en="Active Branch: {{ active_branch or 'All Branches' }}"
+                data-ar="الفرع النشط: {{ active_branch or 'كل الفروع' }}" style="margin:3px 0;">
+                Active Branch: {{ active_branch or "All Branches" }}
+            </h3>
+
+            <h4 id="activeCategory" data-en="Category: {{ active_category or 'All Categories' }}"
+                data-ar="التصنيف: {{ active_category or 'كل التصنيفات' }}" style="margin:3px 0;">
+                Category: {{ active_category or "All Categories" }}
+            </h4>
+
+        </div>
+
+    </div>
     <!-- SIDEBAR -->
     <div class="sidebar">
         <img src="{{ url_for('static', filename='logowhite.jpeg') }}" class="logo">
@@ -237,15 +296,15 @@
 
         <div class="downloads">
 
-            <a class="btn" href="/download_pdf?branch={{ active_branch or '' }}&category={{ active_category or '' }}"
-                data-en="⬇ Download PDF" data-ar="⬇ تحميل PDF">
-
+            <a class="btn pdf"
+                href="/download_pdf?branch={{ active_branch or '' }}&category={{ active_category or '' }}"
+                data-en="Download PDF" data-ar="تحميل PDF">
                 ⬇ Download PDF
             </a>
 
-            <a class="btn" href="/download_excel?branch={{ active_branch or '' }}&category={{ active_category or '' }}"
-                data-en="⬇ Download Excel" data-ar="⬇ تحميل Excel">
-
+            <a class="btn excel"
+                href="/download_excel?branch={{ active_branch or '' }}&category={{ active_category or '' }}"
+                data-en="Download Excel" data-ar="تحميل Excel">
                 ⬇ Download Excel
             </a>
 
@@ -291,7 +350,7 @@
 
         </div>
 
-        <div id="activeInfo">
+        <!-- <div id="activeInfo">
 
             <h3 data-en="Active Branch: {{ active_branch or 'All Branches' }}"
                 data-ar="الفرع النشط: {{ active_branch or 'كل الفروع' }}">
@@ -305,7 +364,7 @@
                 Category: {{ active_category or "All Categories" }}
             </h4>
 
-        </div>
+        </div> -->
 
 
         <!-- TABLE -->
@@ -359,7 +418,9 @@
 
                 <td>
                     {% if role == "admin" %}
-                    <a class="btn-delete" data-en="Delete" data-ar="حذف">Delete</a>
+                    <a class="delete-btn" href="/delete_feedback/{{ item._id }}" onclick="return confirmDelete()">
+                        Delete
+                    </a>
                     {% endif %}
                 </td>
             </tr>
@@ -390,19 +451,41 @@
                 );
             });
 
-            document.querySelectorAll("#activeInfo h3, #activeInfo h4").forEach(el => {
+            document.querySelectorAll("#activeBranch, #activeCategory").forEach(el => {
                 el.innerText = (lang === "ar") ? el.dataset.ar : el.dataset.en;
             });
 
-            document.querySelectorAll(".downloads a").forEach(btn => {
-                btn.innerText = (lang === "ar") ? btn.dataset.ar : btn.dataset.en;
+            document.querySelectorAll(".downloads a").forEach(el => {
+                el.innerText = (lang === "ar") ? el.dataset.ar : el.dataset.en;
             });
+
+            // Active Branch text
+            document.getElementById("activeBranch").innerText =
+                (lang === "ar")
+                    ? "الفرع الحالي: " + "{{ active_branch or 'الكل' }}"
+                    : "Active Branch: " + "{{ active_branch or 'All' }}";
+
+            // Category text
+            document.getElementById("activeCategory").innerText =
+                (lang === "ar")
+                    ? "التصنيف: " + "{{ active_category or 'الكل' }}"
+                    : "Category: " + "{{ active_category or 'All' }}";
         }
 
         window.onload = function () {
             let lang = localStorage.getItem("lang") || "en";
             setLang(lang);
         };
+
+        function confirmDelete() {
+            let lang = localStorage.getItem("lang") || "en";
+
+            if (lang === "ar") {
+                return confirm("هل أنت متأكد من حذف هذا التقييم؟");
+            } else {
+                return confirm("Are you sure you want to delete this feedback?");
+            }
+        }
     </script>
 </body>
 
