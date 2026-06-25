@@ -389,8 +389,8 @@ def admin():
 
     # 📊 category filter (FIXED)
     if category:
-    if category in ["facility", "it", "medical", "nursing", "other"]:
-        query[category] = {"$exists": True}
+        if category in ["facility", "it", "medical", "nursing", "other"]:
+            query[category] = {"$exists": True}
 
     # =====================
     # DATA
