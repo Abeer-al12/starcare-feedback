@@ -172,6 +172,20 @@
             background: #00A79B;
             color: white;
         }
+
+        body[dir="rtl"] .sidebar {
+    right: 0;
+    left: auto;
+}
+
+body[dir="rtl"] .main {
+    margin-right: 240px;
+    margin-left: 0;
+}
+
+body[dir="rtl"] .menu a {
+    text-align: right;
+}
     </style>
 </head>
 
@@ -181,12 +195,18 @@
         <img src="{{ url_for('static', filename='logowhite.jpeg') }}" class="logo">
 
         <div class="menu">
-            <a href="/admin">Dashboard</a>
-            <a href="/analytics">Analytics</a>
-            <a href="/qr_dashboard">QR Code</a>
-            <a href="/manage_users">Users</a>
-            <a href="/logout">Logout</a>
-        </div>
+
+    <a data-en="Dashboard" data-ar="لوحة التحكم" href="/admin">Dashboard</a>
+
+    <a data-en="Analytics" data-ar="التحليلات" href="/analytics">Analytics</a>
+
+    <a data-en="QR Dashboard" data-ar="لوحة QR" href="/qr_dashboard">QR Dashboard</a>
+
+    <a data-en="Manage Users" data-ar="إدارة المستخدمين" href="/manage_users">Manage Users</a>
+
+    <a data-en="Logout" data-ar="تسجيل الخروج" href="/logout">Logout</a>
+
+</div>
     </div>
 
 
