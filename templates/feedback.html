@@ -828,12 +828,13 @@
                 nursing <= 3 ||
                 other <= 3;
 
-            // إذا منخفض → يطلع popup
             if (isLowRating) {
-                document.getElementById("phonePopup").style.display = "flex";
+                document.getElementById("skipBtn").style.display = "none";
             } else {
-                sendData(null, null); // بدون اسم ورقم
+                document.getElementById("skipBtn").style.display = "block";
             }
+
+            document.getElementById("phonePopup").style.display = "flex";
         });
 
         // ---------------- SUBMIT LOW RATING ----------------
@@ -855,7 +856,9 @@
                 }
             }
 
-            sendData(name, phone);
+            function skipPhone() {
+                sendData(null, null);
+            }
         }
 
         function sendData(name, phone) {
