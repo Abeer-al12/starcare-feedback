@@ -380,7 +380,7 @@
                         <h4 data-key="catFacility">Facility / Maintenance</h4>
 
                         <div class="stars">
-                            <input type="radio" name="facility" value="5" id="facility5" required>
+                            <input type="radio" name="facility" value="5" id="facility5">
                             <label for="facility5">★</label>
 
                             <input type="radio" name="facility" value="4" id="facility4">
@@ -402,7 +402,7 @@
                         <h4 data-key="catIT">IT</h4>
 
                         <div class="stars">
-                            <input type="radio" name="it" value="5" id="it5" required>
+                            <input type="radio" name="it" value="5" id="it5">
                             <label for="it5">★</label>
 
                             <input type="radio" name="it" value="4" id="it4">
@@ -424,7 +424,7 @@
                         <h4 data-key="catMedical">Medical Equipment</h4>
 
                         <div class="stars">
-                            <input type="radio" name="medical" value="5" id="medical5" required>
+                            <input type="radio" name="medical" value="5" id="medical5">
                             <label for="medical5">★</label>
 
                             <input type="radio" name="medical" value="4" id="medical4">
@@ -446,7 +446,7 @@
                         <h4 data-key="catNursing">Nursing</h4>
 
                         <div class="stars">
-                            <input type="radio" name="nursing" value="5" id="nursing5" required>
+                            <input type="radio" name="nursing" value="5" id="nursing5">
                             <label for="nursing5">★</label>
 
                             <input type="radio" name="nursing" value="4" id="nursing4">
@@ -468,7 +468,7 @@
                         <h4 data-key="catOther">Other</h4>
 
                         <div class="stars">
-                            <input type="radio" name="other" value="5" id="other5" required>
+                            <input type="radio" name="other" value="5" id="other5">
                             <label for="other5">★</label>
 
                             <input type="radio" name="other" value="4" id="other4">
@@ -798,8 +798,16 @@
             nursing = document.querySelector('input[name="nursing"]:checked')?.value;
             other = document.querySelector('input[name="other"]:checked')?.value;
 
-            if (!facility || !it || !medical || !nursing || !other) {
-                showToast(i18n.messages[currentLang].required);
+            if (
+                !facility ||
+                !it ||
+                !medical ||
+                !nursing ||
+                !other
+            ) {
+                alert(currentLang === "ar"
+                    ? "يرجى الإجابة على جميع الأسئلة"
+                    : "Please answer all questions");
                 return;
             }
 
