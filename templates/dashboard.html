@@ -22,12 +22,16 @@
             background: #00A79B;
             color: white;
             padding-top: 30px;
+            z-index: 1000;
+
         }
 
         .logo {
-            width: 180px;
+            width: 140px;
+            height: auto;
             display: block;
             margin: 0 auto 20px;
+            object-fit: contain;
         }
 
         .menu a {
@@ -45,6 +49,8 @@
         .main {
             margin-left: 240px;
             padding: 30px;
+            min-height: 100vh;
+
         }
 
         /* Cards */
@@ -232,27 +238,7 @@
 
 <body dir="ltr" id="pageBody">
 
-    <!-- <div style="margin-bottom:15px;">
 
-        <h1 id="title" style="margin:0;" data-en="Admin Dashboard" data-ar="لوحة التحكم">
-            Admin Dashboard
-        </h1> -->
-
-    <div id="activeInfo" style="margin-top:8px; color:#555;">
-
-        <h3 id="activeBranch" data-en="Active Branch: {{ active_branch or 'All Branches' }}"
-            data-ar="الفرع النشط: {{ active_branch or 'كل الفروع' }}" style="margin:3px 0;">
-            Active Branch: {{ active_branch or "All Branches" }}
-        </h3>
-
-        <h4 id="activeCategory" data-en="Category: {{ active_category or 'All Categories' }}"
-            data-ar="التصنيف: {{ active_category or 'كل التصنيفات' }}" style="margin:3px 0;">
-            Category: {{ active_category or "All Categories" }}
-        </h4>
-
-    </div>
-    </div>
-    <!-- </div> -->
     <!-- SIDEBAR -->
     <div class="sidebar">
         <img src="{{ url_for('static', filename='logowhite.jpeg') }}" class="logo">
@@ -272,13 +258,7 @@
         </div>
     </div>
 
-    <div style="margin-bottom:15px;">
 
-        <h1 id="title" style="margin:0;" data-en="Admin Dashboard" data-ar="لوحة التحكم">
-            Admin Dashboard
-        </h1>
-
-    </div>
     <!-- MAIN -->
     <div class="main">
 
@@ -286,6 +266,26 @@
             <button class="lang-btn" onclick="setLang('en')">English</button>
             <button class="lang-btn" onclick="setLang('ar')">عربي</button>
         </div>
+
+        <h1 id="title" data-en="Admin Dashboard" data-ar="لوحة التحكم">
+            Admin Dashboard
+        </h1>
+
+        <!-- ACTIVE INFO -->
+        <div id="activeInfo">
+
+            <h3 id="activeBranch" data-en="Active Branch: {{ active_branch or 'All Branches' }}"
+                data-ar="الفرع النشط: {{ active_branch or 'كل الفروع' }}">
+                Active Branch: {{ active_branch or "All Branches" }}
+            </h3>
+
+            <h4 id="activeCategory" data-en="Category: {{ active_category or 'All Categories' }}"
+                data-ar="التصنيف: {{ active_category or 'كل التصنيفات' }}">
+                Category: {{ active_category or "All Categories" }}
+            </h4>
+
+        </div>
+
         <!-- CARDS -->
         <div class="cards">
 
@@ -444,54 +444,51 @@
             // RTL / LTR
             document.body.dir = (lang === "ar") ? "rtl" : "ltr";
 
-            // كل النصوص
+            // كل العناصر اللي فيها data-en / data-ar
             document.querySelectorAll("[data-en]").forEach(el => {
-                el.innerText = el.getAttribute(
-                    lang === "ar" ? "data-ar" : "data-en"
-                );
+                el.innerText = el.getAttribute("data-" + lang);
             });
 
             // options داخل select
             document.querySelectorAll("option[data-en]").forEach(el => {
-                el.textContent = el.getAttribute(
-                    lang === "ar" ? "data-ar" : "data-en"
-                );
+                el.textContent = el.getAttribute("data-" + lang);
             });
 
-            document.querySelectorAll("#activeBranch, #activeCategory").forEach(el => {
-                el.innerText = (lang === "ar") ? el.dataset.ar : el.dataset.en;
-            });
+            // Active Info (مهم جدًا)
+            const branch = "{{ active_branch or 'All' }}";
+            const category = "{{ active_category or 'All' }}";
 
-            document.querySelectorAll(".downloads a").forEach(el => {
-                el.innerText = (lang === "ar") ? el.dataset.ar : el.dataset.en;
-            });
-
-            // Active Branch text
             document.getElementById("activeBranch").innerText =
                 (lang === "ar")
-                    ? "الفرع الحالي: " + "{{ active_branch or 'الكل' }}"
-                    : "Active Branch: " + "{{ active_branch or 'All' }}";
+                    ? "الفرع الحالي: " + branch
+                    : "Active Branch: " + branch;
 
-            // Category text
             document.getElementById("activeCategory").innerText =
                 (lang === "ar")
-                    ? "التصنيف: " + "{{ active_category or 'الكل' }}"
-                    : "Category: " + "{{ active_category or 'All' }}";
+                    ? "التصنيف: " + category
+                    : "Category: " + category;
+
+            // أزرار التحميل
+            document.querySelectorAll(".downloads a").forEach(el => {
+                el.innerText = el.getAttribute("data-" + lang);
+            });
         }
 
+        // تشغيل عند فتح الصفحة
         window.onload = function () {
             let lang = localStorage.getItem("lang") || "en";
             setLang(lang);
         };
 
+        // زر الحذف
         function confirmDelete() {
             let lang = localStorage.getItem("lang") || "en";
 
-            if (lang === "ar") {
-                return confirm("هل أنت متأكد من حذف هذا التقييم؟");
-            } else {
-                return confirm("Are you sure you want to delete this feedback?");
-            }
+            return confirm(
+                lang === "ar"
+                    ? "هل أنت متأكد من حذف هذا التقييم؟"
+                    : "Are you sure you want to delete this feedback?"
+            );
         }
     </script>
 </body>
