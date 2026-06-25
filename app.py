@@ -273,6 +273,8 @@ from datetime import datetime
 
 now = datetime.now()
 
+data = request.get_json()
+
 facility = int(data.get("facility") or 0)
 it = int(data.get("it") or 0)
 medical = int(data.get("medical") or 0)
