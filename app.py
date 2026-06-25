@@ -924,24 +924,37 @@ def download_excel():
     # Rows
     for item in data:
 
+    # ================= DATE SAFE =================
         date_obj = item.get("date")
 
-        if not date_obj:
-            date_str = "-"
-            time_str = "-"
-        else:
+        if isinstance(date_obj, str):
+            try:
+                date_obj = datetime.strptime(date_obj, "%Y-%m-%d")
+            except:
+                date_obj = None
+
+        if date_obj:
             try:
                 date_str = date_obj.strftime("%Y-%m-%d")
                 time_str = date_obj.strftime("%I:%M %p")
             except:
                 date_str = "-"
                 time_str = "-"
+        else:
+            date_str = "-"
+            time_str = "-"
 
+    # ================= LOCATION SAFE =================
+        location = item.get("location") or "-"
+
+        room_name = room_names.get(location, location)
+
+    # ================= ROW =================
         ws.append([
             date_str,
             time_str,
             item.get("branch", "-"),
-            room_names.get(item.get("location"), item.get("location", "-"))
+            room_name,
             item.get("rating", ""),
             item.get("comment", ""),
             item.get("name", "-"),
