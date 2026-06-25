@@ -753,23 +753,33 @@ def download_pdf():
         "Phone"
     ]]
 
-    for item in data:
+for item in data:
 
-        details.append([
-            item["date"].strftime("%Y-%m-%d"),
-            item["date"].strftime("%I:%M %p"),
-            item.get("branch", "-"),
-            room_names.get(item["location"], item["location"]),
-            str(item["rating"]),
-            item.get("comment", ""),
-            item.get("name", "-"),
-            item.get("phone", "-"),
-            item.get("answers", {}).get("category"),
-            item.get("answers", {}).get("speed"),
-            item.get("answers", {}).get("behavior")
-        ])
+    date_obj = item.get("date")
 
-    details_table = Table(details)
+    if not date_obj:
+        date_str = "-"
+        time_str = "-"
+    else:
+        try:
+            date_str = date_obj.strftime("%Y-%m-%d")
+            time_str = date_obj.strftime("%I:%M %p")
+        except:
+            date_str = "-"
+            time_str = "-"
+
+    details.append([
+        date_str,
+        time_str,
+        item.get("branch", "-"),
+        room_names.get(item.get("location", "-"), item.get("location", "-")),
+        str(item.get("rating", "")),
+        item.get("comment", ""),
+        item.get("name", "-"),
+        item.get("phone", "-"),
+    ])
+
+details_table = Table(details)
 
     details_table.setStyle(TableStyle([
         ('BACKGROUND',(0,0),(-1,0),colors.HexColor("#00A79B")),
@@ -904,29 +914,44 @@ def download_excel():
         "Branch",
         "Location",
         "Rating",
-        "Category",
         "Comment",
         "Name",
-        "Phone"
+        "Phone",
+        # "Category",
+        # "Speed",
+        # "Behavior"
     ])
-
     # Rows
     for item in data:
-        ws.append([
-            item["date"].strftime("%Y-%m-%d") if item.get("date") else "",
-            item["date"].strftime("%I:%M %p"),
-            item.get("branch", "-"),
-            room_names.get(item["location"], item["location"]),
-            item.get("rating", ""),
-            item.get("category", "-"),
-            item.get("comment", ""),
-            item.get("name", "-"),
-            item.get("phone", "-"),
-            item.get("answers", {}).get("category"),
-            item.get("answers", {}).get("speed"),
-            item.get("answers", {}).get("behavior")
-        ])
 
+    date_obj = item.get("date")
+
+    if not date_obj:
+        date_str = "-"
+        time_str = "-"
+    else:
+        try:
+            date_str = date_obj.strftime("%Y-%m-%d")
+            time_str = date_obj.strftime("%I:%M %p")
+        except:
+            date_str = "-"
+            time_str = "-"
+
+    ws.append([
+        date_str,
+        time_str,
+        item.get("branch", "-"),
+        room_names.get(item["location"], item["location"]),
+        item.get("rating", ""),
+        item.get("comment", ""),
+        item.get("name", "-"),
+        item.get("phone", "-"),
+
+    # ⭐ هذول الثلاثة
+        # item.get("answers", {}).get("category"),
+        # item.get("answers", {}).get("speed"),
+        # item.get("answers", {}).get("behavior")
+])
     # save in memory
     buffer = BytesIO()
     wb.save(buffer)
