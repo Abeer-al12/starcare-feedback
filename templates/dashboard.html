@@ -232,27 +232,27 @@
 
 <body dir="ltr" id="pageBody">
 
-    <div style="margin-bottom:15px;">
+    <!-- <div style="margin-bottom:15px;">
 
         <h1 id="title" style="margin:0;" data-en="Admin Dashboard" data-ar="لوحة التحكم">
             Admin Dashboard
-        </h1>
+        </h1> -->
 
-        <div id="activeInfo" style="margin-top:8px; color:#555;">
+    <div id="activeInfo" style="margin-top:8px; color:#555;">
 
-            <h3 id="activeBranch" data-en="Active Branch: {{ active_branch or 'All Branches' }}"
-                data-ar="الفرع النشط: {{ active_branch or 'كل الفروع' }}" style="margin:3px 0;">
-                Active Branch: {{ active_branch or "All Branches" }}
-            </h3>
+        <h3 id="activeBranch" data-en="Active Branch: {{ active_branch or 'All Branches' }}"
+            data-ar="الفرع النشط: {{ active_branch or 'كل الفروع' }}" style="margin:3px 0;">
+            Active Branch: {{ active_branch or "All Branches" }}
+        </h3>
 
-            <h4 id="activeCategory" data-en="Category: {{ active_category or 'All Categories' }}"
-                data-ar="التصنيف: {{ active_category or 'كل التصنيفات' }}" style="margin:3px 0;">
-                Category: {{ active_category or "All Categories" }}
-            </h4>
+        <h4 id="activeCategory" data-en="Category: {{ active_category or 'All Categories' }}"
+            data-ar="التصنيف: {{ active_category or 'كل التصنيفات' }}" style="margin:3px 0;">
+            Category: {{ active_category or "All Categories" }}
+        </h4>
 
-        </div>
     </div>
     </div>
+    <!-- </div> -->
     <!-- SIDEBAR -->
     <div class="sidebar">
         <img src="{{ url_for('static', filename='logowhite.jpeg') }}" class="logo">
@@ -272,7 +272,13 @@
         </div>
     </div>
 
+    <div style="margin-bottom:15px;">
 
+        <h1 id="title" style="margin:0;" data-en="Admin Dashboard" data-ar="لوحة التحكم">
+            Admin Dashboard
+        </h1>
+
+    </div>
     <!-- MAIN -->
     <div class="main">
 
