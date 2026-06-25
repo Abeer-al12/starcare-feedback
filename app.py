@@ -941,7 +941,7 @@ def download_excel():
             date_str,
             time_str,
             item.get("branch", "-"),
-            room_names.get(item["location"], item["location"]),
+            room_names.get(item.get("location"), item.get("location", "-"))
             item.get("rating", ""),
             item.get("comment", ""),
             item.get("name", "-"),
@@ -952,8 +952,9 @@ def download_excel():
     wb.save(buffer)
     buffer.seek(0)
 
+    buffer.seek(0)
     return Response(
-        buffer,
+        buffer.getvalue(),
         mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         headers={
             "Content-Disposition": "attachment; filename=feedback_report.xlsx"
