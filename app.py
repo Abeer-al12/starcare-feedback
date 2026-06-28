@@ -9,7 +9,8 @@ from reportlab.platypus import (
     TableStyle,
     Paragraph,
     Spacer,
-    Image
+    Image,
+    HRFlowable
 )
 from dotenv import load_dotenv
 
@@ -668,30 +669,108 @@ def download_pdf():
     elements.append(logo)
     elements.append(Spacer(1, 15))
 
-    elements.append(
-        Paragraph("StarCare Hospital Feedback Report", styles['Title'])
-    )
-
-    elements.append(
-        Paragraph(f"Date: {datetime.now().strftime('%Y-%m-%d')}", styles['Normal'])
-    )
-
-    elements.append(
-        Paragraph(f"Total Feedback: {total}", styles['Normal'])
-    )
-
-    elements.append(
-        Paragraph(f"Overall Rating: {avg} ⭐", styles['Normal'])
-    )
+    # ===========================
+# Title
+# ===========================
 
     elements.append(
         Paragraph(
-            f"⭐5:{five_star} | ⭐4:{four_star} | ⭐3:{three_star} | ⭐2:{two_star} | ⭐1:{one_star}",
-            styles['Normal']
+            "<font size='22' color='#00A79B'><b>StarCare Hospital Feedback Report</b></font>",
+            styles["Title"]
         )
     )
+
+    elements.append(Spacer(1, 8))
+
+    elements.append(
+        HRFlowable(
+            width="100%",
+            thickness=2,
+            color=colors.HexColor("#00A79B")
+        )
+    )
+
+    elements.append(Spacer(1, 15))
+
+# ===========================
+# Report Information
+# ===========================
+
+    report_info = [
+
+        ["Report Date", datetime.now().strftime("%d %b %Y")],
+
+        ["Report Time", datetime.now().strftime("%I:%M %p")],
+
+        ["Branch", branch if branch else "All Branches"],
+
+        ["Location", location if location else "All Locations"],
+
+        ["Category", category if category else "All Categories"]
+
+    ]
+
+    info_table = Table(
+        report_info,
+        colWidths=[130, 260]
+    )
+
+    info_table.setStyle(TableStyle([
+
+        ('BACKGROUND', (0, 0), (0, -1), colors.HexColor("#00A79B")),
+
+        ('TEXTCOLOR', (0, 0), (0, -1), colors.white),
+
+        ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
+
+        ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
+
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
+
+    ]))
+
+    elements.append(info_table)
+
+    elements.append(Spacer(1, 18))
+
+# ===========================
+# Summary
+# ===========================
+
+    summary_table = Table([
+
+        ["Total Feedback", total],
+
+        ["Average Rating", f"{avg} ⭐"],
+
+        ["5 Stars", five_star],
+
+        ["4 Stars", four_star],
+
+        ["3 Stars", three_star],
+
+        ["2 Stars", two_star],
+
+        ["1 Star", one_star],
+
+    ], colWidths=[180, 120])
+
+    summary_table.setStyle(TableStyle([
+
+        ('BACKGROUND', (0, 0), (0, -1), colors.HexColor("#EAF9F8")),
+
+        ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
+
+        ('BOX', (0, 0), (-1, -1), 1, colors.black),
+
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
+
+    ]))
+
+    elements.append(summary_table)
+
+    elements.append(Spacer(1, 18))
     
-    elements.append(Spacer(1, 10))
 
     if avg >= 4.5:
         summary = "Overall patient satisfaction is excellent."
@@ -717,39 +796,66 @@ def download_pdf():
 
     elements.append(Spacer(1, 20))
 
-    rows = [["Room", "Feedbacks", "Average", "Status"]]
+    elements.append(
+    Paragraph("<b>Room Performance Summary</b>", styles["Heading2"])
+)
+
+    elements.append(Spacer(1,10))
+
+    rows = [["Room", "Feedback", "Average", "Status"]]
 
     for loc, v in stats.items():
 
         avg_loc = round(v["total"] / v["count"], 2)
 
-        if avg_loc <= 2:
-            status = "CRITICAL"
-        elif avg_loc <= 3:
-            status = "NEEDS IMPROVEMENT"
-        elif avg_loc <= 4:
-            status = "GOOD"
+        if avg_loc >= 4.5:
+            status = "Excellent"
+
+        elif avg_loc >= 4:
+            status = "Good"
+
+        elif avg_loc >= 3:
+            status = "Needs Improvement"
+
         else:
-            status = "EXCELLENT"
+            status = "Critical"
 
         rows.append([
             room_names.get(loc, loc),
             str(v["count"]),
-            str(avg_loc),
+            f"{avg_loc} ⭐",
             status
         ])
 
-    table = Table(rows)
+    table = Table(
+        rows,
+        colWidths=[180,70,70,120]
+    )
 
     table.setStyle(TableStyle([
-        ('BACKGROUND', (0,0), (-1,0), colors.HexColor("#59e3ec")),
-        ('TEXTCOLOR', (0,0), (-1,0), colors.white),
-        ('GRID', (0,0), (-1,-1), 1, colors.black)
+
+    ('BACKGROUND',(0,0),(-1,0),colors.HexColor("#00A79B")),
+
+    ('TEXTCOLOR',(0,0),(-1,0),colors.white),
+
+    ('FONTNAME',(0,0),(-1,0),"Helvetica-Bold"),
+
+    ('ALIGN',(0,0),(-1,-1),"CENTER"),
+
+    ('GRID',(0,0),(-1,-1),0.5,colors.grey),
+
+    ('ROWBACKGROUNDS',(0,1),(-1,-1),[
+        colors.white,
+        colors.HexColor("#F7FCFC")
+    ]),
+
+    ('BOTTOMPADDING',(0,0),(-1,-1),8),
+
     ]))
 
     elements.append(table)
 
-    elements.append(Spacer(1, 20))
+    elements.append(Spacer(1,25))
 
     elements.append(
         Paragraph("Detailed Feedback", styles['Heading2'])
@@ -762,6 +868,7 @@ def download_pdf():
         "Location",
         "Rating",
         "Comment",
+        "Patient",
         "Name",
         "Phone"
     ]]
@@ -781,26 +888,77 @@ def download_pdf():
                 date_str = "-"
                 time_str = "-"
 
-        details.append([
-            date_str,
-            time_str,
-            item.get("branch", "-"),
-            room_names.get(item.get("location", "-"), item.get("location", "-")),
-            str(item.get("rating", "")),
-            item.get("comment", ""),
-            item.get("name", "-"),
-            item.get("phone", "-"),
-        ])
+    rating = item.get("rating", 0)
+
+    stars = "⭐" * int(rating)
+
+    comment = item.get("comment", "-")
+
+    if len(comment) > 40:
+        comment = comment[:40] + "..."
+
+    details.append([
+        date_str,
+        time_str,
+        item.get("branch", "-"),
+        room_names.get(
+            item.get("location", "-"),
+            item.get("location", "-")
+        ),
+        stars,
+        comment,
+        item.get("name", "-"),
+        item.get("phone", "-")
+    ])
 
 # 👇 خارج اللوب 100%
-    details_table = Table(details)
+    details_table = Table(
+    details,
+    colWidths=[
+        55,
+        55,
+        55,
+        90,
+        55,
+        150,
+        65,
+        70
+    ]
+)
 
     details_table.setStyle(TableStyle([
-        ('BACKGROUND', (0,0), (-1,0), colors.HexColor("#00A79B")),
-        ('TEXTCOLOR', (0,0), (-1,0), colors.white),
-        ('GRID', (0,0), (-1,-1), 1, colors.black),
+
+    ('BACKGROUND',(0,0),(-1,0),colors.HexColor("#00A79B")),
+
+    ('TEXTCOLOR',(0,0),(-1,0),colors.white),
+
+    ('FONTNAME',(0,0),(-1,0),"Helvetica-Bold"),
+
+    ('ALIGN',(0,0),(-1,-1),"CENTER"),
+
+    ('GRID',(0,0),(-1,-1),0.4,colors.grey),
+
+    ('ROWBACKGROUNDS',(0,1),(-1,-1),[
+        colors.white,
+        colors.HexColor("#F8FDFC")
+    ]),
+
+    ('VALIGN',(0,0),(-1,-1),"MIDDLE"),
+
+    ('BOTTOMPADDING',(0,0),(-1,-1),8),
+
+    ('TOPPADDING',(0,0),(-1,-1),8),
+
     ]))
 
+    elements.append(
+        Paragraph(
+            "<b>Patient Feedback Details</b>",
+            styles["Heading2"]
+        )
+    )
+
+    elements.append(Spacer(1,8))
     elements.append(details_table)
 
     elements.append(Spacer(1, 20))
@@ -808,33 +966,81 @@ def download_pdf():
         Paragraph("Low Rating Cases", styles['Heading2'])
     )
 
-    low_rows = [["Location", "Rating", "Comment", "Phone"]]
+    elements.append(
+        Paragraph(
+            "<b>Critical Feedback Cases</b>",
+            styles["Heading2"]
+        )
+    )
+
+    elements.append(Spacer(1,8))
+
+    low_rows = [[
+        "Location",
+        "Rating",
+        "Comment",
+        "Phone"
+    ]]
 
     for item in data:
 
-        if item["rating"] <= 3:
+        if item.get("rating",0) <= 3:
+
+            stars = "⭐"*int(item.get("rating",0))
+
+            comment = item.get("comment","-")
+
+            if len(comment) > 40:
+                comment = comment[:40] + "..."
 
             low_rows.append([
-                room_names.get(item["location"], item["location"]),
-                str(item["rating"]),
-                item.get("comment", ""),
-                item.get("phone", "-")
+                room_names.get(item.get("location"), item.get("location")),
+                stars,
+                comment,
+                item.get("phone","-")
             ])
 
     if len(low_rows) > 1:
 
-        low_table = Table(low_rows)
+        low_table = Table(
+            low_rows,
+            colWidths=[140,70,220,90]
+        )
 
         low_table.setStyle(TableStyle([
-            ('BACKGROUND',(0,0),(-1,0),colors.red),
+
+            ('BACKGROUND',(0,0),(-1,0),colors.HexColor("#E74C3C")),
+
             ('TEXTCOLOR',(0,0),(-1,0),colors.white),
-            ('GRID',(0,0),(-1,-1),1,colors.black)
+
+            ('FONTNAME',(0,0),(-1,0),"Helvetica-Bold"),
+
+            ('GRID',(0,0),(-1,-1),0.5,colors.grey),
+
+            ('ROWBACKGROUNDS',(0,1),(-1,-1),[
+                colors.white,
+                colors.HexColor("#FFF5F5")
+            ]),
+
+            ('BOTTOMPADDING',(0,0),(-1,-1),8),
+
         ]))
 
         elements.append(low_table)
 
+    else:
 
-    doc.build(elements)
+        elements.append(
+            Paragraph(
+                "No critical feedback found.",
+                styles["Normal"]
+            )
+        )
+
+    elements.append(Spacer(1,20))
+
+
+    
 
     elements.append(Spacer(1, 20))
     elements.append(
@@ -866,6 +1072,30 @@ def download_pdf():
     elements.append(
         Paragraph(recommendation.replace("\n", "<br/>"), styles['BodyText'])
     )
+
+    elements.append(Spacer(1,25))
+
+    elements.append(
+        HRFlowable(
+            width="100%",
+            thickness=1,
+            color=colors.grey
+        )
+    )
+
+    elements.append(Spacer(1,8))
+
+    elements.append(
+        Paragraph(
+            "<font size='9' color='grey'>"
+            "Generated automatically by StarCare Hospital Feedback System"
+            "<br/>Confidential Report"
+            "</font>",
+            styles["Normal"]
+        )
+    )
+
+    doc.build(elements)
 
     pdf = buffer.getvalue()
     buffer.close()
