@@ -849,24 +849,26 @@
             let name = document.getElementById("popupName").value.trim();
             let phone = document.getElementById("popupPhone").value.trim();
 
-            // لو منخفض (1-3) لازم الاسم والرقم
             if (isLowRating) {
+
                 if (!name) {
-                    alert("Name required");
+                    alert(currentLang === "ar"
+                        ? "الاسم مطلوب"
+                        : "Name is required");
                     return;
                 }
 
                 if (!/^\d{8}$/.test(phone)) {
-                    alert("Phone must be 8 digits");
+                    alert(currentLang === "ar"
+                        ? "رقم الهاتف يجب أن يكون 8 أرقام"
+                        : "Phone must be 8 digits");
                     return;
                 }
             }
 
-            function skipPhone() {
-                sendData(null, null);
-            }
+            // ⭐ هذا السطر كان ناقص
+            sendData(name, phone);
         }
-
         function sendData(name, phone) {
 
             fetch("/save_feedback", {
@@ -902,7 +904,9 @@
         function skipContact() {
 
             if (isLowRating) {
-                alert("الاسم والرقم إجباري");
+                alert(currentLang === "ar"
+                    ? "الاسم ورقم الهاتف مطلوبان"
+                    : "Name and phone are required");
                 return;
             }
 
@@ -918,9 +922,11 @@
                     rating: tempRating,
                     comment: tempComment,
 
-                    category: document.querySelector('input[name="category"]:checked')?.value,
-                    speed: document.querySelector('input[name="speed"]:checked')?.value,
-                    behavior: document.querySelector('input[name="behavior"]:checked')?.value,
+                    facility: selectedFacility,
+                    it: selectedIT,
+                    medical: selectedMedical,
+                    nursing: selectedNursing,
+                    other: selectedOther,
 
                     name: null,
                     phone: null
