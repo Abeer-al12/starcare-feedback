@@ -239,23 +239,26 @@
         }
 
 
-        @media (max-width: 600px) {
+        @media (max-width:600px) {
 
             .card {
                 width: 92%;
-                padding: 20px;
+                padding: 18px;
             }
 
-            .category-item {
+            .rating-group {
+                gap: 8px;
+            }
+
+            .rating-group h4 {
                 font-size: 14px;
             }
 
-            .stars label {
-                font-size: 40px;
+            .rating-group .stars label {
+                font-size: 30px;
+                padding: 2px;
             }
         }
-
-
 
         .category-options {
             display: flex;
@@ -310,20 +313,30 @@
 
         .rating-group {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 22px;
         }
 
         .rating-group h4 {
+            flex: 1;
             margin: 0;
             font-size: 16px;
-            font-weight: 600;
+            font-weight: bold;
+            white-space: nowrap;
         }
 
         .rating-group .stars {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: flex-end;
             margin: 0;
+            flex-shrink: 0;
+        }
+
+        .rating-group .stars label {
+            font-size: 42px;
         }
     </style>
 </head>
