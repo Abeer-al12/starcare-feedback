@@ -888,28 +888,48 @@ def download_pdf():
                 date_str = "-"
                 time_str = "-"
 
-    rating = item.get("rating", 0)
+    for item in data:
 
-    stars = "⭐" * int(rating)
+        date_obj = item.get("date")
 
-    comment = item.get("comment", "-")
+        if not date_obj:
+            date_str = "-"
+            time_str = "-"
+        else:
+            try:
+                date_str = date_obj.strftime("%Y-%m-%d")
+                time_str = date_obj.strftime("%I:%M %p")
+            except:
+                date_str = "-"
+                time_str = "-"
 
-    if len(comment) > 40:
-        comment = comment[:40] + "..."
+        rating = item.get("rating", 0)
 
-    details.append([
-        date_str,
-        time_str,
-        item.get("branch", "-"),
-        room_names.get(
-            item.get("location", "-"),
-            item.get("location", "-")
-        ),
-        stars,
-        comment,
-        item.get("name", "-"),
-        item.get("phone", "-")
-    ])
+        try:
+            rating = int(rating)
+        except:
+            rating = 0
+
+        stars = "⭐" * rating
+
+        comment = item.get("comment", "-")
+
+        if len(comment) > 40:
+            comment = comment[:40] + "..."
+
+        details.append([
+            date_str,
+            time_str,
+            item.get("branch", "-"),
+            room_names.get(
+                item.get("location", "-"),
+                item.get("location", "-")
+            ),
+            stars,
+            comment,
+            item.get("name", "-"),
+            item.get("phone", "-")
+        ])
 
 # 👇 خارج اللوب 100%
     details_table = Table(
@@ -966,12 +986,12 @@ def download_pdf():
         Paragraph("Low Rating Cases", styles['Heading2'])
     )
 
-    elements.append(
-        Paragraph(
-            "<b>Critical Feedback Cases</b>",
-            styles["Heading2"]
-        )
-    )
+    # elements.append(
+    #     Paragraph(
+    #         "<b>Critical Feedback Cases</b>",
+    #         styles["Heading2"]
+    #     )
+    # )
 
     elements.append(Spacer(1,8))
 
