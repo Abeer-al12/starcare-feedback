@@ -575,7 +575,6 @@ def download_pdf():
     if 'admin' not in session:
         return redirect('/login')
 
-
     # 👇 هنا تحطين الكود الجديد مباشرة
     query = {}
 
@@ -613,6 +612,13 @@ def download_pdf():
         
     # 📦 جلب البيانات
     data = list(collection.find(query))
+
+    for i in data:
+        i["rating"] = float(i.get("rating") or 0)
+        i["category"] = i.get("category", "-")
+        i["branch"] = i.get("branch", "-")
+        i["location"] = i.get("location", "-")
+        i["comment"] = i.get("comment", "-")
 
     # (حذفنا هذا الغلط القديم)
     # data = list(collection.find()) ❌
@@ -877,16 +883,12 @@ def download_pdf():
 
         date_obj = item.get("date")
 
-        if not date_obj:
+        if isinstance(date_obj, datetime):
+            date_str = date_obj.strftime("%Y-%m-%d")
+            time_str = date_obj.strftime("%I:%M %p")
+        else:
             date_str = "-"
             time_str = "-"
-        else:
-            try:
-                date_str = date_obj.strftime("%Y-%m-%d")
-                time_str = date_obj.strftime("%I:%M %p")
-            except:
-                date_str = "-"
-                time_str = "-"
 
     for item in data:
 
