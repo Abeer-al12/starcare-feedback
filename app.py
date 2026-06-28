@@ -620,11 +620,11 @@ def download_pdf():
     # 🔢 الحسابات
     total = len(data)
 
-    five_star = len([x for x in data if x["rating"] == 5])
-    four_star = len([x for x in data if x["rating"] == 4])
-    three_star = len([x for x in data if x["rating"] == 3])
-    two_star = len([x for x in data if x["rating"] == 2])
-    one_star = len([x for x in data if x["rating"] == 1])
+    five_star = len([x for x in data if x.get("rating", 0) == 5])
+    four_star = len([x for x in data if x.get("rating", 0) == 4])
+    three_star = len([x for x in data if x.get("rating", 0) == 3])
+    two_star = len([x for x in data if x.get("rating", 0) == 2])
+    one_star = len([x for x in data if x.get("rating", 0) == 1])
 
     avg = round(
         sum(i["rating"] for i in data) / total,
