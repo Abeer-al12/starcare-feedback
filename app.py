@@ -912,7 +912,9 @@ def download_pdf():
         except:
             rating = 0
 
-        stars = "⭐" * rating
+        rating = int(item.get("rating") or 0)
+
+        stars = f"{rating} out of 5"
 
         comment = item.get("comment", "-")
 
