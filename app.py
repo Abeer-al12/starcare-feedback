@@ -1521,7 +1521,7 @@ def generate_qr():
     if not branch or not location:
         return redirect('/qr_generator')
 
-    url = f"https://starcare-feedback-1.onrender.com/feedback?branch={branch}&location={location}"
+    url = f"https://starcare-feedback-1.onrender.com/feedback/{branch}/{location}"
 
     qr = qrcode.make(url)
 
