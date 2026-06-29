@@ -1519,6 +1519,9 @@ def generate_qr():
 
     user = db.users.find_one({"username": session["username"]})
 
+    print(user)
+    print(user.get("role"))
+
     # 🔐 لازم يكون admin
     if user.get("role") != "admin":
         return "Not allowed"
