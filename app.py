@@ -1513,12 +1513,13 @@ def qr_generator():
 @app.route('/generate_qr', methods=['GET', 'POST'])
 def generate_qr():
 
+    # 🔐 لازم تسجيل دخول
     if 'admin' not in session:
         return redirect('/login')
 
     user = db.users.find_one({"username": session["username"]})
 
-    # 🔒 فقط admin يسمح له
+    # 🔐 لازم يكون admin
     if user.get("role") != "admin":
         return "Not allowed"
 
@@ -1530,9 +1531,12 @@ def generate_qr():
         branch = request.form.get("branch")
         location = request.form.get("location")
 
+        # 🔐 حماية إضافية (اختياري لكن مهم)
+        if branch not in user.get("branches", []):
+            return "Not allowed"
+
         url = f"https://starcare-feedback-1.onrender.com/feedback/{branch}/{location}"
 
-        # توليد QR
         qr = qrcode.make(url)
 
         buffer = BytesIO()
@@ -1541,7 +1545,7 @@ def generate_qr():
 
         img_base64 = base64.b64encode(buffer.getvalue()).decode()
 
-        # 💾 حفظ في MongoDB (إذا غير موجود)
+        # 💾 حفظ QR في DB
         existing = db.qr_codes.find_one({
             "branch": branch,
             "location": location
@@ -1574,7 +1578,7 @@ def qr_dashboard():
 
     if user.get("role") != "admin":
         return "Not allowed"
-        
+
     rooms_data = []
 
     # 1️⃣ الباركودات القديمة (من map)
