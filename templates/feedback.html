@@ -239,26 +239,23 @@
         }
 
 
-        @media (max-width:600px) {
+        @media (max-width: 600px) {
 
             .card {
                 width: 92%;
-                padding: 18px;
+                padding: 20px;
             }
 
-            .rating-group {
-                gap: 8px;
-            }
-
-            .rating-group h4 {
+            .category-item {
                 font-size: 14px;
             }
 
-            .rating-group .stars label {
-                font-size: 30px;
-                padding: 2px;
+            .stars label {
+                font-size: 40px;
             }
         }
+
+
 
         .category-options {
             display: flex;
@@ -310,34 +307,6 @@
             border-color: #00A79B;
             box-shadow: inset 0 0 0 3px white;
         }
-
-        .rating-group {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 15px;
-            margin-bottom: 22px;
-        }
-
-        .rating-group h4 {
-            flex: 1;
-            margin: 0;
-            font-size: 16px;
-            font-weight: bold;
-            white-space: nowrap;
-        }
-
-        .rating-group .stars {
-            display: flex;
-            flex-direction: row-reverse;
-            justify-content: flex-end;
-            margin: 0;
-            flex-shrink: 0;
-        }
-
-        .rating-group .stars label {
-            font-size: 42px;
-        }
     </style>
 </head>
 <div id="errorMsg" style="
@@ -385,121 +354,7 @@
                     What would you like to rate?
                 </div>
 
-
-                <div class="category-ratings">
-
-                    <!-- Facility -->
-                    <div class="rating-group">
-                        <h4 data-key="catFacility">Facility / Maintenance</h4>
-
-                        <div class="stars">
-                            <input type="radio" name="facility" value="5" id="facility5">
-                            <label for="facility5">★</label>
-
-                            <input type="radio" name="facility" value="4" id="facility4">
-                            <label for="facility4">★</label>
-
-                            <input type="radio" name="facility" value="3" id="facility3">
-                            <label for="facility3">★</label>
-
-                            <input type="radio" name="facility" value="2" id="facility2">
-                            <label for="facility2">★</label>
-
-                            <input type="radio" name="facility" value="1" id="facility1">
-                            <label for="facility1">★</label>
-                        </div>
-                    </div>
-
-                    <!-- IT -->
-                    <div class="rating-group">
-                        <h4 data-key="catIT">IT</h4>
-
-                        <div class="stars">
-                            <input type="radio" name="it" value="5" id="it5">
-                            <label for="it5">★</label>
-
-                            <input type="radio" name="it" value="4" id="it4">
-                            <label for="it4">★</label>
-
-                            <input type="radio" name="it" value="3" id="it3">
-                            <label for="it3">★</label>
-
-                            <input type="radio" name="it" value="2" id="it2">
-                            <label for="it2">★</label>
-
-                            <input type="radio" name="it" value="1" id="it1">
-                            <label for="it1">★</label>
-                        </div>
-                    </div>
-
-                    <!-- Medical Equipment -->
-                    <div class="rating-group">
-                        <h4 data-key="catMedical">Medical Equipment</h4>
-
-                        <div class="stars">
-                            <input type="radio" name="medical" value="5" id="medical5">
-                            <label for="medical5">★</label>
-
-                            <input type="radio" name="medical" value="4" id="medical4">
-                            <label for="medical4">★</label>
-
-                            <input type="radio" name="medical" value="3" id="medical3">
-                            <label for="medical3">★</label>
-
-                            <input type="radio" name="medical" value="2" id="medical2">
-                            <label for="medical2">★</label>
-
-                            <input type="radio" name="medical" value="1" id="medical1">
-                            <label for="medical1">★</label>
-                        </div>
-                    </div>
-
-                    <!-- Nursing -->
-                    <div class="rating-group">
-                        <h4 data-key="catNursing">Nursing</h4>
-
-                        <div class="stars">
-                            <input type="radio" name="nursing" value="5" id="nursing5">
-                            <label for="nursing5">★</label>
-
-                            <input type="radio" name="nursing" value="4" id="nursing4">
-                            <label for="nursing4">★</label>
-
-                            <input type="radio" name="nursing" value="3" id="nursing3">
-                            <label for="nursing3">★</label>
-
-                            <input type="radio" name="nursing" value="2" id="nursing2">
-                            <label for="nursing2">★</label>
-
-                            <input type="radio" name="nursing" value="1" id="nursing1">
-                            <label for="nursing1">★</label>
-                        </div>
-                    </div>
-
-                    <!-- Other -->
-                    <div class="rating-group">
-                        <h4 data-key="catOther">Other</h4>
-
-                        <div class="stars">
-                            <input type="radio" name="other" value="5" id="other5">
-                            <label for="other5">★</label>
-
-                            <input type="radio" name="other" value="4" id="other4">
-                            <label for="other4">★</label>
-
-                            <input type="radio" name="other" value="3" id="other3">
-                            <label for="other3">★</label>
-
-                            <input type="radio" name="other" value="2" id="other2">
-                            <label for="other2">★</label>
-
-                            <input type="radio" name="other" value="1" id="other1">
-                            <label for="other1">★</label>
-                        </div>
-                    </div>
-
-                </div>
-                <!-- <div class="category-options">
+                <div class="category-options">
 
                     <label class="category-item">
                         <input type="radio" name="category" value="facility">
@@ -532,9 +387,9 @@
                     </label>
 
                 </div>
-            </div> -->
+            </div>
 
-                <!-- <div class="question-block">
+            <div class="question-block">
 
                 <div class="question-title" data-key="qSpeed">
                     Service Speed
@@ -590,52 +445,53 @@
                     </label>
 
                 </div>
-            </div> -->
-                <!-- <div class="question-block">
+            </div>
+            <div class="question-block">
 
-                    <div class="question-title" data-key="qRating">
-                        Rating
-                    </div>
+                <div class="question-title" data-key="qRating">
+                    Rating
+                </div>
 
-                    <div class="stars">
-                        <input type="radio" name="rating" value="5" id="5" required>
-                        <label for="5">★</label>
+                <div class="stars">
+                    <input type="radio" name="rating" value="5" id="5" required>
+                    <label for="5">★</label>
 
-                        <input type="radio" name="rating" value="4" id="4">
-                        <label for="4">★</label>
+                    <input type="radio" name="rating" value="4" id="4">
+                    <label for="4">★</label>
 
-                        <input type="radio" name="rating" value="3" id="3">
-                        <label for="3">★</label>
+                    <input type="radio" name="rating" value="3" id="3">
+                    <label for="3">★</label>
 
-                        <input type="radio" name="rating" value="2" id="2">
-                        <label for="2">★</label>
+                    <input type="radio" name="rating" value="2" id="2">
+                    <label for="2">★</label>
 
-                        <input type="radio" name="rating" value="1" id="1">
-                        <label for="1">★</label>
-                    </div>
+                    <input type="radio" name="rating" value="1" id="1">
+                    <label for="1">★</label>
+                </div>
 
-                    <p id="starText">Tap a star to rate</p> -->
-                <!-- </div> -->
+                <!-- <p id="starText">Tap a star to rate</p> -->
+            </div>
 
-                <!-- <input type="text" name="phone" placeholder="Optional phone number"> -->
-                <!-- <p id="starText">
+            <!-- <input type="text" name="phone" placeholder="Optional phone number"> -->
+            <!-- <p id="starText">
                 Tap a star to rate
             </p> -->
 
-                <div class="question-block">
+            <div class="question-block">
 
-                    <div class="question-title" data-key="qComment">
-                        Your Comment
-                    </div>
-
-                    <textarea name="comment" id="commentBox" data-placeholder="qComment"></textarea>
-
+                <div class="question-title" data-key="qComment">
+                    Your Comment
                 </div>
 
+                <textarea name="comment" id="commentBox" data-placeholder="qComment"></textarea>
 
-                <button class="submit-btn" type="submit" data-key="submitFeedback">
+            </div>
+
+            <button class="submit-btn" type="submit">
+                <span id="btnText">
                     Submit Feedback
-                </button>
+                </span>
+            </button>
 
         </form>
 
@@ -664,10 +520,7 @@
             behGood: { en: "Good", ar: "جيد" },
             behBad: { en: "Bad", ar: "سيئ" },
 
-            submitFeedback: {
-                en: "Submit Feedback",
-                ar: "إرسال التقييم"
-            },
+            submit: { en: "Submit Feedback", ar: "إرسال التقييم" },
 
             popupTitle: {
                 en: "Contact Information",
@@ -687,11 +540,6 @@
             phoneNumber: {
                 en: "Phone Number",
                 ar: "رقم الهاتف"
-            },
-
-            submit: {
-                en: "Submit",
-                ar: "إرسال"
             },
 
             skip: {
@@ -775,12 +623,12 @@
             <input type="text" id="popupPhone" placeholder="Phone Number"
                 style="width:100%;padding:10px;margin:8px 0;border:1px solid #ddd;border-radius:10px;">
 
-            <button id="popupBtn" data-key="submit" onclick="submitLowRating()"
+            <button id="popupBtn" onclick="submitLowRating()"
                 style="width:100%;padding:12px;margin-top:10px;background:#00A79B;color:white;border:none;border-radius:10px;">
                 Submit
             </button>
 
-            <button id="skipBtn" data-key="skip" onclick="skipContact()"
+            <button id="skipBtn" onclick="skipContact()"
                 style="width:100%;padding:10px;margin-top:8px;background:#eee;border:none;border-radius:10px;">
                 Skip
             </button>
@@ -792,11 +640,6 @@
         let tempRating = 0;
         let tempComment = "";
         let isLowRating = false;
-        let facility = 0;
-        let it = 0;
-        let medical = 0;
-        let nursing = 0;
-        let other = 0;
 
         function showError(msg) {
             const box = document.getElementById("errorMsg");
@@ -811,46 +654,25 @@
         document.getElementById("feedbackForm").addEventListener("submit", function (e) {
             e.preventDefault();
 
-            facility = document.querySelector('input[name="facility"]:checked')?.value;
-            it = document.querySelector('input[name="it"]:checked')?.value;
-            medical = document.querySelector('input[name="medical"]:checked')?.value;
-            nursing = document.querySelector('input[name="nursing"]:checked')?.value;
-            other = document.querySelector('input[name="other"]:checked')?.value;
+            let category = document.querySelector('input[name="category"]:checked');
+            let speed = document.querySelector('input[name="speed"]:checked');
+            let behavior = document.querySelector('input[name="behavior"]:checked');
+            let rating = document.querySelector('input[name="rating"]:checked');
 
-            if (
-                !facility ||
-                !it ||
-                !medical ||
-                !nursing ||
-                !other
-            ) {
-                alert(currentLang === "ar"
-                    ? "يرجى الإجابة على جميع الأسئلة"
-                    : "Please answer all questions");
+            // 🚨 إذا ناقص شيء
+            if (!rating || !category || !speed || !behavior) {
+                showToast(i18n.messages[currentLang].required);
                 return;
             }
+            let ratingValue = parseInt(rating.value);
 
-            // نحول القيم لأرقام
-            facility = parseInt(facility);
-            it = parseInt(it);
-            medical = parseInt(medical);
-            nursing = parseInt(nursing);
-            other = parseInt(other);
-
+            tempRating = ratingValue;
             tempComment = document.getElementById("commentBox").value;
 
-            // 🔥 نحسب إذا فيه تقييم منخفض
-            isLowRating =
-                facility <= 3 ||
-                it <= 3 ||
-                medical <= 3 ||
-                nursing <= 3 ||
-                other <= 3;
-
-            if (isLowRating) {
-                document.getElementById("skipBtn").style.display = "none";
+            if (ratingValue <= 3) {
+                isLowRating = true;
             } else {
-                document.getElementById("skipBtn").style.display = "block";
+                isLowRating = false;
             }
 
             document.getElementById("phonePopup").style.display = "flex";
@@ -862,68 +684,20 @@
             let name = document.getElementById("popupName").value.trim();
             let phone = document.getElementById("popupPhone").value.trim();
 
+            // لو منخفض (1-3) لازم الاسم والرقم
             if (isLowRating) {
-
                 if (!name) {
-                    alert(currentLang === "ar"
-                        ? "الاسم مطلوب"
-                        : "Name is required");
+                    alert("Name required");
                     return;
                 }
 
                 if (!/^\d{8}$/.test(phone)) {
-                    alert(currentLang === "ar"
-                        ? "رقم الهاتف يجب أن يكون 8 أرقام"
-                        : "Phone must be 8 digits");
+                    alert("Phone must be 8 digits");
                     return;
                 }
             }
 
-            // ⭐ هذا السطر كان ناقص
             sendData(name, phone);
-        }
-        function sendData(name, phone) {
-
-            fetch("/save_feedback", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    location: "{{ room }}",
-                    branch: "{{ branch }}",
-
-                    facility,
-                    it,
-                    medical,
-                    nursing,
-                    other,
-
-                    comment: tempComment,
-
-                    name: name || null,
-                    phone: phone || null
-                })
-            })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success) {
-                        window.location.href = `/thankyou/{{ branch }}/{{ room }}`;
-                    }
-                });
-        }
-
-        // ---------------- SKIP BUTTON ----------------
-        function skipContact() {
-
-            if (isLowRating) {
-                alert(currentLang === "ar"
-                    ? "الاسم ورقم الهاتف مطلوبان"
-                    : "Name and phone are required");
-                return;
-            }
-
-            sendData(null, null);
         }
 
         fetch("/save_feedback", {
@@ -934,18 +708,15 @@
             body: JSON.stringify({
                 location: "{{ room }}",
                 branch: "{{ branch }}",
-
                 rating: tempRating,
                 comment: tempComment,
 
-                facility: selectedFacility,
-                it: selectedIT,
-                medical: selectedMedical,
-                nursing: selectedNursing,
-                other: selectedOther,
+                category: document.querySelector('input[name="category"]:checked')?.value,
+                speed: document.querySelector('input[name="speed"]:checked')?.value,
+                behavior: document.querySelector('input[name="behavior"]:checked')?.value,
 
-                name: null,
-                phone: null
+                name: name || null,
+                phone: phone || null
             })
         })
             .then(res => res.json())
@@ -954,7 +725,42 @@
                     window.location.href = `/thankyou/{{ branch }}/{{ room }}`;
                 }
             });
-        
+
+        // ---------------- SKIP BUTTON ----------------
+        function skipContact() {
+
+            if (isLowRating) {
+                alert("الاسم والرقم إجباري");
+                return;
+            }
+
+            fetch("/save_feedback", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    location: "{{ room }}",
+                    branch: "{{ branch }}",
+
+                    rating: tempRating,
+                    comment: tempComment,
+
+                    category: document.querySelector('input[name="category"]:checked')?.value,
+                    speed: document.querySelector('input[name="speed"]:checked')?.value,
+                    behavior: document.querySelector('input[name="behavior"]:checked')?.value,
+
+                    name: null,
+                    phone: null
+                })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.href = `/thankyou/{{ branch }}/{{ room }}`;
+                    }
+                });
+        }
 
         function showToast(msg) {
             const toast = document.createElement("div");
