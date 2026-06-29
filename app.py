@@ -1500,29 +1500,36 @@ def analytics():
 # ---------------- GENERATE QR ----------------
 
 
-@app.route('/generate_qr', methods=['GET', 'POST'])
+@app.route('/qr_generator')
+def qr_generator():
+
+    if 'admin' not in session:
+        return redirect('/login')
+
+    return render_template("qr_generator.html", qr_image=None, url=None)
+
+
+@app.route('/generate_qr', methods=['POST'])
 def generate_qr():
 
     if 'admin' not in session:
         return redirect('/login')
 
-    qr_image = None
-    url = None
+    branch = request.form.get("branch")
+    location = request.form.get("location")
 
-    if request.method == 'POST':
+    if not branch or not location:
+        return redirect('/qr_generator')
 
-        branch = request.form.get("branch")
-        location = request.form.get("location")
+    url = f"https://starcare-feedback-1.onrender.com/feedback?branch={branch}&location={location}"
 
-        url = f"https://starcare-feedback-1.onrender.com/feedback?branch={branch}&location={location}"
+    qr = qrcode.make(url)
 
-        qr = qrcode.make(url)
+    buffer = BytesIO()
+    qr.save(buffer, format="PNG")
+    buffer.seek(0)
 
-        buffer = BytesIO()
-        qr.save(buffer, format="PNG")
-        buffer.seek(0)
-
-        qr_image = base64.b64encode(buffer.getvalue()).decode()
+    qr_image = base64.b64encode(buffer.getvalue()).decode()
 
     return render_template(
         "qr_generator.html",
