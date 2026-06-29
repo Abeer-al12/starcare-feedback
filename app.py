@@ -1517,14 +1517,14 @@ def generate_qr():
     if 'admin' not in session:
         return redirect('/login')
 
-    user = db.users.find_one({"username": session["username"]})
+    # user = db.users.find_one({"username": session["username"]})
 
-    # 🔐 لازم يكون admin
-    if user.get("role") != "admin":
-        return "Not allowed"
+    # # 🔐 لازم يكون admin
+    # if user.get("role") != "admin":
+    #     return "Not allowed"
 
-    qr_image = None
-    url = None
+    # qr_image = None
+    # url = None
 
     if request.method == 'POST':
 
