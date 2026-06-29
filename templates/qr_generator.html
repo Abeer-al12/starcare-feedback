@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
     <meta charset="UTF-8">
@@ -8,26 +8,21 @@
     <style>
         body {
             margin: 0;
-            font-family: Arial, sans-serif;
+            font-family: Arial;
             background: #f6fbfc;
+            display: flex;
         }
 
-        /* ===== SIDEBAR ===== */
+        /* SIDEBAR */
         .sidebar {
             width: 220px;
             height: 100vh;
             background: #00A79B;
+            color: white;
+            padding: 20px;
             position: fixed;
             left: 0;
             top: 0;
-            padding: 20px;
-            color: white;
-            box-sizing: border-box;
-        }
-
-        .sidebar img {
-            width: 100%;
-            margin-bottom: 20px;
         }
 
         .sidebar a {
@@ -35,84 +30,61 @@
             color: white;
             text-decoration: none;
             padding: 10px;
-            margin-bottom: 8px;
-            border-radius: 8px;
-            transition: 0.2s;
-            font-size: 15px;
+            margin: 5px 0;
+            border-radius: 10px;
         }
 
         .sidebar a:hover {
             background: rgba(255, 255, 255, 0.2);
         }
 
-        /* ===== MAIN ===== */
+        /* MAIN */
         .main {
             margin-left: 240px;
             padding: 30px;
+            width: 100%;
         }
 
-        /* ===== TOPBAR ===== */
+        /* TOPBAR */
         .topbar {
             margin-bottom: 20px;
         }
 
-        .topbar h3 {
+        .topbar h2 {
             margin: 0;
             color: #00A79B;
-            font-size: 24px;
         }
 
-        .topbar p {
-            margin: 5px 0 0;
-            color: #777;
-        }
-
-        /* ===== CARD ===== */
+        /* CARD */
         .card {
             background: white;
-            padding: 30px;
-            border-radius: 18px;
+            padding: 25px;
+            border-radius: 20px;
+            width: 450px;
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
         }
 
-        .card h2 {
-            margin-top: 0;
-            color: #1b2a41;
+        input,
+        select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 10px;
+            border: 1px solid #ddd;
         }
 
-        .card p {
-            color: #666;
-            line-height: 1.6;
-        }
-
-        /* ===== BUTTON (جاهز للـ QR لاحقاً) ===== */
-        .btn {
-            margin-top: 20px;
-            padding: 12px 20px;
+        button {
+            width: 100%;
+            padding: 12px;
             background: #00A79B;
             color: white;
             border: none;
-            border-radius: 10px;
+            border-radius: 12px;
             cursor: pointer;
-            font-size: 15px;
         }
 
-        .btn:hover {
-            background: #009488;
-        }
-
-        /* ===== MOBILE ===== */
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 100%;
-                height: auto;
-                position: relative;
-            }
-
-            .main {
-                margin-left: 0;
-                padding: 15px;
-            }
+        button:hover {
+            background: #008f86;
         }
     </style>
 </head>
@@ -121,51 +93,63 @@
 
     <!-- SIDEBAR -->
     <div class="sidebar">
-        <img src="{{ url_for('static', filename='logowhite.jpeg') }}">
+
+        <h3>STARCARE</h3>
 
         <a href="/admin">Dashboard</a>
         <a href="/analytics">Analytics</a>
         <a href="/qr_dashboard">QR Dashboard</a>
         <a href="/manage_users">Manage Users</a>
         <a href="/logout">Logout</a>
+
     </div>
 
     <!-- MAIN -->
     <div class="main">
 
         <div class="topbar">
-            <h3>QR Generator</h3>
-            <p>Create New QR Code</p>
+            <h2>QR Generator</h2>
+            <p>Create QR for patient feedback</p>
         </div>
 
         <div class="card">
 
+            <h3>Create QR Code</h3>
+
+            <p>Select branch and type room name manually</p>
+
             <form method="POST" action="/generate_qr">
 
-                <input type="text" name="branch" placeholder="Branch" required>
-                <input type="text" name="location" placeholder="Location" required>
+                <!-- Branch -->
+                <label>Branch</label>
+                <select name="branch" required>
+                    <option value="alhail">Al Hail</option>
+                    <option value="mabella">Mabella</option>
+                </select>
 
-                <button class="btn" type="submit">Generate QR</button>
+                <!-- Location -->
+                <label>Room / Location</label>
+                <input type="text" name="location" placeholder="e.g. Room 101" required>
+
+                <button type="submit">Generate QR</button>
 
             </form>
 
             {% if qr_image %}
 
-            <div style="margin-top:20px; text-align:center;">
-
-                <p>QR Generated:</p>
+            <div style="text-align:center; margin-top:20px;">
+                <h3>Generated QR</h3>
 
                 <img src="data:image/png;base64,{{ qr_image }}" width="220">
 
-                <p style="margin-top:10px; color:#777;">
-                    {{ url }}
-                </p>
-
+                <p style="color:#777">{{ url }}</p>
             </div>
 
             {% endif %}
 
         </div>
+
+    </div>
 
 </body>
 
