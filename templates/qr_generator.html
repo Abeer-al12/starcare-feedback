@@ -1,171 +1,172 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
 
-{% block content %}
+<head>
+    <meta charset="UTF-8">
+    <title>QR Generator</title>
 
-<style>
-    .generator-card {
-        background: #fff;
-        border-radius: 20px;
-        padding: 35px;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, .08);
-        max-width: 850px;
-        margin: auto;
-    }
-
-    .generator-card h2 {
-        margin-top: 0;
-        color: #1b2a41;
-    }
-
-    .generator-card p {
-        color: #777;
-        margin-bottom: 30px;
-    }
-
-    .form-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 20px;
-    }
-
-    .form-group {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .form-group label {
-        margin-bottom: 8px;
-        font-weight: 600;
-        color: #1b2a41;
-    }
-
-    .form-group select {
-        padding: 12px;
-        border: 1px solid #ddd;
-        border-radius: 10px;
-        font-size: 15px;
-        outline: none;
-    }
-
-    .form-group select:focus {
-        border-color: #00A79B;
-    }
-
-    .generate-btn {
-        margin-top: 30px;
-        background: #00A79B;
-        color: #fff;
-        border: none;
-        padding: 14px;
-        width: 100%;
-        border-radius: 12px;
-        cursor: pointer;
-        font-size: 16px;
-        font-weight: bold;
-        transition: .3s;
-    }
-
-    .generate-btn:hover {
-        background: #008f84;
-    }
-
-    .qr-preview {
-        margin-top: 35px;
-        text-align: center;
-        padding: 30px;
-        border: 2px dashed #d8d8d8;
-        border-radius: 18px;
-        background: #fafafa;
-    }
-
-    .qr-preview h3 {
-        margin-bottom: 10px;
-    }
-
-    .qr-box {
-        width: 220px;
-        height: 220px;
-        background: #eee;
-        border-radius: 12px;
-        margin: 20px auto;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        color: #888;
-        font-size: 15px;
-    }
-
-    @media(max-width:768px) {
-
-        .form-grid {
-            grid-template-columns: 1fr;
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f6fbfc;
         }
 
-    }
-</style>
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: 220px;
+            height: 100vh;
+            background: #00A79B;
+            position: fixed;
+            left: 0;
+            top: 0;
+            padding: 20px;
+            color: white;
+            box-sizing: border-box;
+        }
 
-<div class="topbar">
-    <h3>QR Generator</h3>
-    <p>Create Feedback QR Codes</p>
-</div>
+        .sidebar img {
+            width: 100%;
+            margin-bottom: 20px;
+        }
 
-<div class="generator-card">
+        .sidebar a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            transition: 0.2s;
+            font-size: 15px;
+        }
 
-    <h2>Create New QR Code</h2>
+        .sidebar a:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
 
-    <p>
-        Select the branch and room, then generate a QR Code that patients can scan to access the feedback page.
-    </p>
+        /* ===== MAIN ===== */
+        .main {
+            margin-left: 240px;
+            padding: 30px;
+        }
 
-    <div class="form-grid">
+        /* ===== TOPBAR ===== */
+        .topbar {
+            margin-bottom: 20px;
+        }
 
-        <div class="form-group">
-            <label>Branch</label>
+        .topbar h3 {
+            margin: 0;
+            color: #00A79B;
+            font-size: 24px;
+        }
 
-            <select id="branch">
+        .topbar p {
+            margin: 5px 0 0;
+            color: #777;
+        }
 
-                <option>Select Branch</option>
+        /* ===== CARD ===== */
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 18px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        }
 
-                <option>Al Hail</option>
+        .card h2 {
+            margin-top: 0;
+            color: #1b2a41;
+        }
 
-                <option>Mabella</option>
+        .card p {
+            color: #666;
+            line-height: 1.6;
+        }
 
-            </select>
+        /* ===== BUTTON (جاهز للـ QR لاحقاً) ===== */
+        .btn {
+            margin-top: 20px;
+            padding: 12px 20px;
+            background: #00A79B;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 15px;
+        }
 
-        </div>
+        .btn:hover {
+            background: #009488;
+        }
 
-        <div class="form-group">
+        /* ===== MOBILE ===== */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
 
-            <label>Location</label>
+            .main {
+                margin-left: 0;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
 
-            <select id="location">
+<body>
 
-                <option>Select Location</option>
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <img src="{{ url_for('static', filename='logowhite.jpeg') }}">
 
-            </select>
-
-        </div>
-
+        <a href="/admin">Dashboard</a>
+        <a href="/analytics">Analytics</a>
+        <a href="/qr_dashboard">QR Dashboard</a>
+        <a href="/manage_users">Manage Users</a>
+        <a href="/logout">Logout</a>
     </div>
 
-    <button class="generate-btn">
-        Generate QR Code
-    </button>
+    <!-- MAIN -->
+    <div class="main">
 
-    <div class="qr-preview">
+        <div class="topbar">
+            <h3>QR Generator</h3>
+            <p>Create New QR Code</p>
+        </div>
 
-        <h3>QR Preview</h3>
+        <div class="card">
 
-        <p>The generated QR Code will appear here.</p>
+            <form method="POST" action="/generate_qr">
 
-        <div class="qr-box">
+                <input type="text" name="branch" placeholder="Branch" required>
+                <input type="text" name="location" placeholder="Location" required>
 
-            QR Preview
+                <button class="btn" type="submit">Generate QR</button>
+
+            </form>
+
+            {% if qr_image %}
+
+            <div style="margin-top:20px; text-align:center;">
+
+                <p>QR Generated:</p>
+
+                <img src="data:image/png;base64,{{ qr_image }}" width="220">
+
+                <p style="margin-top:10px; color:#777;">
+                    {{ url }}
+                </p>
+
+            </div>
+
+            {% endif %}
 
         </div>
 
-    </div>
+</body>
 
-</div>
-
-{% endblock %}
+</html>

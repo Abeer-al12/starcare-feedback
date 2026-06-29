@@ -21,6 +21,7 @@ from io import BytesIO
 from flask import Response
 from bson import ObjectId
 from flask import jsonify
+import base64
 # from reportlab.pdfbase import pdfmetrics
 # from reportlab.pdfbase.ttfonts import TTFont
 # from reportlab.lib.styles import ParagraphStyle
@@ -1509,13 +1510,33 @@ def generate_qr():
     return "QR Generated Successfully"
 
 
-@app.route("/qr_generator")
-def qr_generator():
+@app.route('/generate_qr', methods=['POST'])
+def generate_qr():
 
-    if "admin" not in session:
-        return redirect("/login")
+    if 'admin' not in session:
+        return redirect('/login')
 
-    return render_template("qr_generator.html")
+    branch = request.form.get("branch")
+    location = request.form.get("location")
+
+    # الرابط اللي بينمسح
+    url = f"https://starcare-feedback-1.onrender.com/feedback?branch={branch}&location={location}"
+
+    # توليد QR
+    qr = qrcode.make(url)
+
+    buffer = BytesIO()
+    qr.save(buffer, format="PNG")
+    buffer.seek(0)
+
+    # تحويله base64 عشان نعرضه في الصفحة
+    img_base64 = base64.b64encode(buffer.getvalue()).decode()
+
+    return render_template(
+        "qr_generator.html",
+        qr_image=img_base64,
+        url=url
+    )
 # ---------------- QR DASHBOARD ----------------
 @app.route('/qr_dashboard')
 def qr_dashboard():
