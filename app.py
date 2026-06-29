@@ -1509,27 +1509,47 @@ def qr_generator():
     return render_template("qr_generator.html", qr_image=None, url=None)
 
 
-@app.route('/generate_qr', methods=['POST'])
+@app.route('/generate_qr', methods=['GET', 'POST'])
 def generate_qr():
 
     if 'admin' not in session:
         return redirect('/login')
 
-    branch = request.form.get("branch")
-    location = request.form.get("location")
+    qr_image = None
+    url = None
 
-    if not branch or not location:
-        return redirect('/qr_generator')
+    if request.method == 'POST':
 
-    url = f"https://starcare-feedback-1.onrender.com/feedback/{branch}/{location}"
+        branch = request.form.get("branch")
+        location = request.form.get("location")
 
-    qr = qrcode.make(url)
+        url = f"https://starcare-feedback-1.onrender.com/feedback/{branch}/{location}"
 
-    buffer = BytesIO()
-    qr.save(buffer, format="PNG")
-    buffer.seek(0)
+        # توليد QR
+        qr = qrcode.make(url)
 
-    qr_image = base64.b64encode(buffer.getvalue()).decode()
+        buffer = BytesIO()
+        qr.save(buffer, format="PNG")
+        buffer.seek(0)
+
+        img_base64 = base64.b64encode(buffer.getvalue()).decode()
+
+        # 💾 حفظ في MongoDB (إذا غير موجود)
+        existing = db.qr_codes.find_one({
+            "branch": branch,
+            "location": location
+        })
+
+        if not existing:
+            db.qr_codes.insert_one({
+                "branch": branch,
+                "location": location,
+                "url": url,
+                "qr_image": img_base64,
+                "created_at": datetime.now()
+            })
+
+        qr_image = img_base64
 
     return render_template(
         "qr_generator.html",
@@ -1540,28 +1560,31 @@ def generate_qr():
 @app.route('/qr_dashboard')
 def qr_dashboard():
 
+    if 'admin' not in session:
+        return redirect('/login')
+
+    qrs = list(db.qr_codes.find().sort("created_at", -1))
+
     rooms_data = []
 
-    for branch, rooms in branch_rooms_map.items():
+    for qr in qrs:
 
-        for room in rooms:
+        branch = qr.get("branch")
+        location = qr.get("location")
 
-            url = f"{BASE_URL}/feedback/{branch}/{room}"
+        rooms_data.append({
+            "branch": branch,
+            "room": location,
+            "name": room_names.get(location, location),
 
-            print("QR:", url)  # 👈 للتأكد
-
-            rooms_data.append({
+            "count": collection.count_documents({
                 "branch": branch,
-                "room": room,
-                "name": room_names.get(room, room),
+                "location": location
+            }),
 
-                "count": collection.count_documents({
-                    "branch": branch,
-                    "location": room
-                }),
-
-                "qr": url
-            })
+            "qr": qr.get("url"),
+            "image": qr.get("qr_image")
+        })
 
     return render_template("qr_dashboard.html", rooms=rooms_data)
 # @app.route('/fix_branch')
