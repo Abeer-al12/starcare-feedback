@@ -1500,31 +1500,33 @@ def analytics():
 # ---------------- GENERATE QR ----------------
 
 
-@app.route('/generate_qr', methods=['POST'])
+@app.route('/generate_qr', methods=['GET', 'POST'])
 def generate_qr():
 
     if 'admin' not in session:
         return redirect('/login')
 
-    branch = request.form.get("branch")
-    location = request.form.get("location")
+    qr_image = None
+    url = None
 
-    # الرابط اللي بينمسح
-    url = f"https://starcare-feedback-1.onrender.com/feedback?branch={branch}&location={location}"
+    if request.method == 'POST':
 
-    # توليد QR
-    qr = qrcode.make(url)
+        branch = request.form.get("branch")
+        location = request.form.get("location")
 
-    buffer = BytesIO()
-    qr.save(buffer, format="PNG")
-    buffer.seek(0)
+        url = f"https://starcare-feedback-1.onrender.com/feedback?branch={branch}&location={location}"
 
-    # تحويله base64 عشان نعرضه في الصفحة
-    img_base64 = base64.b64encode(buffer.getvalue()).decode()
+        qr = qrcode.make(url)
+
+        buffer = BytesIO()
+        qr.save(buffer, format="PNG")
+        buffer.seek(0)
+
+        qr_image = base64.b64encode(buffer.getvalue()).decode()
 
     return render_template(
         "qr_generator.html",
-        qr_image=img_base64,
+        qr_image=qr_image,
         url=url
     )
 # ---------------- QR DASHBOARD ----------------
