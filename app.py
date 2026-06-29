@@ -30,6 +30,7 @@ from flask import jsonify
 from openpyxl import Workbook
 from io import BytesIO
 from flask import Response
+from openpyxl.styles import Font, PatternFill, Border, Side, Alignment
 
 app = Flask(__name__)
 app.secret_key = "starcare_secret"
@@ -1178,8 +1179,77 @@ def download_excel():
     ws = wb.active
     ws.title = "Feedback Report"
 
-    # Header
-    ws.append([
+    # ===========================
+# Title
+# ===========================
+
+    ws["A1"] = "StarCare Hospital Feedback Report"
+    ws["A1"].font = Font(size=18, bold=True, color="FFFFFF")
+    ws["A1"].fill = PatternFill("solid", fgColor="00A79B")
+
+    ws["A3"] = "Report Date"
+    ws["B3"] = datetime.now().strftime("%Y-%m-%d")
+
+    ws["A4"] = "Report Time"
+    ws["B4"] = datetime.now().strftime("%I:%M %p")
+
+    ws["A5"] = "Branch"
+    ws["B5"] = branch if branch else "All Branches"
+
+    ws["A6"] = "Location"
+    ws["B6"] = location if location else "All Locations"
+
+    ws["A7"] = "Category"
+    ws["B7"] = category if category else "All Categories"
+
+    
+# ===========================
+# Statistics
+# ===========================
+
+    ratings = [
+        float(i.get("rating") or 0)
+        for i in data
+    ]
+
+    total = len(ratings)
+
+    avg = round(sum(ratings)/total,2) if total else 0
+
+    five = len([r for r in ratings if r==5])
+    four = len([r for r in ratings if r==4])
+    three = len([r for r in ratings if r==3])
+    two = len([r for r in ratings if r==2])
+    one = len([r for r in ratings if r==1])
+
+    ws["D3"]="Total Feedback"
+    ws["E3"]=total
+
+    ws["D4"]="Average Rating"
+    ws["E4"]=avg
+
+    ws["D5"]="5 Stars"
+    ws["E5"]=five
+
+    ws["D6"]="4 Stars"
+    ws["E6"]=four
+
+    ws["D7"]="3 Stars"
+    ws["E7"]=three
+
+    ws["D8"]="2 Stars"
+    ws["E8"]=two
+
+    ws["D9"]="1 Star"
+    ws["E9"]=one
+
+# ===========================
+# Table Header
+# ===========================
+
+    row = 12
+
+    headers = [
         "Date",
         "Time",
         "Branch",
@@ -1187,15 +1257,20 @@ def download_excel():
         "Rating",
         "Comment",
         "Name",
-        "Phone",
-        # "Category",
-        # "Speed",
-        # "Behavior"
-    ])
-    # Rows
+        "Phone"
+    ]
+
+    for col, head in enumerate(headers,1):
+
+        cell = ws.cell(row=row,column=col)
+
+        cell.value = head
+        cell.font = Font(bold=True,color="FFFFFF")
+        cell.fill = PatternFill("solid",fgColor="00A79B")
+        cell.alignment = Alignment(horizontal="center")
+
     for item in data:
 
-    # ================= DATE SAFE =================
         date_obj = item.get("date")
 
         if isinstance(date_obj, str):
@@ -1205,32 +1280,53 @@ def download_excel():
                 date_obj = None
 
         if date_obj:
-            try:
-                date_str = date_obj.strftime("%Y-%m-%d")
-                time_str = date_obj.strftime("%I:%M %p")
-            except:
-                date_str = "-"
-                time_str = "-"
+            date_str = date_obj.strftime("%Y-%m-%d")
+            time_str = date_obj.strftime("%I:%M %p")
         else:
             date_str = "-"
             time_str = "-"
 
-    # ================= LOCATION SAFE =================
-        location = item.get("location") or "-"
+        location_name = item.get("location") or "-"
+        room_name = room_names.get(location_name, location_name)
 
-        room_name = room_names.get(location, location)
+        rating = int(item.get("rating") or 0)
 
-    # ================= ROW =================
         ws.append([
             date_str,
             time_str,
             item.get("branch", "-"),
             room_name,
-            item.get("rating", ""),
+            f"{rating}/5",
             item.get("comment", ""),
             item.get("name", "-"),
             item.get("phone", "-"),
         ])
+        
+        thin = Side(style="thin")
+
+        for row_cells in ws.iter_rows():
+
+            for cell in row_cells:
+
+                cell.border = Border(
+                    left=thin,
+                    right=thin,
+                    top=thin,
+                    bottom=thin
+                )
+
+                cell.alignment = Alignment(
+                    vertical="center",
+                    wrap_text=True
+                )
+
+        for col in ws.columns:
+
+            length = max(len(str(c.value or "")) for c in col)
+
+            ws.column_dimensions[col[0].column_letter].width = min(length+5,40)
+
+        ws.freeze_panes = "A13"
     # save in memory
     buffer = BytesIO()
     wb.save(buffer)
