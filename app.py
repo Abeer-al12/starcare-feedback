@@ -1563,27 +1563,44 @@ def qr_dashboard():
     if 'admin' not in session:
         return redirect('/login')
 
-    qrs = list(db.qr_codes.find().sort("created_at", -1))
-
     rooms_data = []
+
+    # 1️⃣ الباركودات القديمة (من map)
+    for branch, rooms in branch_rooms_map.items():
+
+        for room in rooms:
+
+            url = f"{BASE_URL}/feedback/{branch}/{room}"
+
+            rooms_data.append({
+                "branch": branch,
+                "room": room,
+                "name": room_names.get(room, room),
+
+                "count": collection.count_documents({
+                    "branch": branch,
+                    "location": room
+                }),
+
+                "qr": url
+            })
+
+    # 2️⃣ الباركودات الجديدة (من DB)
+    qrs = list(db.qr_codes.find())
 
     for qr in qrs:
 
-        branch = qr.get("branch")
-        location = qr.get("location")
-
         rooms_data.append({
-            "branch": branch,
-            "room": location,
-            "name": room_names.get(location, location),
+            "branch": qr.get("branch"),
+            "room": qr.get("location"),
+            "name": room_names.get(qr.get("location"), qr.get("location")),
 
             "count": collection.count_documents({
-                "branch": branch,
-                "location": location
+                "branch": qr.get("branch"),
+                "location": qr.get("location")
             }),
 
-            "qr": qr.get("url"),
-            "image": qr.get("qr_image")
+            "qr": qr.get("url")
         })
 
     return render_template("qr_dashboard.html", rooms=rooms_data)
