@@ -1301,7 +1301,7 @@ def download_excel():
             item.get("name", "-"),
             item.get("phone", "-"),
         ])
-        
+
         thin = Side(style="thin")
 
         for row_cells in ws.iter_rows():
@@ -1470,14 +1470,19 @@ def analytics():
     stats = {}
 
     for i in data:
-        loc = i.get("location")
+
+        loc = i.get("location", "Unknown")
+        rating = float(i.get("rating") or 0)
 
         if loc not in stats:
-            stats[loc] = {"count": 0, "total": 0}
+            stats[loc] = {
+                "count": 0,
+                "total": 0
+            }
 
         stats[loc]["count"] += 1
-        stats[loc]["total"] += i["rating"]
-
+        stats[loc]["total"] += rating
+        
     chart_data = [
         {
             "location": room_names.get(loc, loc),
