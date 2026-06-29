@@ -1513,32 +1513,18 @@ def qr_generator():
 @app.route('/generate_qr', methods=['GET', 'POST'])
 def generate_qr():
 
-    # 🔐 لازم تسجيل دخول
     if 'admin' not in session:
         return redirect('/login')
-
-    user = db.users.find_one({"username": session["username"]})
-
-    print(user)
-    print(user.get("role"))
-
-    # 🔐 لازم يكون admin
-    if user.get("role") != "admin":
-        return "Not allowed"
 
     qr_image = None
     url = None
 
-    if request.method == 'POST':
+    if request.method == "POST":
 
         branch = request.form.get("branch")
-        location = request.form.get("location")
+        location = request.form.get("location").strip().lower().replace(" ", "_")
 
-        # 🔐 حماية إضافية (اختياري لكن مهم)
-        if branch not in user.get("branches", []):
-            return "Not allowed"
-
-        url = f"https://starcare-feedback-1.onrender.com/feedback/{branch}/{location}"
+        url = f"{BASE_URL}/feedback/{branch}/{location}"
 
         qr = qrcode.make(url)
 
@@ -1548,7 +1534,6 @@ def generate_qr():
 
         img_base64 = base64.b64encode(buffer.getvalue()).decode()
 
-        # 💾 حفظ QR في DB
         existing = db.qr_codes.find_one({
             "branch": branch,
             "location": location
