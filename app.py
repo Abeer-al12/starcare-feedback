@@ -1498,16 +1498,16 @@ def analytics():
         data=chart_data
     )
 # ---------------- GENERATE QR ----------------
-@app.route('/generate_qr')
-def generate_qr():
+# @app.route('/generate_qr')
+# def generate_qr():
 
-    os.makedirs("qr_codes", exist_ok=True)
+#     os.makedirs("qr_codes", exist_ok=True)
 
-    for loc in locations:
-        img = qrcode.make(BASE_URL + loc)
-        img.save(f"qr_codes/{loc}.png")
+#     for loc in locations:
+#         img = qrcode.make(BASE_URL + loc)
+#         img.save(f"qr_codes/{loc}.png")
 
-    return "QR Generated Successfully"
+#     return "QR Generated Successfully"
 
 
 @app.route('/generate_qr', methods=['POST'])
