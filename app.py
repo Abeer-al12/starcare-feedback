@@ -484,26 +484,27 @@ def admin():
 @app.route('/add_user', methods=['GET', 'POST'])
 def add_user():
 
-    if session.get("role") != "admin":
-        return "Forbidden", 403
-
     if request.method == 'POST':
 
-        username = request.form['username']
-        password = request.form['password']
-        role = request.form['role']
+        username = request.form.get("username")
+        password = request.form.get("password")
+        role = request.form.get("role")
 
-        # ⭐ هذا الجديد
-        locations = request.form.getlist('locations')
+        # 🔥 مهم: lists
+        branches = request.form.getlist("branches")
+        locations = request.form.getlist("locations")
 
         db.users.insert_one({
             "username": username,
             "password": password,
             "role": role,
+
+            # 🔥 صلاحيات
+            "branches": branches,
             "locations": locations
         })
 
-        return redirect('/manage_users')
+        return redirect("/manage_users")
 
     return render_template("add_user.html")
 
@@ -1515,6 +1516,12 @@ def generate_qr():
     if 'admin' not in session:
         return redirect('/login')
 
+    user = db.users.find_one({"username": session["username"]})
+
+    # 🔒 فقط admin يسمح له
+    if user.get("role") != "admin":
+        return "Not allowed"
+
     qr_image = None
     url = None
 
@@ -1563,6 +1570,11 @@ def qr_dashboard():
     if 'admin' not in session:
         return redirect('/login')
 
+    user = db.users.find_one({"username": session["username"]})
+
+    if user.get("role") != "admin":
+        return "Not allowed"
+        
     rooms_data = []
 
     # 1️⃣ الباركودات القديمة (من map)
