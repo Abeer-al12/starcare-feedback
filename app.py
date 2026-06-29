@@ -1482,7 +1482,7 @@ def analytics():
 
         stats[loc]["count"] += 1
         stats[loc]["total"] += rating
-        
+
     chart_data = [
         {
             "location": room_names.get(loc, loc),
@@ -1508,6 +1508,14 @@ def generate_qr():
 
     return "QR Generated Successfully"
 
+
+@app.route("/qr_generator")
+def qr_generator():
+
+    if "admin" not in session:
+        return redirect("/login")
+
+    return render_template("qr_generator.html")
 # ---------------- QR DASHBOARD ----------------
 @app.route('/qr_dashboard')
 def qr_dashboard():
