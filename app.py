@@ -174,29 +174,29 @@ branch_rooms_map = {
     ]
 }
 
-RECEPTION = [
-    {
-        "name": "welcome",
-        "title": {
-            "en": "How friendly was the reception staff?",
-            "ar": "مدى ترحيب موظف الاستقبال؟"
-        }
-    },
-    {
-        "name": "checkin",
-        "title": {
-            "en": "How easy was the check-in process?",
-            "ar": "سهولة إجراءات التسجيل؟"
-        }
-    },
-    {
-        "name": "waitinfo",
-        "title": {
-            "en": "Was waiting time clearly explained?",
-            "ar": "هل تم توضيح وقت الانتظار؟"
-        }
-    }
-]
+# RECEPTION = [
+#     {
+#         "name": "welcome",
+#         "title": {
+#             "en": "How friendly was the reception staff?",
+#             "ar": "مدى ترحيب موظف الاستقبال؟"
+#         }
+#     },
+#     {
+#         "name": "checkin",
+#         "title": {
+#             "en": "How easy was the check-in process?",
+#             "ar": "سهولة إجراءات التسجيل؟"
+#         }
+#     },
+#     {
+#         "name": "waitinfo",
+#         "title": {
+#             "en": "Was waiting time clearly explained?",
+#             "ar": "هل تم توضيح وقت الانتظار؟"
+#         }
+#     }
+# ]
 
 branches = list(branch_rooms_map.keys())
 
@@ -338,7 +338,7 @@ def feedback(branch, room):
         room_name=room_name,
         branch=branch,
         room=room,
-        questions=questions,
+        questions = QUESTIONS.get(room_type, QUESTIONS["consultation"]),
         lang=lang
     )
 
