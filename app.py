@@ -32,7 +32,7 @@ from openpyxl import Workbook
 from io import BytesIO
 from flask import Response
 from openpyxl.styles import Font, PatternFill, Border, Side, Alignment
-from questions import QUESTIONS
+
 
 
 app = Flask(__name__)
