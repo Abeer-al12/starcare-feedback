@@ -260,8 +260,13 @@ def home():
 @app.route('/feedback/<branch>/<room>', methods=['GET', 'POST'])
 def feedback(branch, room):
 
+    # جلب الأسئلة + اللغة
+    lang = request.args.get("lang", "en")
+
+    questions = get_questions(room, lang)
+
     room_name = room_names.get(room, room)
-    
+
     room_lower = room.lower()
 
 # تحديد نوع السؤال من QUESTIONS
@@ -289,10 +294,7 @@ def feedback(branch, room):
     else:
         key = "consultation"
 
-# جلب الأسئلة + اللغة
-    lang = request.args.get("lang", "en")
 
-    questions = QUESTIONS[key][lang]
     # ================= POST =================
 
     if request.method == "POST":
