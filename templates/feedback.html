@@ -11,36 +11,36 @@
             background: #f6fbfc;
         }
 
+        /* ================= CARD ================= */
         .card {
             background: white;
             width: 430px;
             margin: 40px auto;
             padding: 35px;
             border-radius: 30px;
-            text-align: center;
         }
 
+        /* ================= LOGO ================= */
         .logo {
             width: 200px;
-            height: auto;
             display: block;
             margin: 0 auto 20px;
         }
 
-        h1 {
-            color: #1b2a41;
-            margin: 15px 0 5px;
+        /* ================= ROOM ================= */
+        .room {
+            color: #00A79B;
+            font-size: 20px;
+            font-weight: bold;
+            margin: 15px 0;
+            text-align: center;
         }
 
+        /* ================= LANG BUTTONS ================= */
         .lang-switch {
             display: flex;
-            justify-content: flex-start;
             gap: 10px;
             margin-bottom: 20px;
-        }
-
-        html[dir="rtl"] .lang-switch {
-            justify-content: flex-end;
         }
 
         .lang-switch button {
@@ -51,7 +51,7 @@
             border-radius: 12px;
             cursor: pointer;
             font-weight: bold;
-            transition: .3s;
+            transition: 0.3s;
         }
 
         .lang-switch button:hover {
@@ -64,117 +64,41 @@
             color: white;
         }
 
-        .title {
-            color: #666;
-            margin-top: 10px;
-            font-size: 16px;
-        }
-
-        .room {
-            color: #00A79B;
-            font-size: 20px;
-            font-weight: bold;
-            margin: 15px 0;
-        }
-
-        .stars {
-            display: flex;
-            justify-content: center;
-            flex-direction: row-reverse;
-            margin: 25px 0;
-        }
-
-        .stars input {
-            display: none;
-        }
-
-        .stars label {
-            font-size: 48px;
-            color: #d7d7d7;
-            cursor: pointer;
-            padding: 4px;
-            transition: .2s;
-        }
-
-        .stars input:checked~label,
-        .stars label:hover,
-        .stars label:hover~label {
-            color: #00A79B;
-        }
-
-        #starText {
-            color: #777;
-            margin-bottom: 18px;
-        }
-
-        textarea {
-            width: 100%;
-            height: 110px;
-            border: 1px solid #ddd;
-            border-radius: 18px;
-            padding: 15px;
-            font-size: 15px;
-            resize: none;
-            box-sizing: border-box;
-            outline: none;
-        }
-
-        textarea:focus {
-            border-color: #00A79B;
-        }
-
-        .submit-btn {
-            width: 100%;
-            background: #00A79B;
-            color: #fff;
-            border: none;
-            border-radius: 12px;
-            padding: 14px;
-            font-size: 17px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 25px;
-            transition: .3s;
-        }
-
-        .submit-btn:hover {
-            background: #008f88;
-        }
-
+        /* ================= QUESTIONS ================= */
         .question-block {
-            margin-bottom: 30px;
-            text-align: left;
+            margin-bottom: 25px;
         }
 
-        html[dir="rtl"] .card {
-            text-align: right;
-        }
-
-        html[dir="ltr"] .card {
-            text-align: left;
-        }
-
-        .logo,
-        .lang-switch,
-        .room,
-        .submit-btn,
-        .rating-guide {
-            text-align: center;
-        }
-
+        /* title */
         .question-title {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 600;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
 
+        /* ================= STARS FIX (IMPORTANT) ================= */
+        .rating-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            gap: 10px;
+        }
+
+        .rating-group h4 {
+            flex: 1;
+            font-size: 15px;
+            margin: 0;
+        }
+
+        /* ⭐ النجوم ثابتة وما تتأثر بالـ RTL */
         .stars {
             display: flex;
             flex-direction: row-reverse;
-            justify-content: flex-start;
-            gap: 5px;
+            gap: 4px;
+            direction: ltr;
+            /* أهم سطر */
         }
-
 
         .stars input {
             display: none;
@@ -184,219 +108,72 @@
             font-size: 34px;
             color: #d8d8d8;
             cursor: pointer;
-            transition: .2s;
+            transition: 0.2s;
         }
 
+        /* hover + select */
+        .stars input:checked~label,
         .stars label:hover,
-        .stars label:hover~label,
-        .stars input:checked~label {
+        .stars label:hover~label {
             color: #00A79B;
         }
 
-
-        input {
+        /* ================= TEXTAREA ================= */
+        textarea {
             width: 100%;
-            padding: 10px;
-            margin: 8px 0;
-            border-radius: 10px;
+            height: 110px;
             border: 1px solid #ddd;
+            border-radius: 18px;
+            padding: 15px;
+            resize: none;
             outline: none;
         }
 
-        input:focus {
+        textarea:focus {
             border-color: #00A79B;
         }
 
-        #phonePopup {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
+        /* ================= SUBMIT ================= */
+        .submit-btn {
             width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.45);
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-        }
-
-        #phonePopup>div {
-            background: white;
-            width: 350px;
-            padding: 30px;
-            border-radius: 25px;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-        }
-
-        #popupName,
-        #popupPhone {
-            width: 100%;
-            padding: 10px;
-            margin: 8px 0;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            outline: none;
-        }
-
-        #popupBtn,
-        #skipBtn {
-            width: 100%;
-            padding: 10px;
-            margin-top: 10px;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-        }
-
-        #popupBtn {
             background: #00A79B;
             color: white;
-        }
-
-        #skipBtn {
-            background: #eee;
-        }
-
-        #toast {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #1b2a41;
-            color: white;
-            padding: 12px 20px;
+            border: none;
+            padding: 14px;
             border-radius: 12px;
-            font-size: 14px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-            display: none;
-            z-index: 9999;
-            animation: fadeIn 0.3s ease;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
         }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translate(-50%, -10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translate(-50%, 0);
-            }
+        .submit-btn:hover {
+            background: #008f88;
         }
 
+        /* ================= RTL / LTR FIX ================= */
+        html[dir="rtl"] .card {
+            text-align: right;
+        }
 
-        @media (max-width:600px) {
+        html[dir="ltr"] .card {
+            text-align: left;
+        }
 
+        /* يخلي المحتوى يمشي صح */
+        html[dir="rtl"] .rating-group {
+            flex-direction: row-reverse;
+        }
+
+        /* ================= MOBILE ================= */
+        @media (max-width: 600px) {
             .card {
                 width: 92%;
                 padding: 18px;
             }
 
-            .rating-group {
-                gap: 8px;
-            }
-
-            .rating-group h4 {
-                font-size: 14px;
-            }
-
-            .rating-group .stars label {
+            .stars label {
                 font-size: 30px;
-                padding: 2px;
             }
-        }
-
-        .category-options {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .category-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 12px;
-            border-radius: 20px;
-            cursor: pointer;
-            transition: 0.2s;
-            border: 1px solid #ddd;
-            position: relative;
-        }
-
-        /* نخفي radio */
-        .category-item input {
-            display: none;
-        }
-
-        /* الدائرة */
-        .category-item::before {
-            content: "";
-            width: 14px;
-            height: 14px;
-            border: 2px solid #aaa;
-            border-radius: 50%;
-            display: inline-block;
-            transition: 0.2s;
-        }
-
-        /* لما ينختار */
-        .category-item input:checked+span,
-        .category-item input:checked~span {
-            color: #00A79B;
-        }
-
-        /* تلوين الدائرة عند الاختيار */
-        .category-item input:checked~* {
-            color: #00A79B;
-        }
-
-        .category-item:has(input:checked)::before {
-            background: #00A79B;
-            border-color: #00A79B;
-            box-shadow: inset 0 0 0 3px white;
-        }
-
-        .rating-group {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 15px;
-            margin-bottom: 22px;
-        }
-
-        .rating-group h4 {
-            flex: 1;
-            margin: 0;
-            font-size: 16px;
-            font-weight: bold;
-            white-space: nowrap;
-        }
-
-        .rating-group .stars {
-            display: flex;
-            flex-direction: row-reverse;
-            justify-content: flex-end;
-            margin: 0;
-            flex-shrink: 0;
-        }
-
-        .rating-group .stars label {
-            font-size: 42px;
-        }
-
-        .rating-guide {
-            display: flex;
-            justify-content: space-between;
-            font-size: 13px;
-            color: #666;
-            margin-bottom: 15px;
-        }
-
-        html[dir="rtl"] .rating-guide {
-            flex-direction: row-reverse;
         }
     </style>
 </head>
@@ -627,12 +404,14 @@
 
         }
         function setLang(lang) {
+
             currentLang = lang;
 
-            document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
+            // اتجاه الصفحة
+            document.documentElement.dir = (lang === "ar") ? "rtl" : "ltr";
             document.documentElement.lang = lang;
 
-            // النصوص
+            // تغيير النصوص
             document.querySelectorAll("[data-key]").forEach(el => {
                 const key = el.getAttribute("data-key");
                 if (i18n[key]) {
@@ -647,24 +426,24 @@
                     el.placeholder = i18n[key][lang];
                 }
             });
-            document.getElementById("poorText").innerText =
-                `${translations[lang].poor} ⭐`;
 
-            document.getElementById("excellentText").innerText =
-                `⭐⭐⭐⭐⭐ ${translations[lang].excellent}`;
+            // rating labels
+            document.querySelectorAll(".rating-guide span").forEach(el => {
+                const key = el.dataset.key;
+                if (translations[key]) {
+                    el.innerText = translations[key][lang];
+                }
+            });
 
-            document.querySelector(".submit-btn").innerText =
-                translations[lang].submit;
+            // زر اللغة active
+            document.getElementById("btnEN").classList.remove("active");
+            document.getElementById("btnAR").classList.remove("active");
 
-            // زر اللغة نفسه يتغير
-            document.getElementById("btnEN").innerText =
-                translations[lang].english;
-
-            document.getElementById("btnAR").innerText =
-                translations[lang].arabic;
-
-            window.location.search = "?lang=" + lang;
-
+            if (lang === "ar") {
+                document.getElementById("btnAR").classList.add("active");
+            } else {
+                document.getElementById("btnEN").classList.add("active");
+            }
         }
 
 
