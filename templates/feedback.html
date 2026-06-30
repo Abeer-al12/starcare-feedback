@@ -837,34 +837,34 @@
             sendData(null, null);
         }
 
-        fetch("/save_feedback", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                location: "{{ room }}",
-                branch: "{{ branch }}",
+        // fetch("/save_feedback", {
+        //     method: "POST",
+        //     headers: {
+        //         "Content-Type": "application/json"
+        //     },
+        //     body: JSON.stringify({
+        //         location: "{{ room }}",
+        //         branch: "{{ branch }}",
 
-                rating: tempRating,
-                comment: tempComment,
+        //         rating: tempRating,
+        //         comment: tempComment,
 
-                facility: selectedFacility,
-                it: selectedIT,
-                medical: selectedMedical,
-                nursing: selectedNursing,
-                other: selectedOther,
+        //         facility: selectedFacility,
+        //         it: selectedIT,
+        //         medical: selectedMedical,
+        //         nursing: selectedNursing,
+        //         other: selectedOther,
 
-                name: null,
-                phone: null
-            })
-        })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    window.location.href = `/thankyou/{{ branch }}/{{ room }}`;
-                }
-            });
+        //         name: null,
+        //         phone: null
+        //     })
+        // })
+        //     .then(res => res.json())
+        //     .then(data => {
+        //         if (data.success) {
+        //             window.location.href = `/thankyou/{{ branch }}/{{ room }}`;
+        //         }
+        //     });
 
 
         function showToast(msg) {

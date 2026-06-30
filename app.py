@@ -339,7 +339,7 @@ def feedback(branch, room):
         branch=branch,
         room=room,
         questions=questions,
-        lang=session.get("lang", "en")
+        lang=lang
     )
 
 
