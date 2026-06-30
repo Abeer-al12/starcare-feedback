@@ -463,54 +463,38 @@
 
                 </div>
 
-                <div id="questionsContainer">
+                {% for q in questions %}
 
-                    {% for question in questions %}
+                <div class="rating-group">
 
-                    <div class="rating-group">
+                    <h4>{{ q.text }}</h4>
 
-                        <h4>{{ question }}</h4>
-
-                        <div class="stars">
-
-                            <input type="radio" name="q{{ loop.index }}" value="5" id="q{{ loop.index }}5">
-                            <label for="q{{ loop.index }}5">★</label>
-
-                            <input type="radio" name="q{{ loop.index }}" value="4" id="q{{ loop.index }}4">
-                            <label for="q{{ loop.index }}4">★</label>
-
-                            <input type="radio" name="q{{ loop.index }}" value="3" id="q{{ loop.index }}3">
-                            <label for="q{{ loop.index }}3">★</label>
-
-                            <input type="radio" name="q{{ loop.index }}" value="2" id="q{{ loop.index }}2">
-                            <label for="q{{ loop.index }}2">★</label>
-
-                            <input type="radio" name="q{{ loop.index }}" value="1" id="q{{ loop.index }}1">
-                            <label for="q{{ loop.index }}1">★</label>
-
-                        </div>
-
+                    <div class="stars">
+                        <input type="radio" name="{{ q.name }}" value="5"> ★
+                        <input type="radio" name="{{ q.name }}" value="4"> ★
+                        <input type="radio" name="{{ q.name }}" value="3"> ★
+                        <input type="radio" name="{{ q.name }}" value="2"> ★
+                        <input type="radio" name="{{ q.name }}" value="1"> ★
                     </div>
 
-                    {% endfor %}
-
-                </div>
-            </div>
-
-            <div class="question-block">
-
-                <div class="question-title" data-key="qComment">
-                    Your Comment
                 </div>
 
-                <textarea name="comment" id="commentBox" data-placeholder="qComment"></textarea>
+                {% endfor %}
 
-            </div>
+                <div class="question-block">
+
+                    <div class="question-title" data-key="qComment">
+                        Your Comment
+                    </div>
+
+                    <textarea name="comment" id="commentBox" data-placeholder="qComment"></textarea>
+
+                </div>
 
 
-            <button class="submit-btn" type="submit" data-key="submitFeedback">
-                Submit Feedback
-            </button>
+                <button class="submit-btn" type="submit" data-key="submitFeedback">
+                    Submit Feedback
+                </button>
 
         </form>
 

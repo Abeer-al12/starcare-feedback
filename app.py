@@ -174,6 +174,30 @@ branch_rooms_map = {
     ]
 }
 
+RECEPTION = [
+    {
+        "name": "welcome",
+        "title": {
+            "en": "How friendly was the reception staff?",
+            "ar": "مدى ترحيب موظف الاستقبال؟"
+        }
+    },
+    {
+        "name": "checkin",
+        "title": {
+            "en": "How easy was the check-in process?",
+            "ar": "سهولة إجراءات التسجيل؟"
+        }
+    },
+    {
+        "name": "waitinfo",
+        "title": {
+            "en": "Was waiting time clearly explained?",
+            "ar": "هل تم توضيح وقت الانتظار؟"
+        }
+    }
+]
+
 branches = list(branch_rooms_map.keys())
 
 def get_branch_from_location(location):
@@ -236,41 +260,32 @@ def home():
 @app.route('/feedback/<branch>/<room>', methods=['GET', 'POST'])
 def feedback(branch, room):
 
-    # ================= GET =================
+    lang = request.args.get("lang", "en")  # 👈 جديد
 
     room_name = room_names.get(room, room)
 
     room_lower = room.lower()
 
-    # اللغة الافتراضية
-    language = request.args.get("lang", "en")
-
     if "reception" in room_lower:
-        survey = "reception"
-
+        questions = RECEPTION
     elif "waiting" in room_lower:
-        survey = "waiting"
-
+        questions = WAITING
     elif "consultation" in room_lower or "doctor" in room_lower:
-        survey = "consultation"
-
+        questions = CONSULTATION
     elif "xray" in room_lower:
-        survey = "xray"
-
+        questions = XRAY
     elif "lab" in room_lower:
-        survey = "lab"
-
+        questions = LAB
     elif "pharmacy" in room_lower:
-        survey = "pharmacy"
-
+        questions = PHARMACY
     elif "toilet" in room_lower:
-        survey = "toilet"
-
+        questions = TOILET
     else:
-        survey = "consultation"
+        questions = CONSULTATION
 
-    questions = QUESTIONS[survey][language]
-
+    # 👇 نضيف اللغة لكل سؤال
+    for q in questions:
+        q["text"] = q["title"].get(lang, q["title"]["en"])
     # ================= POST =================
 
     if request.method == "POST":
@@ -324,7 +339,7 @@ def feedback(branch, room):
         branch=branch,
         room=room,
         questions=questions,
-        language=language
+        lang=session.get("lang", "en")
     )
 
 
