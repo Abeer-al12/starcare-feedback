@@ -443,7 +443,15 @@
 
             <div class="question-block">
 
+                <div class="question-title">
+                    What would you like to rate?
+                </div>
 
+                <!-- 👇 هنا حطيه -->
+                <div class="rating-guide">
+                    <span id="poorText"></span>
+                    <span id="excellentText"></span>
+                </div>
 
                 <div class="rating-guide">
 
@@ -585,18 +593,28 @@
         const translations = {
 
             en: {
+                poor: "Poor",
+                fair: "Fair",
+                good: "Good",
+                veryGood: "Very Good",
+                excellent: "Excellent",
                 submit: "Submit Feedback",
-                excellent: "5 Stars = Excellent",
-                poor: "1 Star = Poor"
+                english: "English",
+                arabic: "Arabic"
             },
 
             ar: {
+                poor: "سيئ",
+                fair: "مقبول",
+                good: "جيد",
+                veryGood: "جيد جداً",
+                excellent: "ممتاز",
                 submit: "إرسال التقييم",
-                excellent: "٥ نجوم = ممتاز",
-                poor: "نجمة واحدة = سيئ"
+                english: "English",
+                arabic: "عربي"
             }
-
         };
+
         let currentLang = "en";
 
         function changeLanguage(lang) {
@@ -630,23 +648,20 @@
                 }
             });
             document.getElementById("poorText").innerText =
-                translations[lang].poor;
+                `${translations[lang].poor} ⭐`;
 
             document.getElementById("excellentText").innerText =
-                translations[lang].excellent;
+                `⭐⭐⭐⭐⭐ ${translations[lang].excellent}`;
 
             document.querySelector(".submit-btn").innerText =
                 translations[lang].submit;
-            setPopupLang(lang);
 
-            document.getElementById("btnEN").classList.remove("active");
-            document.getElementById("btnAR").classList.remove("active");
+            // زر اللغة نفسه يتغير
+            document.getElementById("btnEN").innerText =
+                translations[lang].english;
 
-            if (lang === "ar") {
-                document.getElementById("btnAR").classList.add("active");
-            } else {
-                document.getElementById("btnEN").classList.add("active");
-            }
+            document.getElementById("btnAR").innerText =
+                translations[lang].arabic;
 
         }
 
