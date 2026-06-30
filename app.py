@@ -32,6 +32,8 @@ from openpyxl import Workbook
 from io import BytesIO
 from flask import Response
 from openpyxl.styles import Font, PatternFill, Border, Side, Alignment
+from questions import *
+
 
 app = Flask(__name__)
 app.secret_key = "starcare_secret"
@@ -234,12 +236,46 @@ def home():
 @app.route('/feedback/<branch>/<room>', methods=['GET', 'POST'])
 def feedback(branch, room):
 
-    if request.method == 'POST':
+    # ================= GET =================
+
+    room_name = room_names.get(room, room)
+
+    room_lower = room.lower()
+
+    if "reception" in room_lower:
+        questions = RECEPTION
+
+    elif "waiting" in room_lower:
+        questions = WAITING
+
+    elif "consultation" in room_lower or "doctor" in room_lower:
+        questions = CONSULTATION
+
+    elif "xray" in room_lower:
+        questions = XRAY
+
+    elif "lab" in room_lower:
+        questions = LAB
+
+    elif "pharmacy" in room_lower:
+        questions = PHARMACY
+
+    elif "toilet" in room_lower:
+        questions = TOILET
+
+    else:
+        questions = CONSULTATION
+
+    # ================= POST =================
+
+    if request.method == "POST":
 
         data = request.get_json()
 
-        rating = data.get('rating')
-        comment = data.get('comment')
+        rating = data.get("rating")
+        comment = data.get("comment")
+
+        
 
         if not rating:
             return jsonify({"error": "missing rating"})
@@ -279,9 +315,10 @@ def feedback(branch, room):
 
     return render_template(
         "feedback.html",
+        room_name=room_name,
         branch=branch,
         room=room,
-        room_name=room_names.get(room, room)
+        questions=questions
     )
 
 

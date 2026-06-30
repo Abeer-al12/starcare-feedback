@@ -386,256 +386,64 @@
                 </div>
 
 
-                <div class="category-ratings">
+                <div class="rating-guide">
 
-                    <!-- Facility -->
-                    <div class="rating-group">
-                        <h4 data-key="catFacility">Facility / Maintenance</h4>
-
-                        <div class="stars">
-                            <input type="radio" name="facility" value="5" id="facility5">
-                            <label for="facility5">★</label>
-
-                            <input type="radio" name="facility" value="4" id="facility4">
-                            <label for="facility4">★</label>
-
-                            <input type="radio" name="facility" value="3" id="facility3">
-                            <label for="facility3">★</label>
-
-                            <input type="radio" name="facility" value="2" id="facility2">
-                            <label for="facility2">★</label>
-
-                            <input type="radio" name="facility" value="1" id="facility1">
-                            <label for="facility1">★</label>
-                        </div>
-                    </div>
-
-                    <!-- IT -->
-                    <div class="rating-group">
-                        <h4 data-key="catIT">IT</h4>
-
-                        <div class="stars">
-                            <input type="radio" name="it" value="5" id="it5">
-                            <label for="it5">★</label>
-
-                            <input type="radio" name="it" value="4" id="it4">
-                            <label for="it4">★</label>
-
-                            <input type="radio" name="it" value="3" id="it3">
-                            <label for="it3">★</label>
-
-                            <input type="radio" name="it" value="2" id="it2">
-                            <label for="it2">★</label>
-
-                            <input type="radio" name="it" value="1" id="it1">
-                            <label for="it1">★</label>
-                        </div>
-                    </div>
-
-                    <!-- Medical Equipment -->
-                    <div class="rating-group">
-                        <h4 data-key="catMedical">Medical Equipment</h4>
-
-                        <div class="stars">
-                            <input type="radio" name="medical" value="5" id="medical5">
-                            <label for="medical5">★</label>
-
-                            <input type="radio" name="medical" value="4" id="medical4">
-                            <label for="medical4">★</label>
-
-                            <input type="radio" name="medical" value="3" id="medical3">
-                            <label for="medical3">★</label>
-
-                            <input type="radio" name="medical" value="2" id="medical2">
-                            <label for="medical2">★</label>
-
-                            <input type="radio" name="medical" value="1" id="medical1">
-                            <label for="medical1">★</label>
-                        </div>
-                    </div>
-
-                    <!-- Nursing -->
-                    <div class="rating-group">
-                        <h4 data-key="catNursing">Nursing</h4>
-
-                        <div class="stars">
-                            <input type="radio" name="nursing" value="5" id="nursing5">
-                            <label for="nursing5">★</label>
-
-                            <input type="radio" name="nursing" value="4" id="nursing4">
-                            <label for="nursing4">★</label>
-
-                            <input type="radio" name="nursing" value="3" id="nursing3">
-                            <label for="nursing3">★</label>
-
-                            <input type="radio" name="nursing" value="2" id="nursing2">
-                            <label for="nursing2">★</label>
-
-                            <input type="radio" name="nursing" value="1" id="nursing1">
-                            <label for="nursing1">★</label>
-                        </div>
-                    </div>
-
-                    <!-- Other -->
-                    <div class="rating-group">
-                        <h4 data-key="catOther">Other</h4>
-
-                        <div class="stars">
-                            <input type="radio" name="other" value="5" id="other5">
-                            <label for="other5">★</label>
-
-                            <input type="radio" name="other" value="4" id="other4">
-                            <label for="other4">★</label>
-
-                            <input type="radio" name="other" value="3" id="other3">
-                            <label for="other3">★</label>
-
-                            <input type="radio" name="other" value="2" id="other2">
-                            <label for="other2">★</label>
-
-                            <input type="radio" name="other" value="1" id="other1">
-                            <label for="other1">★</label>
-                        </div>
-                    </div>
+                    <span>★☆☆☆☆ Poor</span>
+                    <span>★★☆☆☆ Fair</span>
+                    <span>★★★☆☆ Good</span>
+                    <span>★★★★☆ Very Good</span>
+                    <span>★★★★★ Excellent</span>
 
                 </div>
-                <!-- <div class="category-options">
 
-                    <label class="category-item">
-                        <input type="radio" name="category" value="facility">
+                <div id="questionsContainer">
 
-                        <span data-key="catFacility">Facility / Maintenance</span>
-                    </label>
+                    {% for question in questions %}
 
-                    <label class="category-item">
-                        <input type="radio" name="category" value="it">
+                    <div class="rating-group">
 
-                        <span data-key="catIT">IT</span>
-                    </label>
+                        <h4>{{ question }}</h4>
 
-                    <label class="category-item">
-                        <input type="radio" name="category" value="medical">
+                        <div class="stars">
 
-                        <span data-key="catMedical">Medical Equipment</span>
-                    </label>
+                            <input type="radio" name="q{{ loop.index }}" value="5" id="q{{ loop.index }}5">
+                            <label for="q{{ loop.index }}5">★</label>
 
-                    <label class="category-item">
-                        <input type="radio" name="category" value="nursing">
+                            <input type="radio" name="q{{ loop.index }}" value="4" id="q{{ loop.index }}4">
+                            <label for="q{{ loop.index }}4">★</label>
 
-                        <span data-key="catNursing">Nursing</span>
-                    </label>
+                            <input type="radio" name="q{{ loop.index }}" value="3" id="q{{ loop.index }}3">
+                            <label for="q{{ loop.index }}3">★</label>
 
-                    <label class="category-item">
-                        <input type="radio" name="category" value="other">
+                            <input type="radio" name="q{{ loop.index }}" value="2" id="q{{ loop.index }}2">
+                            <label for="q{{ loop.index }}2">★</label>
 
-                        <span data-key="catOther">Other</span>
-                    </label>
+                            <input type="radio" name="q{{ loop.index }}" value="1" id="q{{ loop.index }}1">
+                            <label for="q{{ loop.index }}1">★</label>
 
-                </div>
-            </div> -->
+                        </div>
 
-                <!-- <div class="question-block">
+                    </div>
 
-                <div class="question-title" data-key="qSpeed">
-                    Service Speed
-                </div>
-
-                <div class="category-options">
-
-                    <label class="category-item">
-                        <input type="radio" name="speed" value="fast">
-
-                        <span data-key="speedFast">Fast</span>
-                    </label>
-
-                    <label class="category-item">
-                        <input type="radio" name="speed" value="average">
-
-                        <span data-key="speedAverage">Average</span>
-                    </label>
-
-                    <label class="category-item">
-                        <input type="radio" name="speed" value="slow">
-
-                        <span data-key="speedSlow">Slow</span>
-                    </label>
+                    {% endfor %}
 
                 </div>
             </div>
 
             <div class="question-block">
 
-                <div class="question-title" data-key="qBehavior">
-                    Staff Behavior
+                <div class="question-title" data-key="qComment">
+                    Your Comment
                 </div>
 
-                <div class="category-options">
+                <textarea name="comment" id="commentBox" data-placeholder="qComment"></textarea>
 
-                    <label class="category-item">
-                        <input type="radio" name="behavior" value="excellent">
-
-                        <span data-key="behExcellent">Excellent</span>
-                    </label>
-
-                    <label class="category-item">
-                        <input type="radio" name="behavior" value="good">
-
-                        <span data-key="behGood">Good</span>
-                    </label>
-
-                    <label class="category-item">
-                        <input type="radio" name="behavior" value="bad">
-
-                        <span data-key="behBad">Bad</span>
-                    </label>
-
-                </div>
-            </div> -->
-                <!-- <div class="question-block">
-
-                    <div class="question-title" data-key="qRating">
-                        Rating
-                    </div>
-
-                    <div class="stars">
-                        <input type="radio" name="rating" value="5" id="5" required>
-                        <label for="5">★</label>
-
-                        <input type="radio" name="rating" value="4" id="4">
-                        <label for="4">★</label>
-
-                        <input type="radio" name="rating" value="3" id="3">
-                        <label for="3">★</label>
-
-                        <input type="radio" name="rating" value="2" id="2">
-                        <label for="2">★</label>
-
-                        <input type="radio" name="rating" value="1" id="1">
-                        <label for="1">★</label>
-                    </div>
-
-                    <p id="starText">Tap a star to rate</p> -->
-                <!-- </div> -->
-
-                <!-- <input type="text" name="phone" placeholder="Optional phone number"> -->
-                <!-- <p id="starText">
-                Tap a star to rate
-            </p> -->
-
-                <div class="question-block">
-
-                    <div class="question-title" data-key="qComment">
-                        Your Comment
-                    </div>
-
-                    <textarea name="comment" id="commentBox" data-placeholder="qComment"></textarea>
-
-                </div>
+            </div>
 
 
-                <button class="submit-btn" type="submit" data-key="submitFeedback">
-                    Submit Feedback
-                </button>
+            <button class="submit-btn" type="submit" data-key="submitFeedback">
+                Submit Feedback
+            </button>
 
         </form>
 
@@ -954,7 +762,7 @@
                     window.location.href = `/thankyou/{{ branch }}/{{ room }}`;
                 }
             });
-        
+
 
         function showToast(msg) {
             const toast = document.createElement("div");
@@ -967,7 +775,7 @@
             toast.style.transform = "translateX(-50%)";
             toast.style.background = "#1b2a41";
             toast.style.color = "white";
-            toast.style.padding = "12px 20px";
+            toast.style.padding = "12px  20px";
             toast.style.borderRadius = "12px";
             toast.style.zIndex = "9999";
 
