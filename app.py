@@ -260,6 +260,8 @@ def home():
 @app.route('/feedback/<branch>/<room>', methods=['GET', 'POST'])
 def feedback(branch, room):
 
+    room_name = room_names.get(room, room)
+    
     room_lower = room.lower()
 
 # تحديد نوع السؤال من QUESTIONS
