@@ -256,7 +256,33 @@ def home():
 #         need_phone=False
 #     )
 
+def get_questions(room, lang):
+    room_lower = room.lower()
 
+    if "reception" in room_lower:
+        return QUESTIONS["reception"][lang]
+
+    elif "waiting" in room_lower:
+        return QUESTIONS["waiting"][lang]
+
+    elif "consultation" in room_lower or "doctor" in room_lower:
+        return QUESTIONS["consultation"][lang]
+
+    elif "xray" in room_lower:
+        return QUESTIONS["xray"][lang]
+
+    elif "lab" in room_lower:
+        return QUESTIONS["lab"][lang]
+
+    elif "pharmacy" in room_lower:
+        return QUESTIONS["pharmacy"][lang]
+
+    elif "toilet" in room_lower:
+        return QUESTIONS["toilet"][lang]
+
+    return QUESTIONS["consultation"][lang]
+
+    
 @app.route('/feedback/<branch>/<room>', methods=['GET', 'POST'])
 def feedback(branch, room):
 

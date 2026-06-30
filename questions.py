@@ -117,25 +117,3 @@ QUESTIONS = {
         ]
     }
 }
-
-
-def get_questions(room, lang):
-    room_lower = room.lower()
-
-    if "xray" in room_lower:
-        return QUESTIONS["xray"][lang]
-
-    if "reception" in room_lower:
-        return OLD_RECEPTION
-    elif "waiting" in room_lower:
-        return OLD_WAITING
-    elif "consultation" in room_lower:
-        return OLD_CONSULTATION
-    elif "lab" in room_lower:
-        return OLD_LAB
-    elif "pharmacy" in room_lower:
-        return OLD_PHARMACY
-    elif "toilet" in room_lower:
-        return OLD_TOILET
-
-    return OLD_CONSULTATION
