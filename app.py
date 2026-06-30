@@ -411,6 +411,8 @@ def feedback(branch, room):
 
     questions = get_questions(room)
 
+    print(questions)
+
     room_name = room_names.get(room, room)
 
     room_lower = room.lower()
