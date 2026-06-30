@@ -243,13 +243,10 @@
 
                 <div id="questionsContainer">
 
-                    {% for q in questions %}
+                    {% for question in questions %}
 
                     <div class="rating-group">
-
-                        <div class="question-text">
-                            {{ q.title[lang] }}
-                        </div>
+                        <h4 class="question-text">{{ q.text }}</h4>
 
                         <div class="stars">
                             <input type="radio" name="{{ q.name }}" value="5" id="{{ q.name }}5">
@@ -267,10 +264,7 @@
                             <input type="radio" name="{{ q.name }}" value="1" id="{{ q.name }}1">
                             <label for="{{ q.name }}1">★</label>
                         </div>
-
                     </div>
-
-                    {% endfor %}
 
                     <div class="question-block">
 
