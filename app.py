@@ -376,37 +376,31 @@ QUESTIONS = {
 }
 
 
-def get_questions(room, lang):
+def get_questions(room):
     room_lower = room.lower()
 
     if "reception" in room_lower:
-        qset = QUESTIONS["reception"]
+        return QUESTIONS["reception"]
 
     elif "waiting" in room_lower:
-        qset = QUESTIONS["waiting"]
+        return QUESTIONS["waiting"]
 
-    elif "consultation" in room_lower:
-        qset = QUESTIONS["consultation"]
+    elif "consultation" in room_lower or "doctor" in room_lower:
+        return QUESTIONS["consultation"]
 
     elif "xray" in room_lower:
-        qset = QUESTIONS["xray"]
+        return QUESTIONS["xray"]
 
     elif "lab" in room_lower:
-        qset = QUESTIONS["lab"]
+        return QUESTIONS["lab"]
 
     elif "pharmacy" in room_lower:
-        qset = QUESTIONS["pharmacy"]
+        return QUESTIONS["pharmacy"]
 
     elif "toilet" in room_lower:
-        qset = QUESTIONS["toilet"]
+        return QUESTIONS["toilet"]
 
-    else:
-        qset = QUESTIONS["consultation"]
-
-    return [
-        {"text": q}
-        for q in qset[lang]
-    ]
+    return QUESTIONS["consultation"]
 
 
 @app.route('/feedback/<branch>/<room>', methods=['GET', 'POST'])
@@ -415,7 +409,7 @@ def feedback(branch, room):
     # جلب الأسئلة + اللغة
     lang = request.args.get("lang", "en")
 
-    questions = get_questions(room, lang)
+    questions = get_questions(room)
 
     room_name = room_names.get(room, room)
 
