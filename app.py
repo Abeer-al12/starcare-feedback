@@ -1582,7 +1582,7 @@ def generate_qr():
         branch = request.form.get("branch")
         location = request.form.get("location").strip().lower().replace(" ", "_")
 
-        url = f"{BASE_URL}/feedback/{branch}/{location}"
+        url = f"https://starcare-feedback-1.onrender.com/feedback/{branch}/{room}"
 
         qr = qrcode.make(url)
 
