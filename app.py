@@ -260,32 +260,37 @@ def home():
 @app.route('/feedback/<branch>/<room>', methods=['GET', 'POST'])
 def feedback(branch, room):
 
-    lang = request.args.get("lang", "en")  # 👈 جديد
-
-    room_name = room_names.get(room, room)
-
     room_lower = room.lower()
 
+# تحديد نوع السؤال من QUESTIONS
     if "reception" in room_lower:
-        questions = RECEPTION
-    elif "waiting" in room_lower:
-        questions = WAITING
-    elif "consultation" in room_lower or "doctor" in room_lower:
-        questions = CONSULTATION
-    elif "xray" in room_lower:
-        questions = XRAY
-    elif "lab" in room_lower:
-        questions = LAB
-    elif "pharmacy" in room_lower:
-        questions = PHARMACY
-    elif "toilet" in room_lower:
-        questions = TOILET
-    else:
-        questions = CONSULTATION
+        key = "reception"
 
-    # 👇 نضيف اللغة لكل سؤال
-    for q in questions:
-        q["text"] = q["title"].get(lang, q["title"]["en"])
+    elif "waiting" in room_lower:
+        key = "waiting"
+
+    elif "consultation" in room_lower or "doctor" in room_lower:
+        key = "consultation"
+
+    elif "xray" in room_lower:
+        key = "xray"
+
+    elif "lab" in room_lower:
+        key = "lab"
+
+    elif "pharmacy" in room_lower:
+        key = "pharmacy"
+
+    elif "toilet" in room_lower:
+        key = "toilet"
+
+    else:
+        key = "consultation"
+
+# جلب الأسئلة + اللغة
+    lang = request.args.get("lang", "en")
+
+    questions = QUESTIONS[key][lang]
     # ================= POST =================
 
     if request.method == "POST":
@@ -338,7 +343,7 @@ def feedback(branch, room):
         room_name=room_name,
         branch=branch,
         room=room,
-        questions = QUESTIONS.get(room_type, QUESTIONS["consultation"]),
+        questions=questions,
         lang=lang
     )
 
