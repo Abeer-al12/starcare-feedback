@@ -34,24 +34,32 @@
 
         .lang-switch {
             display: flex;
-            justify-content: center;
+            justify-content: flex-start;
             gap: 10px;
-            margin: 15px 0;
+            margin-bottom: 20px;
+        }
+
+        html[dir="rtl"] .lang-switch {
+            justify-content: flex-end;
         }
 
         .lang-switch button {
             background: #eafcfd;
             color: #00A79B;
             border: 1px solid #00A79B;
-            padding: 8px 18px;
+            padding: 8px 20px;
             border-radius: 12px;
             cursor: pointer;
-            font-size: 14px;
-            width: auto;
-            margin: 0;
+            font-weight: bold;
+            transition: .3s;
         }
 
         .lang-switch button:hover {
+            background: #00A79B;
+            color: white;
+        }
+
+        .lang-switch button.active {
             background: #00A79B;
             color: white;
         }
@@ -138,8 +146,20 @@
             text-align: left;
         }
 
-        html[dir="rtl"] .question-block {
+        html[dir="rtl"] .card {
             text-align: right;
+        }
+
+        html[dir="ltr"] .card {
+            text-align: left;
+        }
+
+        .logo,
+        .lang-switch,
+        .room,
+        .submit-btn,
+        .rating-guide {
+            text-align: center;
         }
 
         .question-title {
@@ -170,7 +190,7 @@
         .stars label:hover,
         .stars label:hover~label,
         .stars input:checked~label {
-            color: #f5b301;
+            color: #00A79B;
         }
 
 
@@ -399,13 +419,17 @@
 
 
 
-        <button type="button" onclick="changeLanguage('en')">
-            English
-        </button>
+        <div class="lang-switch">
 
-        <button type="button" onclick="changeLanguage('ar')">
-            عربي
-        </button>
+            <button id="btnEN" type="button" onclick="setLang('en')">
+                English
+            </button>
+
+            <button id="btnAR" type="button" onclick="setLang('ar')">
+                عربي
+            </button>
+
+        </div>
 
         <!-- <p class="title" id="titleText">
             Rate our Service
@@ -587,7 +611,8 @@
         function setLang(lang) {
             currentLang = lang;
 
-            document.documentElement.dir = (lang === "ar") ? "rtl" : "ltr";
+            document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
+            document.documentElement.lang = lang;
 
             // النصوص
             document.querySelectorAll("[data-key]").forEach(el => {
@@ -613,7 +638,18 @@
             document.querySelector(".submit-btn").innerText =
                 translations[lang].submit;
             setPopupLang(lang);
+
+            document.getElementById("btnEN").classList.remove("active");
+            document.getElementById("btnAR").classList.remove("active");
+
+            if (lang === "ar") {
+                document.getElementById("btnAR").classList.add("active");
+            } else {
+                document.getElementById("btnEN").classList.add("active");
+            }
+
         }
+
 
     </script>
     <div id="phonePopup" style="display:none;
