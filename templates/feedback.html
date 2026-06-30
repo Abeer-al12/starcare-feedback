@@ -359,15 +359,13 @@
 
 
 
-        <div class="lang-switch">
-            <button type="button" onclick="setLang('en')">
-                English
-            </button>
+        <button type="button" onclick="changeLanguage('en')">
+            English
+        </button>
 
-            <button type="button" onclick="setLang('ar')">
-                عربي
-            </button>
-        </div>
+        <button type="button" onclick="changeLanguage('ar')">
+            عربي
+        </button>
 
         <!-- <p class="title" id="titleText">
             Rate our Service
@@ -524,6 +522,16 @@
         };
 
         let currentLang = "en";
+
+        function changeLanguage(lang) {
+
+            let url = new URL(window.location.href);
+
+            url.searchParams.set("lang", lang);
+
+            window.location.href = url.toString();
+
+        }
         function setLang(lang) {
             currentLang = lang;
 
