@@ -32,7 +32,7 @@ from openpyxl import Workbook
 from io import BytesIO
 from flask import Response
 from openpyxl.styles import Font, PatternFill, Border, Side, Alignment
-from questions import *
+from questions import QUESTIONS
 
 
 app = Flask(__name__)
@@ -242,29 +242,34 @@ def feedback(branch, room):
 
     room_lower = room.lower()
 
+    # اللغة الافتراضية
+    language = request.args.get("lang", "en")
+
     if "reception" in room_lower:
-        questions = RECEPTION
+        survey = "reception"
 
     elif "waiting" in room_lower:
-        questions = WAITING
+        survey = "waiting"
 
     elif "consultation" in room_lower or "doctor" in room_lower:
-        questions = CONSULTATION
+        survey = "consultation"
 
     elif "xray" in room_lower:
-        questions = XRAY
+        survey = "xray"
 
     elif "lab" in room_lower:
-        questions = LAB
+        survey = "lab"
 
     elif "pharmacy" in room_lower:
-        questions = PHARMACY
+        survey = "pharmacy"
 
     elif "toilet" in room_lower:
-        questions = TOILET
+        survey = "toilet"
 
     else:
-        questions = CONSULTATION
+        survey = "consultation"
+
+    questions = QUESTIONS[survey][language]
 
     # ================= POST =================
 
@@ -318,7 +323,8 @@ def feedback(branch, room):
         room_name=room_name,
         branch=branch,
         room=room,
-        questions=questions
+        questions=questions,
+        language=language
     )
 
 
