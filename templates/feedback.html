@@ -720,6 +720,9 @@
                     location: "{{ room }}",
                     branch: "{{ branch }}",
 
+                    // ⭐ أضيفي هذا السطر
+                    type: "{{ room }}",
+
                     answers: answers,
                     comment: tempComment,
 
@@ -733,6 +736,7 @@
                         window.location.href = `/thankyou/{{ branch }}/{{ room }}`;
                     }
                 });
+
         }
 
 
