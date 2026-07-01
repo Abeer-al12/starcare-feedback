@@ -248,7 +248,7 @@
 
         /* tooltip */
         .stars label::after {
-            content: attr(data-en-label);
+            content: attr(data-label);
             position: absolute;
             bottom: 120%;
             left: 50%;
@@ -259,7 +259,6 @@
             padding: 5px 8px;
             border-radius: 8px;
             white-space: nowrap;
-
             opacity: 0;
             transition: 0.2s;
             pointer-events: none;
@@ -534,8 +533,6 @@
             document.querySelectorAll(".stars label").forEach(label => {
                 const text = label.dataset[lang + "Label"];
                 if (text) {
-                    label.setAttribute("data-en-label", label.dataset.enLabel);
-                    label.setAttribute("data-ar-label", label.dataset.arLabel);
                     label.setAttribute("data-label", text);
                 }
             });
