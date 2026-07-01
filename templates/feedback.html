@@ -566,12 +566,11 @@
     </div>
     <script>
 
-        let tempRating = 0;
+        let answers = [];
         let tempComment = "";
         let isLowRating = false;
 
-        let answers = [];
-
+        // ================= SHOW ERROR =================
         function showError(msg) {
             const box = document.getElementById("errorMsg");
             box.innerText = msg;
@@ -582,12 +581,13 @@
             }, 3000);
         }
 
+        // ================= FORM SUBMIT =================
         document.getElementById("feedbackForm").addEventListener("submit", function (e) {
             e.preventDefault();
 
             answers = [];
 
-            // 1️⃣ التأكد من الإجابات
+            // 1️⃣ التأكد من كل الإجابات
             for (let i = 1; i <= 5; i++) {
 
                 const selected = document.querySelector(`input[name="q${i}"]:checked`);
@@ -596,37 +596,34 @@
                     alert(currentLang === "ar"
                         ? "يرجى الإجابة على جميع الأسئلة"
                         : "Please answer all questions");
-                    return; // ❌ توقف هنا
+                    return;
                 }
 
                 answers.push(parseInt(selected.value));
             }
 
+            // 2️⃣ حفظ التعليق
             tempComment = document.getElementById("commentBox").value;
 
-            // 2️⃣ تحديد الحالة
+            // 3️⃣ تحديد هل فيه تقييم منخفض
             isLowRating = answers.some(a => a <= 3);
 
-            // 3️⃣ إذا منخفض (3 أو أقل)
-            if (isLowRating) {
+            // 4️⃣ فتح البوب أب
+            document.getElementById("phonePopup").style.display = "flex";
 
-                document.getElementById("skipBtn").style.display = "none";
-                document.getElementById("phonePopup").style.display = "flex";
-
-            }
-            // 4️⃣ إذا عالي (4 أو 5)
-            else {
-
-                document.getElementById("skipBtn").style.display = "block";
-                document.getElementById("phonePopup").style.display = "flex";
-            }
+            // 5️⃣ إظهار/إخفاء زر skip
+            document.getElementById("skipBtn").style.display =
+                isLowRating ? "none" : "block";
         });
-        // ---------------- SUBMIT LOW RATING ----------------
+
+
+        // ================= POPUP SUBMIT =================
         function submitLowRating() {
 
             let name = document.getElementById("popupName").value.trim();
             let phone = document.getElementById("popupPhone").value.trim();
 
+            // إذا تقييم منخفض → لازم بيانات
             if (isLowRating) {
 
                 if (!name) {
@@ -644,9 +641,25 @@
                 }
             }
 
-            // ⭐ هذا السطر كان ناقص
             sendData(name, phone);
         }
+
+
+        // ================= SKIP =================
+        function skipContact() {
+
+            if (isLowRating) {
+                alert(currentLang === "ar"
+                    ? "الاسم ورقم الهاتف مطلوبان"
+                    : "Name and phone are required");
+                return;
+            }
+
+            sendData(null, null);
+        }
+
+
+        // ================= SEND DATA =================
         function sendData(name, phone) {
 
             fetch("/save_feedback", {
@@ -673,67 +686,8 @@
                 });
         }
 
-        // ---------------- SKIP BUTTON ----------------
-        function skipContact() {
 
-            if (isLowRating) {
-                alert(currentLang === "ar"
-                    ? "الاسم ورقم الهاتف مطلوبان"
-                    : "Name and phone are required");
-                return;
-            }
-
-            sendData(null, null);
-        }
-
-        fetch("/save_feedback", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                location: "{{ room }}",
-                branch: "{{ branch }}",
-
-                rating: tempRating,
-                comment: tempComment,
-
-
-
-                name: null,
-                phone: null
-            })
-        })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    window.location.href = `/thankyou/{{ branch }}/{{ room }}`;
-                }
-            });
-
-
-        function showToast(msg) {
-            const toast = document.createElement("div");
-
-            toast.innerText = msg;
-
-            toast.style.position = "fixed";
-            toast.style.top = "20px";
-            toast.style.left = "50%";
-            toast.style.transform = "translateX(-50%)";
-            toast.style.background = "#1b2a41";
-            toast.style.color = "white";
-            toast.style.padding = "12px  20px";
-            toast.style.borderRadius = "12px";
-            toast.style.zIndex = "9999";
-
-            document.body.appendChild(toast);
-
-            setTimeout(() => {
-                toast.remove();
-            }, 2500);
-        }
-
+        // ================= POPUP LANGUAGE =================
         function setPopupLang(lang) {
 
             document.getElementById("popupTitle").innerText =
@@ -754,6 +708,7 @@
             document.getElementById("skipBtn").innerText =
                 i18n.skip[lang];
         }
+
     </script>
     <div id="toast"></div>
 </body>
