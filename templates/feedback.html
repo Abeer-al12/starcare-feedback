@@ -332,9 +332,10 @@
 
                 </div>
 
-                <!-- <p style="text-align:center; font-size:14px; color:#666; margin-bottom:10px;">
-                    1 ⭐ = Very Bad &nbsp;&nbsp; | &nbsp;&nbsp; 5 ⭐ = Excellent
-                </p> -->
+                <p style="text-align:center; font-size:13px; color:#888; margin-bottom:10px;"
+                    data-en="★ 1 = Bad • ★ 5 = Excellent" data-ar="★ 1 = سيئ • ★ 5 = ممتاز">
+                    ★ 1 = Bad • ★ 5 = Excellent
+                </p>
                 <div id="questionsContainer">
 
                     {% for q in questions["en"] %}
@@ -542,6 +543,12 @@
                 q.innerText = q.dataset[lang];
             });
 
+            document.querySelectorAll("[data-en]").forEach(el => {
+                const text = el.getAttribute("data-" + lang);
+                if (text) {
+                    el.innerText = text;
+                }
+            });
             // زر اللغة active
             document.getElementById("btnEN").classList.remove("active");
             document.getElementById("btnAR").classList.remove("active");
