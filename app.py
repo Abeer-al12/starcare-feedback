@@ -514,22 +514,17 @@ def save_feedback():
 
     answers = data.get("answers", [])
 
-    facility = answers[0] if len(answers) > 0 else 0
-    it = answers[1] if len(answers) > 1 else 0
-    medical = answers[2] if len(answers) > 2 else 0
-    nursing = answers[3] if len(answers) > 3 else 0
-    other = answers[4] if len(answers) > 4 else 0
+   
 
     feedback = {
         "location": data.get("location", "-"),
         "branch": data.get("branch", "-"),
 
-        # ⭐ توحيد الحقول (IMPORTANT)
-        "facility": facility,
-        "it": it,
-        "medical": medical,
-        "nursing": nursing,
-        "other": other,
+        "q1": answers[0] if len(answers) > 0 else 0,
+        "q2": answers[1] if len(answers) > 1 else 0,
+        "q3": answers[2] if len(answers) > 2 else 0,
+        "q4": answers[3] if len(answers) > 3 else 0,
+        "q5": answers[4] if len(answers) > 4 else 0,
 
         "comment": data.get("comment", ""),
         "name": data.get("name", "-"),
