@@ -585,7 +585,7 @@
         document.getElementById("feedbackForm").addEventListener("submit", function (e) {
             e.preventDefault();
 
-            let answers = [];
+            answers = [];
 
             for (let i = 1; i <= 5; i++) {
 
@@ -607,16 +607,13 @@
             let isLowRating = answers.some(answer => answer <= 3);
 
             if (isLowRating) {
-
                 document.getElementById("skipBtn").style.display = "none";
-                document.getElementById("phonePopup").style.display = "flex";
-
             } else {
-
-                sendData(null, null);
+                document.getElementById("skipBtn").style.display = "block";
             }
-        });
 
+            document.getElementById("phonePopup").style.display = "flex";
+        });
         // ---------------- SUBMIT LOW RATING ----------------
         function submitLowRating() {
 
