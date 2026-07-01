@@ -709,6 +709,16 @@
                 i18n.skip[lang];
         }
 
+        document.getElementById("popupBtn").addEventListener("click", function (e) {
+
+            let name = document.getElementById("popupName").value.trim();
+            let phone = document.getElementById("popupPhone").value.trim();
+
+            if (isLowRating && (!name || !/^\d{8}$/.test(phone))) {
+                e.preventDefault();
+                return;
+            }
+        });
     </script>
     <div id="toast"></div>
 </body>
