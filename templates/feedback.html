@@ -70,19 +70,19 @@
         }
 
         /* title */
-        /* .question-title {
+        .question-title {
             flex: 1;
             font-size: 17px;
             font-weight: 600;
-        } */
+        }
 
         /* ================= STARS FIX (IMPORTANT) ================= */
-        /* .rating-group {
+        .rating-group {
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 20px;
-        } */
+        }
 
         /* السؤال */
         .question-text {
@@ -92,7 +92,7 @@
         }
 
         /* النجوم */
-        /* .stars {
+        .stars {
             display: flex;
             flex-direction: row-reverse;
             gap: 4px;
@@ -103,10 +103,10 @@
             font-size: 34px;
             color: #d8d8d8;
             cursor: pointer;
-        } */
+        }
 
         /* اختيار + hover */
-        /* .stars input:checked~label,
+        .stars input:checked~label,
         .stars label:hover,
         .stars label:hover~label {
             color: #00A79B;
@@ -114,7 +114,7 @@
 
         /* .stars input {
             display: none;
-        } */
+        }
 
         /* ================= TEXTAREA ================= */
         textarea {
@@ -150,21 +150,21 @@
 
         /* ================= RTL / LTR FIX ================= */
         /* 🔥 عربي */
-        /* html[dir="rtl"] .rating-group {
+        html[dir="rtl"] .rating-group {
             flex-direction: row-reverse;
             text-align: right;
-        } */
+        }
 
         /* 🔥 إنجليزي */
-        /* html[dir="ltr"] .rating-group {
+        html[dir="ltr"] .rating-group {
             flex-direction: row;
             text-align: left;
-        } */
+        }
 
         /* يخلي المحتوى يمشي صح */
-        /* html[dir="rtl"] .rating-group {
+        html[dir="rtl"] .rating-group {
             flex-direction: row-reverse;
-        } */
+        }
 
         /* ================= MOBILE ================= */
         @media (max-width: 600px) {
@@ -180,7 +180,7 @@
 
 
         /* English */
-        /* html[dir="ltr"] .rating-group {
+        html[dir="ltr"] .rating-group {
             flex-direction: row;
         }
 
@@ -194,7 +194,7 @@
 
 
         /* Arabic */
-        /* html[dir="rtl"] .rating-group {
+        html[dir="rtl"] .rating-group {
             flex-direction: row-reverse;
         }
 
@@ -204,76 +204,8 @@
 
         html[dir="rtl"] .stars {
             justify-content: flex-start;
-        } */
-
-        .rating-group {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 28px;
-            gap: 20px;
         }
 
-        .question-title {
-            flex: 1;
-            font-size: 17px;
-            font-weight: 600;
-            line-height: 1.6;
-        }
-
-        .stars {
-            display: flex;
-            flex-direction: row-reverse;
-            gap: 4px;
-            flex-shrink: 0;
-        }
-
-        .stars input {
-            display: none;
-        }
-
-        .stars label {
-            font-size: 34px;
-            color: #d8d8d8;
-            cursor: pointer;
-            transition: .2s;
-        }
-
-        .stars input:checked~label,
-        .stars label:hover,
-        .stars label:hover~label {
-            color: #00A79B;
-        }
-
-        /* ================= ENGLISH ================= */
-
-        html[dir="ltr"] .rating-group {
-            flex-direction: row;
-        }
-
-        html[dir="ltr"] .question-title {
-            order: 1;
-            text-align: left;
-        }
-
-        html[dir="ltr"] .stars {
-            order: 2;
-        }
-
-        /* ================= ARABIC ================= */
-
-        html[dir="rtl"] .rating-group {
-            flex-direction: row-reverse;
-        }
-
-        html[dir="rtl"] .question-title {
-            order: 1;
-            text-align: right;
-        }
-
-        html[dir="rtl"] .stars {
-            order: 2;
-        }
     </style>
 </head>
 <div id="errorMsg" style="
