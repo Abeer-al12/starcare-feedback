@@ -512,21 +512,30 @@ def save_feedback():
     if not data:
         return jsonify({"success": False, "error": "No data"}), 400
 
+    # ⭐ نوع الصفحة (xray / lab / reception ...)
+    room_type = data.get("type")
+
+    # ⭐ الإجابات
     answers = data.get("answers", [])
 
-    questions = [
-        {"name": "Cleanliness", "value": answers[0] if len(answers) > 0 else 0},
-        {"name": "Service", "value": answers[1] if len(answers) > 1 else 0},
-        {"name": "Waiting Time", "value": answers[2] if len(answers) > 2 else 0},
-        {"name": "Staff Behavior", "value": answers[3] if len(answers) > 3 else 0},
-        {"name": "Communication", "value": answers[4] if len(answers) > 4 else 0},
-    ]
+    # ⭐ جلب الأسئلة حسب النوع
+    questions_list = QUESTIONS.get(room_type, {}).get("en", [])
 
-   
+    # ⭐ تحويل الإجابات إلى أسئلة منظمة
+    questions = []
 
+    for i in range(len(answers)):
+        questions.append({
+            "title": questions_list[i] if i < len(questions_list) else f"Q{i+1}",
+            "value": answers[i]
+        })
+
+    # ⭐ حفظ البيانات
     feedback = {
-        "location": data.get("location", "-"),
-        "branch": data.get("branch", "-"),
+        "location": data.get("location"),
+        "branch": data.get("branch"),
+
+        "type": room_type,
 
         "questions": questions,
 

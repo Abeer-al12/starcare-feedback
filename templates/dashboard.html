@@ -375,22 +375,23 @@
         <table>
             <tr>
                 <th>Room</th>
+                <th>Type</th>
                 <th>Questions</th>
                 <th>Status</th>
                 <th>Date</th>
                 <th>Name</th>
                 <th>Phone</th>
-                <th>Delete</th>
             </tr>
 
             {% for item in data %}
             <tr>
                 <td>{{ item.location }}</td>
+                <td>{{ item.type }}</td>
 
                 <td>
                     {% for q in item.questions %}
-                    <div>
-                        {{ q.name }}: {{ q.value }}
+                    <div style="margin-bottom:5px;">
+                        <b>{{ q.title }}</b> : {{ q.value }}
                     </div>
                     {% endfor %}
                 </td>
@@ -399,9 +400,9 @@
                     {% set low = item.questions | selectattr("value", "le", 3) | list %}
 
                     {% if low|length > 0 %}
-                    <span class="status-issue">Issue</span>
+                    <span style="color:red;">Issue</span>
                     {% else %}
-                    <span class="status-good">OK</span>
+                    <span style="color:green;">OK</span>
                     {% endif %}
                 </td>
 
