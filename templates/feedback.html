@@ -623,24 +623,29 @@
             let name = document.getElementById("popupName").value.trim();
             let phone = document.getElementById("popupPhone").value.trim();
 
-            // 🔥 إذا فيه تقييم منخفض لازم بيانات
-            if (isLowRating) {
-
-                if (!name || !phone) {
-                    alert(currentLang === "ar"
-                        ? "الاسم ورقم الهاتف مطلوب"
-                        : "Name and phone required");
-                    return;
-                }
-
-                if (!/^\d{8}$/.test(phone)) {
-                    alert(currentLang === "ar"
-                        ? "رقم الهاتف يجب أن يكون 8 أرقام"
-                        : "Phone must be 8 digits");
-                    return;
-                }
+            // 🚨 تحقق مباشر بدون شروط ملخبطة
+            if (!name) {
+                alert(currentLang === "ar"
+                    ? "الاسم مطلوب"
+                    : "Name is required");
+                return;
             }
 
+            if (!phone) {
+                alert(currentLang === "ar"
+                    ? "رقم الهاتف مطلوب"
+                    : "Phone is required");
+                return;
+            }
+
+            if (!/^\d{8}$/.test(phone)) {
+                alert(currentLang === "ar"
+                    ? "رقم الهاتف يجب أن يكون 8 أرقام"
+                    : "Phone must be 8 digits");
+                return;
+            }
+
+            // ✔ فقط إذا كل شيء صحيح
             sendData(name, phone);
         }
         // ================= SKIP =================
