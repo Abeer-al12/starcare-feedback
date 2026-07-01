@@ -623,8 +623,8 @@
             let name = document.getElementById("popupName").value.trim();
             let phone = document.getElementById("popupPhone").value.trim();
 
-            // إذا منخفض لازم بيانات
-            if (window.tempData.isLowRating) {
+            // 🔥 إذا فيه تقييم منخفض لازم بيانات
+            if (isLowRating) {
 
                 if (!name || !phone) {
                     alert(currentLang === "ar"
@@ -634,7 +634,9 @@
                 }
 
                 if (!/^\d{8}$/.test(phone)) {
-                    alert("Phone must be 8 digits");
+                    alert(currentLang === "ar"
+                        ? "رقم الهاتف يجب أن يكون 8 أرقام"
+                        : "Phone must be 8 digits");
                     return;
                 }
             }
