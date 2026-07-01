@@ -74,14 +74,16 @@
             flex: 1;
             font-size: 17px;
             font-weight: 600;
+            line-height: 1.6;
         }
 
         /* ================= STARS FIX (IMPORTANT) ================= */
         .rating-group {
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            gap: 20px;
+            align-items: center;
+            gap: 25px;
+            margin-bottom: 28px;
         }
 
         /* السؤال */
@@ -179,30 +181,36 @@
         }
 
 
-        /* English */
+        /* ================= English ================= */
+
         html[dir="ltr"] .rating-group {
             flex-direction: row;
         }
 
         html[dir="ltr"] .question-title {
             text-align: left;
+            order: 1;
         }
 
         html[dir="ltr"] .stars {
+            order: 2;
             justify-content: flex-end;
         }
 
 
-        /* Arabic */
+        /* ================= Arabic ================= */
+
         html[dir="rtl"] .rating-group {
             flex-direction: row-reverse;
         }
 
         html[dir="rtl"] .question-title {
+            order: 1;
             text-align: right;
         }
 
         html[dir="rtl"] .stars {
+            order: 2;
             justify-content: flex-start;
         }
     </style>
