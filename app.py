@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, session
 from pymongo import MongoClient
 from datetime import datetime
+from zoneinfo import ZoneInfo
 import os
 import qrcode
 from reportlab.platypus import (
@@ -543,7 +544,7 @@ def save_feedback():
         "name": data.get("name", "-"),
         "phone": data.get("phone", "-"),
 
-        "created_at": datetime.now().strftime("%Y-%m-%d %I:%M %p")
+        "created_at": datetime.now(ZoneInfo("Asia/Muscat")).strftime("%Y-%m-%d %I:%M %p")
     }
 
     collection.insert_one(feedback)
