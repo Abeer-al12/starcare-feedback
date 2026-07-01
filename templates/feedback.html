@@ -587,6 +587,7 @@
 
             answers = [];
 
+            // 1️⃣ التأكد من الإجابات
             for (let i = 1; i <= 5; i++) {
 
                 const selected = document.querySelector(`input[name="q${i}"]:checked`);
@@ -595,24 +596,30 @@
                     alert(currentLang === "ar"
                         ? "يرجى الإجابة على جميع الأسئلة"
                         : "Please answer all questions");
-                    return;
+                    return; // ❌ توقف هنا
                 }
 
                 answers.push(parseInt(selected.value));
             }
 
-            let tempComment = document.getElementById("commentBox").value;
+            tempComment = document.getElementById("commentBox").value;
 
-            // إذا أي سؤال 3 أو أقل
-            let isLowRating = answers.some(answer => answer <= 3);
+            // 2️⃣ تحديد الحالة
+            isLowRating = answers.some(a => a <= 3);
 
+            // 3️⃣ إذا منخفض (3 أو أقل)
             if (isLowRating) {
-                document.getElementById("skipBtn").style.display = "none";
-            } else {
-                document.getElementById("skipBtn").style.display = "block";
-            }
 
-            document.getElementById("phonePopup").style.display = "flex";
+                document.getElementById("skipBtn").style.display = "none";
+                document.getElementById("phonePopup").style.display = "flex";
+
+            }
+            // 4️⃣ إذا عالي (4 أو 5)
+            else {
+
+                document.getElementById("skipBtn").style.display = "block";
+                document.getElementById("phonePopup").style.display = "flex";
+            }
         });
         // ---------------- SUBMIT LOW RATING ----------------
         function submitLowRating() {
@@ -652,7 +659,6 @@
                     branch: "{{ branch }}",
 
                     answers: answers,
-
                     comment: tempComment,
 
                     name: name || null,
