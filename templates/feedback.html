@@ -97,7 +97,7 @@
             flex-direction: row-reverse;
             gap: 4px;
             flex-shrink: 0;
-        } 
+        }
 
         .stars label {
             font-size: 34px;
@@ -110,7 +110,7 @@
         .stars label:hover,
         .stars label:hover~label {
             color: #00A79B;
-        } 
+        }
 
         .stars input {
             display: none;
@@ -150,21 +150,21 @@
 
         /* ================= RTL / LTR FIX ================= */
         /* 🔥 عربي */
-        html[dir="rtl"] .rating-group {
+        /* html[dir="rtl"] .rating-group {
             flex-direction: row-reverse;
             text-align: right;
-        }
+        } */
 
         /* 🔥 إنجليزي */
-        html[dir="ltr"] .rating-group {
+        /* html[dir="ltr"] .rating-group {
             flex-direction: row;
             text-align: left;
-        }
+        } */
 
         /* يخلي المحتوى يمشي صح */
-        html[dir="rtl"] .rating-group {
+        /* html[dir="rtl"] .rating-group {
             flex-direction: row-reverse;
-        }
+        } */
 
         /* ================= MOBILE ================= */
         @media (max-width: 600px) {
@@ -180,7 +180,7 @@
 
 
         /* English */
-        html[dir="ltr"] .rating-group {
+        /* html[dir="ltr"] .rating-group {
             flex-direction: row;
         }
 
@@ -190,11 +190,11 @@
 
         html[dir="ltr"] .stars {
             justify-content: flex-end;
-        }
+        } */
 
 
         /* Arabic */
-        html[dir="rtl"] .rating-group {
+        /* html[dir="rtl"] .rating-group {
             flex-direction: row-reverse;
         }
 
@@ -204,8 +204,41 @@
 
         html[dir="rtl"] .stars {
             justify-content: flex-start;
+        } */
+
+        /* ================= ENGLISH ================= */
+
+        html[dir="ltr"] .rating-group {
+            display: flex;
+            align-items: center;
         }
 
+        html[dir="ltr"] .question-title {
+            order: 1;
+            flex: 1;
+            text-align: left;
+        }
+
+        html[dir="ltr"] .stars {
+            order: 2;
+        }
+
+        /* ================= ARABIC ================= */
+
+        html[dir="rtl"] .rating-group {
+            display: flex;
+            align-items: center;
+        }
+
+        html[dir="rtl"] .question-title {
+            order: 2;
+            flex: 1;
+            text-align: right;
+        }
+
+        html[dir="rtl"] .stars {
+            order: 1;
+        }
     </style>
 </head>
 <div id="errorMsg" style="
