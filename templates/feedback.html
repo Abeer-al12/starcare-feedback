@@ -623,28 +623,24 @@
             let name = document.getElementById("popupName").value.trim();
             let phone = document.getElementById("popupPhone").value.trim();
 
-            // إذا تقييم منخفض → لازم بيانات
-            if (isLowRating) {
+            // إذا منخفض لازم بيانات
+            if (window.tempData.isLowRating) {
 
-                if (!name) {
+                if (!name || !phone) {
                     alert(currentLang === "ar"
-                        ? "الاسم مطلوب"
-                        : "Name is required");
+                        ? "الاسم ورقم الهاتف مطلوب"
+                        : "Name and phone required");
                     return;
                 }
 
                 if (!/^\d{8}$/.test(phone)) {
-                    alert(currentLang === "ar"
-                        ? "رقم الهاتف يجب أن يكون 8 أرقام"
-                        : "Phone must be 8 digits");
+                    alert("Phone must be 8 digits");
                     return;
                 }
             }
 
             sendData(name, phone);
         }
-
-
         // ================= SKIP =================
         function skipContact() {
 
@@ -709,16 +705,6 @@
                 i18n.skip[lang];
         }
 
-        document.getElementById("popupBtn").addEventListener("click", function (e) {
-
-            let name = document.getElementById("popupName").value.trim();
-            let phone = document.getElementById("popupPhone").value.trim();
-
-            if (isLowRating && (!name || !/^\d{8}$/.test(phone))) {
-                e.preventDefault();
-                return;
-            }
-        });
     </script>
     <div id="toast"></div>
 </body>
