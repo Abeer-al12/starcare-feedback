@@ -374,40 +374,35 @@
         <!-- TABLE -->
         <table>
             <tr>
-                <th data-en="Room" data-ar="الغرفة">Room</th>
-                <th data-en="Q1" data-ar="سؤال 1">Q1</th>
-                <th data-en="Q2" data-ar="سؤال 2">Q2</th>
-                <th data-en="Q3" data-ar="سؤال 3">Q3</th>
-                <th data-en="Q4" data-ar="سؤال 4">Q4</th>
-                <th data-en="Q5" data-ar="سؤال 5">Q5</th>
-                <th data-en="Comment" data-ar="التعليق">Comment</th>
-                <th data-en="Status" data-ar="الحالة">Status</th>
-                <th data-en="Date" data-ar="التاريخ">Date</th>
-                <th data-en="Name" data-ar="الاسم">Name</th>
-                <th data-en="Phone" data-ar="الهاتف">Phone</th>
-                <th data-en="Delete" data-ar="حذف">Delete</th>
+                <th>Room</th>
+                <th>Questions</th>
+                <th>Status</th>
+                <th>Date</th>
+                <th>Name</th>
+                <th>Phone</th>
+                <th>Delete</th>
             </tr>
 
             {% for item in data %}
             <tr>
-                <td style="font-weight:bold; color:#00A79B;">
-                    {{ item.location.replace('_',' ') }}
-                </td>
-                <td>{{ item.q1 }}</td>
-                <td>{{ item.q2 }}</td>
-                <td>{{ item.q3 }}</td>
-                <td>{{ item.q4 }}</td>
-                <td>{{ item.q5 }}</td>
+                <td>{{ item.location }}</td>
 
                 <td>
+                    {% for q in item.questions %}
+                    <div>
+                        {{ q.name }}: {{ q.value }}
+                    </div>
+                    {% endfor %}
+                </td>
+                <td>
 
-                    {% set scores = [item.q1 or 0, item.q2 or 0, item.q3 or 0, item.q4 or 0, item.q5 or 0] %}
+                    {% set low = item.questions | selectattr("value", "le", 3) | list %}
 
-                    {% if scores|min <= 3 %} <span class="status-issue">Issue</span>
-
-                        {% else %}
-                        <span class="status-good">OK</span>
-                        {% endif %}
+                    {% if low|length > 0 %}
+                    <span class="status-issue">Issue</span>
+                    {% else %}
+                    <span class="status-good">OK</span>
+                    {% endif %}
                 </td>
 
 
