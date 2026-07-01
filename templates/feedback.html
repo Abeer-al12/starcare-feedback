@@ -588,41 +588,26 @@
         document.getElementById("feedbackForm").addEventListener("submit", function (e) {
             e.preventDefault();
 
-            facility = document.querySelector('input[name="facility"]:checked')?.value;
-            it = document.querySelector('input[name="it"]:checked')?.value;
-            medical = document.querySelector('input[name="medical"]:checked')?.value;
-            nursing = document.querySelector('input[name="nursing"]:checked')?.value;
-            other = document.querySelector('input[name="other"]:checked')?.value;
+            const answers = [];
 
-            if (
-                !facility ||
-                !it ||
-                !medical ||
-                !nursing ||
-                !other
-            ) {
-                alert(currentLang === "ar"
-                    ? "يرجى الإجابة على جميع الأسئلة"
-                    : "Please answer all questions");
-                return;
+            for (let i = 1; i <= 5; i++) {
+
+                const selected = document.querySelector(`input[name="q${i}"]:checked`);
+
+                if (!selected) {
+                    alert(currentLang === "ar"
+                        ? "يرجى الإجابة على جميع الأسئلة"
+                        : "Please answer all questions");
+                    return;
+                }
+
+                answers.push(parseInt(selected.value));
             }
-
-            // نحول القيم لأرقام
-            facility = parseInt(facility);
-            it = parseInt(it);
-            medical = parseInt(medical);
-            nursing = parseInt(nursing);
-            other = parseInt(other);
 
             tempComment = document.getElementById("commentBox").value;
 
-            // 🔥 نحسب إذا فيه تقييم منخفض
-            isLowRating =
-                facility <= 3 ||
-                it <= 3 ||
-                medical <= 3 ||
-                nursing <= 3 ||
-                other <= 3;
+            // إذا أي سؤال تقييمه 3 أو أقل
+            isLowRating = answers.some(answer => answer <= 3);
 
             if (isLowRating) {
                 document.getElementById("skipBtn").style.display = "none";
