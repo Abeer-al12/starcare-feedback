@@ -512,11 +512,13 @@ def save_feedback():
     if not data:
         return jsonify({"success": False, "error": "No data"}), 400
 
-    facility = int(data.get("facility") or 0)
-    it = int(data.get("it") or 0)
-    medical = int(data.get("medical") or 0)
-    nursing = int(data.get("nursing") or 0)
-    other = int(data.get("other") or 0)
+    answers = data.get("answers", [])
+
+    facility = answers[0] if len(answers) > 0 else 0
+    it = answers[1] if len(answers) > 1 else 0
+    medical = answers[2] if len(answers) > 2 else 0
+    nursing = answers[3] if len(answers) > 3 else 0
+    other = answers[4] if len(answers) > 4 else 0
 
     feedback = {
         "location": data.get("location", "-"),

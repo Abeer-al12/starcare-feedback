@@ -569,11 +569,8 @@
         let tempRating = 0;
         let tempComment = "";
         let isLowRating = false;
-        let facility = 0;
-        let it = 0;
-        let medical = 0;
-        let nursing = 0;
-        let other = 0;
+
+        let answers = [];
 
         function showError(msg) {
             const box = document.getElementById("errorMsg");
@@ -588,7 +585,7 @@
         document.getElementById("feedbackForm").addEventListener("submit", function (e) {
             e.preventDefault();
 
-            const answers = [];
+            answers = [];
 
             for (let i = 1; i <= 5; i++) {
 
@@ -610,156 +607,154 @@
             isLowRating = answers.some(answer => answer <= 3);
 
             if (isLowRating) {
+
                 document.getElementById("skipBtn").style.display = "none";
+                document.getElementById("phonePopup").style.display = "flex";
+
             } else {
-                document.getElementById("skipBtn").style.display = "block";
+
+                sendData(null, null);
+
             }
 
-            document.getElementById("phonePopup").style.display = "flex";
-        });
+            // ---------------- SUBMIT LOW RATING ----------------
+            function submitLowRating() {
 
-        // ---------------- SUBMIT LOW RATING ----------------
-        function submitLowRating() {
+                let name = document.getElementById("popupName").value.trim();
+                let phone = document.getElementById("popupPhone").value.trim();
 
-            let name = document.getElementById("popupName").value.trim();
-            let phone = document.getElementById("popupPhone").value.trim();
+                if (isLowRating) {
 
-            if (isLowRating) {
-
-                if (!name) {
-                    alert(currentLang === "ar"
-                        ? "الاسم مطلوب"
-                        : "Name is required");
-                    return;
-                }
-
-                if (!/^\d{8}$/.test(phone)) {
-                    alert(currentLang === "ar"
-                        ? "رقم الهاتف يجب أن يكون 8 أرقام"
-                        : "Phone must be 8 digits");
-                    return;
-                }
-            }
-
-            // ⭐ هذا السطر كان ناقص
-            sendData(name, phone);
-        }
-        function sendData(name, phone) {
-
-            fetch("/save_feedback", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    location: "{{ room }}",
-                    branch: "{{ branch }}",
-
-                    facility,
-                    it,
-                    medical,
-                    nursing,
-                    other,
-
-                    comment: tempComment,
-
-                    name: name || null,
-                    phone: phone || null
-                })
-            })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success) {
-                        window.location.href = `/thankyou/{{ branch }}/{{ room }}`;
+                    if (!name) {
+                        alert(currentLang === "ar"
+                            ? "الاسم مطلوب"
+                            : "Name is required");
+                        return;
                     }
-                });
-        }
 
-        // ---------------- SKIP BUTTON ----------------
-        function skipContact() {
+                    if (!/^\d{8}$/.test(phone)) {
+                        alert(currentLang === "ar"
+                            ? "رقم الهاتف يجب أن يكون 8 أرقام"
+                            : "Phone must be 8 digits");
+                        return;
+                    }
+                }
 
-            if (isLowRating) {
-                alert(currentLang === "ar"
-                    ? "الاسم ورقم الهاتف مطلوبان"
-                    : "Name and phone are required");
-                return;
+                // ⭐ هذا السطر كان ناقص
+                sendData(name, phone);
+            }
+            function sendData(name, phone) {
+
+                fetch("/save_feedback", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        location: "{{ room }}",
+                        branch: "{{ branch }}",
+
+                        answers: answers,
+
+                        comment: tempComment,
+
+                        name: name || null,
+                        phone: phone || null
+                    })
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            window.location.href = `/thankyou/{{ branch }}/{{ room }}`;
+                        }
+                    });
             }
 
-            sendData(null, null);
-        }
+            // ---------------- SKIP BUTTON ----------------
+            function skipContact() {
 
-        fetch("/save_feedback", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                location: "{{ room }}",
-                branch: "{{ branch }}",
-
-                rating: tempRating,
-                comment: tempComment,
-
-                facility: selectedFacility,
-                it: selectedIT,
-                medical: selectedMedical,
-                nursing: selectedNursing,
-                other: selectedOther,
-
-                name: null,
-                phone: null
-            })
-        })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    window.location.href = `/thankyou/{{ branch }}/{{ room }}`;
+                if (isLowRating) {
+                    alert(currentLang === "ar"
+                        ? "الاسم ورقم الهاتف مطلوبان"
+                        : "Name and phone are required");
+                    return;
                 }
-            });
+
+                sendData(null, null);
+            }
+
+            // fetch("/save_feedback", {
+            //     method: "POST",
+            //     headers: {
+            //         "Content-Type": "application/json"
+            //     },
+            //     body: JSON.stringify({
+            //         location: "{{ room }}",
+            //         branch: "{{ branch }}",
+
+            //         rating: tempRating,
+            //         comment: tempComment,
+
+            //         facility: selectedFacility,
+            //         it: selectedIT,
+            //         medical: selectedMedical,
+            //         nursing: selectedNursing,
+            //         other: selectedOther,
+
+            //         name: null,
+            //         phone: null
+            //     })
+            // })
+            //     .then(res => res.json())
+            //     .then(data => {
+            //         if (data.success) {
+            //             window.location.href = `/thankyou/{{ branch }}/{{ room }}`;
+            //         }
+            //     });
 
 
-        function showToast(msg) {
-            const toast = document.createElement("div");
+            function showToast(msg) {
+                const toast = document.createElement("div");
 
-            toast.innerText = msg;
+                toast.innerText = msg;
 
-            toast.style.position = "fixed";
-            toast.style.top = "20px";
-            toast.style.left = "50%";
-            toast.style.transform = "translateX(-50%)";
-            toast.style.background = "#1b2a41";
-            toast.style.color = "white";
-            toast.style.padding = "12px  20px";
-            toast.style.borderRadius = "12px";
-            toast.style.zIndex = "9999";
+                toast.style.position = "fixed";
+                toast.style.top = "20px";
+                toast.style.left = "50%";
+                toast.style.transform = "translateX(-50%)";
+                toast.style.background = "#1b2a41";
+                toast.style.color = "white";
+                toast.style.padding = "12px  20px";
+                toast.style.borderRadius = "12px";
+                toast.style.zIndex = "9999";
 
-            document.body.appendChild(toast);
+                document.body.appendChild(toast);
 
-            setTimeout(() => {
-                toast.remove();
-            }, 2500);
-        }
+                setTimeout(() => {
+                    toast.remove();
+                }, 2500);
+            }
 
-        function setPopupLang(lang) {
+            function setPopupLang(lang) {
 
-            document.getElementById("popupTitle").innerText =
-                i18n.popupTitle[lang];
+                document.getElementById("popupTitle").innerText =
+                    i18n.popupTitle[lang];
 
-            document.getElementById("popupText").innerText =
-                i18n.popupText[lang];
+                document.getElementById("popupText").innerText =
+                    i18n.popupText[lang];
 
-            document.getElementById("popupName").placeholder =
-                i18n.fullName[lang];
+                document.getElementById("popupName").placeholder =
+                    i18n.fullName[lang];
 
-            document.getElementById("popupPhone").placeholder =
-                i18n.phoneNumber[lang];
+                document.getElementById("popupPhone").placeholder =
+                    i18n.phoneNumber[lang];
 
-            document.getElementById("popupBtn").innerText =
-                i18n.submit[lang];
+                document.getElementById("popupBtn").innerText =
+                    i18n.submit[lang];
 
-            document.getElementById("skipBtn").innerText =
-                i18n.skip[lang];
-        }
+                document.getElementById("skipBtn").innerText =
+                    i18n.skip[lang];
+            }
     </script>
     <div id="toast"></div>
 </body>
