@@ -610,46 +610,55 @@ def admin():
     # =====================
     branch = request.args.get("branch")
     location = request.args.get("location")
-    # category = request.args.get("category")
     room = request.args.get("room")
 
-    room_query = {}
+    # =====================
+    # Base query (Branch)
+    # =====================
+    base_query = {}
 
     if branch:
-        room_query["branch"] = branch
+        base_query["branch"] = branch
+
+    # =====================
+    # Locations (service/department)
+    # =====================
+    locations = sorted(
+        collection.distinct("location", base_query)
+    )
+
+    # =====================
+    # Rooms (depends on branch + location)
+    # =====================
+    room_query = dict(base_query)
 
     if location:
         room_query["location"] = location
 
-    rooms = collection.distinct("room_number", room_query)
-
-    user = db.users.find_one({"username": username})
-    allowed_locations = user.get("locations", []) if user else []
+    rooms = sorted(
+        collection.distinct("room_number", room_query)
+    )
 
     # =====================
-    # QUERY
+    # Main query for table
     # =====================
-    query = {}
+    query = dict(base_query)
 
-    # 🔐 permissions
-    if role != "admin":
-        query["location"] = {"$in": allowed_locations}
-
-    # 🌟 branch filter
-    if branch:
-        query["branch"] = branch
-
-    # 📍 location filter
     if location:
         query["location"] = location
 
-    # 📊 category filter (FIXED)
-    # if category:
-    #     if category in ["facility", "it", "medical", "nursing", "other"]:
-    #         query[category] = {"$exists": True}
-
     if room:
-        query["location"] = room
+        query["room_number"] = room   # ✅ مهم جداً (صححناه)
+
+    # =====================
+    # Permissions
+    # =====================
+    user = db.users.find_one({"username": username})
+    allowed_locations = user.get("locations", []) if user else []
+
+    if role != "admin":
+        query["location"] = {"$in": allowed_locations}
+
     # =====================
     # DATA
     # =====================
@@ -664,22 +673,12 @@ def admin():
 
         i["rating"] = safe_float(i.get("rating"))
 
-
-    # =====================
-    # LOW RATINGS
-    # =====================
-    low_ratings = list(collection.find({
-        **query,
-        "rating": {"$lte": 3}
-    }).sort("created_at", -1))
-
     # =====================
     # STATS
     # =====================
     total = len(data)
 
     valid_ratings = [i["rating"] for i in data if i["rating"] > 0]
-
     avg = round(sum(valid_ratings) / len(valid_ratings), 2) if valid_ratings else 0
 
     stats = {}
@@ -709,18 +708,6 @@ def admin():
     # BRANCHES
     # =====================
     branches = list(branch_rooms_map.keys())
-
-    # =====================
-# Locations & Rooms
-# =====================
-
-    locations = sorted(
-        list(set([doc.get("type") for doc in collection.find({}, {"type": 1}) if doc.get("type")]))
-    )
-
-    rooms = sorted(
-        list(set([doc.get("location") for doc in collection.find({}, {"location": 1}) if doc.get("location")]))
-    )
 
     return render_template(
         "dashboard.html",
