@@ -1466,7 +1466,19 @@ def download_excel():
     # ===========================
     # Statistics
     # ===========================
-    ratings = [float(i.get("rating") or 0) for i in data]
+    ratings = []
+
+    for i in data:
+        qs = i.get("questions", [])
+
+        values = [float(q.get("value") or 0) for q in qs]
+
+        if values:
+            i["rating"] = round(sum(values) / len(values), 2)
+        else:
+            i["rating"] = 0
+
+        ratings.append(avg_rating)
 
     total = len(ratings)
     avg = round(sum(ratings)/total, 2) if total else 0
