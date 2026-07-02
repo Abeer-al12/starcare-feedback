@@ -714,17 +714,13 @@ def admin():
 # Locations & Rooms
 # =====================
 
-    locations = sorted(collection.distinct("location"))
+    locations = sorted(
+        list(set([doc.get("type") for doc in collection.find({}, {"type": 1}) if doc.get("type")]))
+    )
 
-    room_filter = {}
-
-    if branch:
-        room_filter["branch"] = branch
-
-    if location:
-        room_filter["location"] = location
-
-    rooms = sorted(collection.distinct("room_number", room_filter))
+    rooms = sorted(
+        list(set([doc.get("location") for doc in collection.find({}, {"location": 1}) if doc.get("location")]))
+    )
 
     return render_template(
         "dashboard.html",
