@@ -1393,45 +1393,57 @@ def download_excel():
     if 'admin' not in session:
         return redirect('/login')
 
-    # نفس فلتر الـ PDF
     query = {}
 
     branch = request.args.get("branch") or session.get("active_branch")
     location = request.args.get("location")
+    room = request.args.get("room")
     role = session.get("role")
-    category = request.args.get("category")
 
     filters = []
 
+    # =====================
+    # Branch filter
+    # =====================
     if branch and branch != "all":
         filters.append({"branch": branch})
 
+    # =====================
+    # Permissions
+    # =====================
     if role != "admin":
         user = db.users.find_one({"username": session.get("username")})
         allowed_locations = user.get("locations", [])
         if allowed_locations:
             filters.append({"location": {"$in": allowed_locations}})
 
+    # =====================
+    # Location filter (department)
+    # =====================
     if location:
         filters.append({"location": location})
 
-    if category:
-        filters.append({"category": category})
+    # =====================
+    # Room filter (IMPORTANT)
+    # =====================
+    if room:
+        filters.append({"room_number": room})
 
     if filters:
         query = {"$and": filters}
 
     data = list(collection.find(query))
 
-    # 📊 Excel file
+    # ===========================
+    # Excel file
+    # ===========================
     wb = Workbook()
     ws = wb.active
     ws.title = "Feedback Report"
 
     # ===========================
-# Title
-# ===========================
-
+    # Title
+    # ===========================
     ws["A1"] = "StarCare Hospital Feedback Report"
     ws["A1"].font = Font(size=18, bold=True, color="FFFFFF")
     ws["A1"].fill = PatternFill("solid", fgColor="00A79B")
@@ -1446,85 +1458,80 @@ def download_excel():
     ws["B5"] = branch if branch else "All Branches"
 
     ws["A6"] = "Location"
-    ws["B6"] = location if location else "All Locations"
+    ws["B6"] = location if location else "All Departments"
 
-    ws["A7"] = "Category"
-    ws["B7"] = category if category else "All Categories"
+    ws["A7"] = "Room"
+    ws["B7"] = room if room else "All Rooms"
 
-    
-# ===========================
-# Statistics
-# ===========================
-
-    ratings = [
-        float(i.get("rating") or 0)
-        for i in data
-    ]
+    # ===========================
+    # Statistics
+    # ===========================
+    ratings = [float(i.get("rating") or 0) for i in data]
 
     total = len(ratings)
+    avg = round(sum(ratings)/total, 2) if total else 0
 
-    avg = round(sum(ratings)/total,2) if total else 0
+    five = len([r for r in ratings if r == 5])
+    four = len([r for r in ratings if r == 4])
+    three = len([r for r in ratings if r == 3])
+    two = len([r for r in ratings if r == 2])
+    one = len([r for r in ratings if r == 1])
 
-    five = len([r for r in ratings if r==5])
-    four = len([r for r in ratings if r==4])
-    three = len([r for r in ratings if r==3])
-    two = len([r for r in ratings if r==2])
-    one = len([r for r in ratings if r==1])
+    ws["D3"] = "Total Feedback"
+    ws["E3"] = total
 
-    ws["D3"]="Total Feedback"
-    ws["E3"]=total
+    ws["D4"] = "Average Rating"
+    ws["E4"] = avg
 
-    ws["D4"]="Average Rating"
-    ws["E4"]=avg
+    ws["D5"] = "5 Stars"
+    ws["E5"] = five
 
-    ws["D5"]="5 Stars"
-    ws["E5"]=five
+    ws["D6"] = "4 Stars"
+    ws["E6"] = four
 
-    ws["D6"]="4 Stars"
-    ws["E6"]=four
+    ws["D7"] = "3 Stars"
+    ws["E7"] = three
 
-    ws["D7"]="3 Stars"
-    ws["E7"]=three
+    ws["D8"] = "2 Stars"
+    ws["E8"] = two
 
-    ws["D8"]="2 Stars"
-    ws["E8"]=two
+    ws["D9"] = "1 Star"
+    ws["E9"] = one
 
-    ws["D9"]="1 Star"
-    ws["E9"]=one
-
-# ===========================
-# Table Header
-# ===========================
-
+    # ===========================
+    # Table Header
+    # ===========================
     row = 12
 
     headers = [
         "Date",
         "Time",
         "Branch",
-        "Location",
+        "Department",
+        "Room",
         "Rating",
         "Comment",
         "Name",
         "Phone"
     ]
 
-    for col, head in enumerate(headers,1):
-
-        cell = ws.cell(row=row,column=col)
-
+    for col, head in enumerate(headers, 1):
+        cell = ws.cell(row=row, column=col)
         cell.value = head
-        cell.font = Font(bold=True,color="FFFFFF")
-        cell.fill = PatternFill("solid",fgColor="00A79B")
+        cell.font = Font(bold=True, color="FFFFFF")
+        cell.fill = PatternFill("solid", fgColor="00A79B")
         cell.alignment = Alignment(horizontal="center")
 
+    # ===========================
+    # Data rows
+    # ===========================
     for item in data:
 
-        date_obj = item.get("date")
+        date_obj = item.get("created_at")
 
         if isinstance(date_obj, str):
             try:
-                date_obj = datetime.strptime(date_obj, "%Y-%m-%d")
+                date_obj = datetime.strptime(date_obj, "%Y-%m-%d %I:%M %p")
             except:
                 date_obj = None
 
@@ -1535,53 +1542,41 @@ def download_excel():
             date_str = "-"
             time_str = "-"
 
-        location_name = item.get("location") or "-"
-        room_name = room_names.get(location_name, location_name)
-
-        rating = int(item.get("rating") or 0)
-
         ws.append([
             date_str,
             time_str,
             item.get("branch", "-"),
-            room_name,
-            f"{rating}/5",
+            item.get("location", "-"),      # department
+            item.get("room_number", "-"),   # room
+            f"{int(item.get('rating') or 0)}/5",
             item.get("comment", ""),
             item.get("name", "-"),
             item.get("phone", "-"),
         ])
 
-        thin = Side(style="thin")
+    # ===========================
+    # Styling
+    # ===========================
+    thin = Side(style="thin")
 
-        for row_cells in ws.iter_rows():
+    for row_cells in ws.iter_rows():
+        for cell in row_cells:
+            cell.border = Border(left=thin, right=thin, top=thin, bottom=thin)
+            cell.alignment = Alignment(vertical="center", wrap_text=True)
 
-            for cell in row_cells:
+    for col in ws.columns:
+        length = max(len(str(c.value or "")) for c in col)
+        ws.column_dimensions[col[0].column_letter].width = min(length + 5, 40)
 
-                cell.border = Border(
-                    left=thin,
-                    right=thin,
-                    top=thin,
-                    bottom=thin
-                )
+    ws.freeze_panes = "A13"
 
-                cell.alignment = Alignment(
-                    vertical="center",
-                    wrap_text=True
-                )
-
-        for col in ws.columns:
-
-            length = max(len(str(c.value or "")) for c in col)
-
-            ws.column_dimensions[col[0].column_letter].width = min(length+5,40)
-
-        ws.freeze_panes = "A13"
-    # save in memory
+    # ===========================
+    # Return file
+    # ===========================
     buffer = BytesIO()
     wb.save(buffer)
     buffer.seek(0)
 
-    buffer.seek(0)
     return Response(
         buffer.getvalue(),
         mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
