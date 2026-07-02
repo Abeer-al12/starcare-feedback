@@ -717,10 +717,11 @@
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
+
                     branch: "{{ branch }}",
 
-                    location: "{{ location }}",     // xray
-                    room_number: "{{ room }}",      // xray108
+                    location: "{{ location }}",      // pharmacy أو xray أو lab...
+                    room_number: "{{ room }}",       // pharmacy1 أو xray108...
 
                     answers: answers,
                     comment: tempComment,

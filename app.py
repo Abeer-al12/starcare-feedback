@@ -514,7 +514,7 @@ def save_feedback():
         return jsonify({"success": False, "error": "No data"}), 400
 
     # ⭐ نوع الصفحة (xray / lab / reception ...)
-    room_type = data.get("type")
+    room_type = data.get("location")
 
     # ⭐ الإجابات
     answers = data.get("answers", [])
@@ -535,7 +535,7 @@ def save_feedback():
     feedback = {
         "branch": data.get("branch"),
 
-        "location": data.get("location"),
+        "location": room_type,
         "room_number": data.get("room_number"),
 
         "questions": questions,
