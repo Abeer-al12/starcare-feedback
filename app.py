@@ -497,10 +497,10 @@ def feedback(branch, room):
         room_name=room_name,
         branch=branch,
         room=room,
+        location=key,      # ⭐ الجديد
         questions=questions,
         lang=lang
     )
-
 
 from datetime import datetime
 
@@ -533,10 +533,10 @@ def save_feedback():
 
     # ⭐ حفظ البيانات
     feedback = {
-        "location": data.get("location"),
         "branch": data.get("branch"),
 
-        "type": room_type,
+        "location": data.get("location"),
+        "room_number": data.get("room_number"),
 
         "questions": questions,
 
@@ -544,7 +544,9 @@ def save_feedback():
         "name": data.get("name", "-"),
         "phone": data.get("phone", "-"),
 
-        "created_at": datetime.now(ZoneInfo("Asia/Muscat")).strftime("%Y-%m-%d %I:%M %p")
+        "created_at": datetime.now(
+            ZoneInfo("Asia/Muscat")
+        ).strftime("%Y-%m-%d %I:%M %p")
     }
 
     collection.insert_one(feedback)
@@ -608,7 +610,10 @@ def admin():
     # =====================
     branch = request.args.get("branch")
     location = request.args.get("location")
-    category = request.args.get("category")
+    # category = request.args.get("category")
+    room = request.args.get("room")
+
+    rooms = collection.distinct("location")
 
     user = db.users.find_one({"username": username})
     allowed_locations = user.get("locations", []) if user else []
@@ -631,10 +636,12 @@ def admin():
         query["location"] = location
 
     # 📊 category filter (FIXED)
-    if category:
-        if category in ["facility", "it", "medical", "nursing", "other"]:
-            query[category] = {"$exists": True}
+    # if category:
+    #     if category in ["facility", "it", "medical", "nursing", "other"]:
+    #         query[category] = {"$exists": True}
 
+    if room:
+        query["location"] = room
     # =====================
     # DATA
     # =====================
@@ -695,17 +702,35 @@ def admin():
     # =====================
     branches = list(branch_rooms_map.keys())
 
+    # =====================
+# Locations & Rooms
+# =====================
+
+    locations = sorted(
+        list(set([doc.get("type") for doc in collection.find({}, {"type": 1}) if doc.get("type")]))
+    )
+
+    rooms = sorted(
+        list(set([doc.get("location") for doc in collection.find({}, {"location": 1}) if doc.get("location")]))
+    )
+
     return render_template(
         "dashboard.html",
         data=data,
         total_feedback=total,
         avg_rating=avg,
+
         branches=branches,
+        locations=locations,
+        rooms=rooms,
+
         stats=stats_list,
+
         role=role,
+
         active_branch=branch,
-        active_category=category,
-        active_location=location
+        active_location=location,
+        active_room=room
     )
 #اضافه مستخدمين
 @app.route('/add_user', methods=['GET', 'POST'])

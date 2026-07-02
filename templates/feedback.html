@@ -717,11 +717,10 @@
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    location: "{{ room }}",
                     branch: "{{ branch }}",
 
-                    // ⭐ أضيفي هذا السطر
-                    type: "{{ room }}",
+                    location: "{{ location }}",     // xray
+                    room_number: "{{ room }}",      // xray108
 
                     answers: answers,
                     comment: tempComment,

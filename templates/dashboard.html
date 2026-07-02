@@ -329,16 +329,20 @@
                 </select>
 
                 <select name="location" onchange="this.form.submit()">
-                    <option value="" data-en="All Locations" data-ar="كل المواقع">All Locations</option>
-                    {% for s in stats %}
-                    <option value="{{ s.location }}" {% if request.args.get('location')==s.location %}selected{% endif
-                        %}>
-                        {{ s.location }}
+
+                    <option value="" data-en="All Locations" data-ar="كل الأقسام">
+                        All Locations
+                    </option>
+
+                    {% for l in locations %}
+                    <option value="{{ l }}" {% if active_location==l %}selected{% endif %}>
+                        {{ l|upper }}
                     </option>
                     {% endfor %}
+
                 </select>
 
-                <select name="category" onchange="this.form.submit()">
+                <!-- <select name="category" onchange="this.form.submit()">
                     <option value="" data-en="All Categories" data-ar="كل التصنيفات">
                         All Categories
                     </option>
@@ -349,6 +353,20 @@
                     <option value="medical" data-en="Medical Equipment" data-ar="معدات طبية">Medical Equipment</option>
                     <option value="nursing" data-en="Nursing" data-ar="تمريض">Nursing</option>
                     <option value="other" data-en="Other" data-ar="أخرى">Other</option>
+                </select> -->
+
+                <select name="room" onchange="this.form.submit()">
+
+                    <option value="" data-en="All Rooms" data-ar="كل الغرف">
+                        All Rooms
+                    </option>
+
+                    {% for r in rooms %}
+                    <option value="{{ r }}" {% if active_room==r %}selected{% endif %}>
+                        {{ r }}
+                    </option>
+                    {% endfor %}
+
                 </select>
 
             </form>
