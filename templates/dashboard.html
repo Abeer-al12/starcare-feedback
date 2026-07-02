@@ -382,9 +382,14 @@
                 Active Branch: {{ active_branch or "All Branches" }}
             </h3>
 
-            <h4 id="activeCategory" data-en="Category: {{ active_category or 'All Categories' }}"
-                data-ar="التصنيف: {{ active_category or 'كل التصنيفات' }}">
-                Category: {{ active_category or "All Categories" }}
+            <h4 id="activeLocation" data-en="Service / Location: {{ active_location or 'All Locations' }}"
+                data-ar="الخدمة / الموقع: {{ active_location or 'كل المواقع' }}">
+                Service / Location: {{ active_location or "All Locations" }}
+            </h4>
+
+            <h4 id="activeRoom" data-en="Room: {{ request.args.get('room') or 'All Rooms' }}"
+                data-ar="الغرفة: {{ request.args.get('room') or 'كل الغرف' }}">
+                Room: {{ request.args.get('room') or 'All Rooms' }}
             </h4>
 
         </div>
@@ -461,23 +466,28 @@
 
             // تحديث معلومات الفرع والتصنيف
             const branch = "{{ active_branch or 'All Branches' }}";
-            const category = "{{ active_category or 'All Categories' }}";
+            const location = "{{ active_location or 'All Locations' }}";
+            const room = "{{ request.args.get('room') or 'All Rooms' }}";
 
             document.getElementById("activeBranch").innerText =
                 (lang === "ar")
                     ? "الفرع النشط: " + branch
                     : "Active Branch: " + branch;
 
-            document.getElementById("activeCategory").innerText =
+            document.getElementById("activeLocation").innerText =
                 (lang === "ar")
-                    ? "التصنيف: " + category
-                    : "Category: " + category;
-        }
+                    ? "الخدمة / الموقع: " + location
+                    : "Service / Location: " + location;
 
-        window.onload = function () {
-            let lang = localStorage.getItem("lang") || "en";
-            setLang(lang);
-        };
+            document.getElementById("activeRoom").innerText =
+                (lang === "ar")
+                    ? "الغرفة: " + room
+                    : "Room: " + room;
+
+            window.onload = function () {
+                let lang = localStorage.getItem("lang") || "en";
+                setLang(lang);
+            };
     </script>
 </body>
 
