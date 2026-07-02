@@ -613,7 +613,15 @@ def admin():
     # category = request.args.get("category")
     room = request.args.get("room")
 
-    rooms = collection.distinct("location")
+    room_query = {}
+
+    if branch:
+        room_query["branch"] = branch
+
+    if location:
+        room_query["location"] = location
+
+    rooms = collection.distinct("room_number", room_query)
 
     user = db.users.find_one({"username": username})
     allowed_locations = user.get("locations", []) if user else []
