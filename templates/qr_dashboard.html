@@ -150,6 +150,21 @@
         .deleteBtn {
             background: #D32F2F;
         }
+
+        .deleteBtn {
+            display: block;
+            text-decoration: none;
+            background: #dc3545;
+            color: white;
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 5px;
+        }
+
+        .deleteBtn:hover {
+            background: #b52b38;
+        }
     </style>
 </head>
 
@@ -199,22 +214,19 @@
                     <span class="value">{{ room.count }}</span>
                 </div>
 
-                <div class="actions">
+                <div style="margin-top:15px; display:flex; flex-direction:column; gap:8px;">
 
-                    <button class="downloadBtn"
-                        onclick="downloadQR('qr{{ loop.index }}','{{ room.room_display if room.room_display else room.room }}')">
-                        Download
+                    <button class="downloadBtn" onclick="downloadQR('qr{{ loop.index }}','{{ room.room }}')">
+                        Download QR
                     </button>
 
-                    <button class="copyBtn" onclick="copyLink('{{ room.qr }}')">
+                    <button onclick="copyLink('{{ room.qr }}')">
                         Copy Link
                     </button>
 
-                    {% if room._id %}
-                    <a class="deleteBtn" href="/delete_qr/{{ room._id }}" onclick="return confirm('Delete this QR?')">
+                    <a href="/delete_qr/{{ room._id }}" class="deleteBtn" onclick="return confirm('Delete this QR?')">
                         Delete
                     </a>
-                    {% endif %}
 
                 </div>
 

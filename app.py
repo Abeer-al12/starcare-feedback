@@ -1924,6 +1924,19 @@ def qr_dashboard():
         })
 
     return render_template("qr_dashboard.html", rooms=rooms_data)
+
+
+@app.route("/delete_qr/<qr_id>")
+def delete_qr(qr_id):
+
+    if "admin" not in session:
+        return redirect("/login")
+
+    db.qr_codes.delete_one({
+        "_id": ObjectId(qr_id)
+    })
+
+    return redirect("/qr_dashboard")
 # @app.route('/fix_branch')
 # def fix_branch():
 
