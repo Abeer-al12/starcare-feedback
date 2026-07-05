@@ -484,7 +484,7 @@ def feedback(branch, location, room):
 
             return jsonify({
                 "status": "success",
-                "redirect": f"/thankyou/{branch}/{room}"
+                "redirect": f"/thankyou/{branch}/{location}/{room}"
             })
 
         # ⭐ low rating
