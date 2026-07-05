@@ -502,6 +502,13 @@ def feedback(branch, room):
         lang=lang
     )
 
+
+# @app.route("/feedback/<branch>/<location>/<room_number>")
+# def feedback_new(branch, location, room_number):
+
+#     room_name = f"{location.title()} {room_number}"
+
+
 from datetime import datetime
 
 
@@ -1764,10 +1771,12 @@ def generate_qr():
     if request.method == "POST":
 
         branch = request.form.get("branch")
-        location = request.form.get("location").strip().lower().replace(" ", "_")
 
-        url = f"https://starcare-feedback-1.onrender.com/feedback/{branch}/{room}"
+        location = request.form.get("location").strip().lower()
 
+        room_number = request.form.get("room_number").strip()
+
+        url = f"https://starcare-feedback-1.onrender.com/feedback/{branch}/{location}/{room_number}"
         qr = qrcode.make(url)
 
         buffer = BytesIO()
@@ -1778,16 +1787,27 @@ def generate_qr():
 
         existing = db.qr_codes.find_one({
             "branch": branch,
-            "location": location
+            "location": location,
+            "room_number": room_number
         })
 
         if not existing:
             db.qr_codes.insert_one({
+
                 "branch": branch,
+
                 "location": location,
+
+                "room_number": room_number,
+
+                "room_display": f"{location.title()} {room_number}",
+
                 "url": url,
+
                 "qr_image": img_base64,
+
                 "created_at": datetime.now()
+
             })
 
         qr_image = img_base64
