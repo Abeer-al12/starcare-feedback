@@ -408,31 +408,53 @@ def get_questions(room):
 @app.route('/feedback/<branch>/<room>', methods=['GET', 'POST'])
 def feedback(branch, room):
 
+    # جلب الأسئلة + اللغة
     lang = request.args.get("lang", "en")
 
-    questions = get_questions(branch, location, room)
+    questions = get_questions(room)
 
-    room_name = f"{location} {room}"
+    print(questions)
+
+    room_name = room_names.get(room, room)
 
     room_lower = room.lower()
-    location_lower = location.lower()
 
-    if "lab" in room_lower:
-        key = "lab"
+# تحديد نوع السؤال من QUESTIONS
+    if "reception" in room_lower:
+        key = "reception"
+
+    elif "waiting" in room_lower:
+        key = "waiting"
+
+    elif "consultation" in room_lower or "doctor" in room_lower:
+        key = "consultation"
+
     elif "xray" in room_lower:
         key = "xray"
+
+    elif "lab" in room_lower:
+        key = "lab"
+
     elif "pharmacy" in room_lower:
         key = "pharmacy"
+
+    elif "toilet" in room_lower:
+        key = "toilet"
+
     else:
         key = "consultation"
 
+
     # ================= POST =================
+
     if request.method == "POST":
 
         data = request.get_json()
 
         rating = data.get("rating")
         comment = data.get("comment")
+
+        
 
         if not rating:
             return jsonify({"error": "missing rating"})
@@ -441,13 +463,21 @@ def feedback(branch, room):
 
         if rating >= 4:
 
-            db.feedback.insert_one({
+            collection.insert_one({
                 "branch": branch,
-                "location": key,
-                "room": room,
+                "location": room,
                 "rating": rating,
                 "comment": comment,
-                "date": datetime.now()
+                "phone": None,
+                "name": None,
+                "date": datetime.now(),
+
+    # ⭐ الجديد
+                "answers": {
+                    "category": request.get_json().get("category"),
+                    "speed": request.get_json().get("speed"),
+                    "behavior": request.get_json().get("behavior")
+                }
             })
 
             return jsonify({
@@ -455,6 +485,7 @@ def feedback(branch, room):
                 "redirect": f"/thankyou/{branch}/{room}"
             })
 
+        # ⭐ low rating
         return jsonify({
             "status": "need_phone",
             "rating": rating,
@@ -466,11 +497,10 @@ def feedback(branch, room):
         room_name=room_name,
         branch=branch,
         room=room,
-        location=key,
+        location=key,      # ⭐ الجديد
         questions=questions,
         lang=lang
     )
-
 
 from datetime import datetime
 
@@ -1130,13 +1160,10 @@ def download_pdf():
         questions_text = ""
 
         for q in item.get("questions", []):
-            name = q.get("name", "Question")
-            value = q.get("value", "-")
-
-            questions_text += f"• {name}: {value}/5<br/>"
+            questions_text += f"{q['title']}: {q['value']}/5<br/>"
 
         if not questions_text:
-            questions_text = "-" 
+            questions_text = "-"
 
     # ===========================
     # Comment
@@ -1161,20 +1188,20 @@ def download_pdf():
 # ===========================
 # Table
 # ===========================
-    details_table = Table(
-        details,
-        colWidths=[
-            50,   # Date
-            50,   # Time
-            50,   # Branch
-            60,   # Department
-            50,   # Room
-            180,  # Questions
-            80,   # Comment
-            55,   # Name
-            60    # Phone
-        ]
-    )
+details_table = Table(
+    details,
+    colWidths=[
+        50,   # Date
+        50,   # Time
+        50,   # Branch
+        60,   # Department
+        50,   # Room
+        180,  # Questions
+        80,   # Comment
+        55,   # Name
+        60    # Phone
+    ]
+)
 
     details_table.setStyle(TableStyle([
 
@@ -1754,19 +1781,15 @@ def generate_qr():
     if 'admin' not in session:
         return redirect('/login')
 
-
     qr_image = None
     url = None
 
     if request.method == "POST":
 
         branch = request.form.get("branch")
-        location = request.form.get("location")
-        room_number = request.form.get("room_number").strip().lower().replace(" ", "_")
+        location = request.form.get("location").strip().lower().replace(" ", "_")
 
-        room_display = f"{location} {room_number}"
-
-       url = f"https://starcare-feedback-1.onrender.com/feedback/{branch}/{room_display}"
+        url = f"https://starcare-feedback-1.onrender.com/feedback/{branch}/{room}"
 
         qr = qrcode.make(url)
 
@@ -1776,21 +1799,27 @@ def generate_qr():
 
         img_base64 = base64.b64encode(buffer.getvalue()).decode()
 
-        db.qr_codes.insert_one({
+        existing = db.qr_codes.find_one({
             "branch": branch,
-            "location": location,
-            "room_number": room_number,
-            "room_display": room_display,
-            "url": url,
-            "qr_image": img_base64,
-            "created_at": datetime.now()
+            "location": location
         })
+
+        if not existing:
+            db.qr_codes.insert_one({
+                "branch": branch,
+                "location": location,
+                "url": url,
+                "qr_image": img_base64,
+                "created_at": datetime.now()
+            })
 
         qr_image = img_base64
 
-    return render_template("qr_generator.html",
-                           qr_image=qr_image,
-                           url=url)
+    return render_template(
+        "qr_generator.html",
+        qr_image=qr_image,
+        url=url
+    )
 # ---------------- QR DASHBOARD ----------------
 @app.route('/qr_dashboard')
 def qr_dashboard():
