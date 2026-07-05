@@ -450,60 +450,56 @@ def feedback(branch, room):
 
     if request.method == "POST":
 
-        data = request.get_json()
+    data = request.get_json()
 
-        rating = data.get("rating")
-        comment = data.get("comment")
+    rating = data.get("rating")
+    comment = data.get("comment")
 
-        
+    if not rating:
+        return jsonify({"error": "missing rating"})
 
-        if not rating:
-            return jsonify({"error": "missing rating"})
+    rating = int(rating)
 
-        rating = int(rating)
+    if rating >= 4:
 
-        if rating >= 4:
-
-             collection.insert_one({
-                "branch": branch,
-                "location": room,
-                "rating": rating,
-                "comment": comment,
-                "phone": None,
-                "name": None,
-                "date": datetime.now(),
-
-
-    # ⭐ الجديد
-                "answers": {
-                    "category": request.get_json().get("category"),
-                    "speed": request.get_json().get("speed"),
-                    "behavior": request.get_json().get("behavior")
-                }
-            })
-
-            return jsonify({
-                "status": "success",
-                "redirect": f"/thankyou/{branch}/{room}"
-            })
-
-        # ⭐ low rating
-        return jsonify({
-            "status": "need_phone",
+        collection.insert_one({
+            "branch": branch,
+            "location": location,   # 🔥 مهم (مو room إذا عندك location)
+            "room": room,
             "rating": rating,
-            "comment": comment
+            "comment": comment,
+            "phone": None,
+            "name": None,
+            "date": datetime.now(),
+
+            "answers": {
+                "category": data.get("category"),
+                "speed": data.get("speed"),
+                "behavior": data.get("behavior")
+            }
         })
 
-    return render_template(
-        "feedback.html",
-        room_name=room_name,
-        branch=branch,
-        room=room,
-        location=key,      # ⭐ الجديد
-        questions=questions,
-        lang=lang
-    )
+        return jsonify({
+            "status": "success",
+            "redirect": f"/thankyou/{branch}/{location}/{room}"
+        })
 
+    return jsonify({
+        "status": "need_phone",
+        "rating": rating,
+        "comment": comment
+    })
+
+
+return render_template(
+    "feedback.html",
+    room_name=room_name,
+    branch=branch,
+    room=room,
+    location=key,
+    questions=questions,
+    lang=lang
+)
 from datetime import datetime
 
 
