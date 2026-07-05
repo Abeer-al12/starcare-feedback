@@ -1166,7 +1166,7 @@ def download_pdf():
             questions_text += f"• {name}: {value}/5<br/>"
 
         if not questions_text:
-            questions_text = "-"
+            questions_text = "-" 
 
     # ===========================
     # Comment
