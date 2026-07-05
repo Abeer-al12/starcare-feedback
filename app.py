@@ -1890,21 +1890,37 @@ def qr_dashboard():
             })
 
     # 2️⃣ الباركودات الجديدة (من DB)
+    # 2️⃣ الباركودات الجديدة (من DB)
     qrs = list(db.qr_codes.find())
 
     for qr in qrs:
 
-        rooms_data.append({
+        feedback_count = collection.count_documents({
             "branch": qr.get("branch"),
-            "room": qr.get("location"),
-            "name": room_names.get(qr.get("location"), qr.get("location")),
+            "location": qr.get("location"),
+            "room_number": qr.get("room_number")
+        })
 
-            "count": collection.count_documents({
-                "branch": qr.get("branch"),
-                "location": qr.get("location")
-            }),
+        rooms_data.append({
 
-            "qr": qr.get("url")
+            "_id": str(qr["_id"]),
+
+            "branch": qr.get("branch"),
+
+            "location": qr.get("location"),
+
+            "room_number": qr.get("room_number"),
+
+            "room_display": qr.get(
+                "room_display",
+                f'{qr.get("location").title()} {qr.get("room_number")}'
+            ),
+
+            "count": feedback_count,
+
+            "qr": qr.get("url"),
+
+            "qr_image": qr.get("qr_image")
         })
 
     return render_template("qr_dashboard.html", rooms=rooms_data)

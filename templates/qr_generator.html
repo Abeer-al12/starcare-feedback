@@ -104,6 +104,22 @@
             margin-top: 10px;
             word-break: break-all;
         }
+
+        .back-btn {
+            display: inline-block;
+            margin-bottom: 15px;
+            text-decoration: none;
+            color: white;
+            background: #00A79B;
+            padding: 10px 18px;
+            border-radius: 12px;
+            font-weight: bold;
+            transition: .3s;
+        }
+
+        .back-btn:hover {
+            background: #008f86;
+        }
     </style>
 </head>
 
@@ -113,6 +129,9 @@
 
         <div class="card">
 
+            <a href="/qr_dashboard" class="back-btn">
+                ← Back to Dashboard
+            </a>
             <!-- HEADER -->
             <div class="header">
                 <h2>QR Generator</h2>
