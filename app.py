@@ -1138,6 +1138,9 @@ def download_pdf():
 
     for item in data:
 
+        import pprint
+        pprint.pprint(item.get("questions"))
+
     # ===========================
     # Date & Time
     # ===========================
