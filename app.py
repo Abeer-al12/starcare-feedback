@@ -405,48 +405,34 @@ def get_questions(room):
 
 
 
-@app.route('/feedback/<branch>/<room>', methods=['GET', 'POST'])
-def feedback(branch, room):
+@app.route('/feedback/<branch>/<room_display>')
+def feedback(branch, room_display):
 
-    # جلب الأسئلة + اللغة
     lang = request.args.get("lang", "en")
 
     questions = get_questions(branch, location, room)
 
-    print(questions)
-
     room_name = f"{location} {room}"
 
     room_lower = room.lower()
-    location_lower = location.lower()
+    location, room_number = room_display.split("_")
 
-# تحديد نوع السؤال من QUESTIONS
     if "reception" in room_lower:
         key = "reception"
-
     elif "waiting" in room_lower:
         key = "waiting"
-
     elif "consultation" in room_lower or "doctor" in room_lower:
         key = "consultation"
-
     elif "xray" in room_lower:
         key = "xray"
-
     elif "lab" in room_lower:
         key = "lab"
-
     elif "pharmacy" in room_lower:
         key = "pharmacy"
-
     elif "toilet" in room_lower:
         key = "toilet"
-
     else:
         key = "consultation"
-
-
-    # ================= POST =================
 
     if request.method == "POST":
 
@@ -455,51 +441,44 @@ def feedback(branch, room):
         rating = data.get("rating")
         comment = data.get("comment")
 
-    if not rating:
-        return jsonify({"error": "missing rating"})
+        if not rating:
+            return jsonify({"error": "missing rating"})
 
-    rating = int(rating)
+        rating = int(rating)
 
-    if rating >= 4:
+        if rating >= 4:
 
-        collection.insert_one({
-            "branch": branch,
-            "location": location,   # 🔥 مهم (مو room إذا عندك location)
-            "room": room,
-            "rating": rating,
-            "comment": comment,
-            "phone": None,
-            "name": None,
-            "date": datetime.now(),
+            collection.insert_one({
+                "branch": branch,
+                "location": location,
+                "room": room,
+                "rating": rating,
+                "comment": comment,
+                "date": datetime.now()
+            })
 
-            "answers": {
-                "category": data.get("category"),
-                "speed": data.get("speed"),
-                "behavior": data.get("behavior")
-            }
-        })
+            return jsonify({
+                "status": "success",
+                "redirect": f"/thankyou/{branch}/{location}/{room}"
+            })
 
         return jsonify({
-            "status": "success",
-            "redirect": f"/thankyou/{branch}/{location}/{room}"
+            "status": "need_phone",
+            "rating": rating,
+            "comment": comment
         })
 
-    return jsonify({
-        "status": "need_phone",
-        "rating": rating,
-        "comment": comment
-    })
+    return render_template(
+        "feedback.html",
+        room_name=room_name,
+        branch=branch,
+        room=room,
+        location=key,
+        questions=questions,
+        lang=lang
+    )
 
 
-return render_template(
-    "feedback.html",
-    room_name=room_name,
-    branch=branch,
-    room=room,
-    location=key,
-    questions=questions,
-    lang=lang
-)
 from datetime import datetime
 
 
@@ -1782,6 +1761,7 @@ def generate_qr():
     if 'admin' not in session:
         return redirect('/login')
 
+
     qr_image = None
     url = None
 
@@ -1791,11 +1771,9 @@ def generate_qr():
         location = request.form.get("location")
         room_number = request.form.get("room_number").strip().lower().replace(" ", "_")
 
-        # ⭐ اسم الغرفة الحقيقي
         room_display = f"{location} {room_number}"
 
-        # ⭐ الرابط
-        url = f"https://starcare-feedback-1.onrender.com/feedback/{branch}/{location}/{room_number}"
+       url = f"https://starcare-feedback-1.onrender.com/feedback/{branch}/{room_display}"
 
         qr = qrcode.make(url)
 
@@ -1809,7 +1787,7 @@ def generate_qr():
             "branch": branch,
             "location": location,
             "room_number": room_number,
-            "room_display": room_display,   # ⭐ مهم
+            "room_display": room_display,
             "url": url,
             "qr_image": img_base64,
             "created_at": datetime.now()
