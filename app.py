@@ -1448,11 +1448,13 @@ def download_excel():
     ws["A1"].font = Font(size=18, bold=True, color="FFFFFF")
     ws["A1"].fill = PatternFill("solid", fgColor="00A79B")
 
+   oman_time = datetime.now(ZoneInfo("Asia/Muscat"))
+
     ws["A3"] = "Report Date"
-    ws["B3"] = datetime.now().strftime("%Y-%m-%d")
+    ws["B3"] = oman_time.strftime("%Y-%m-%d")
 
     ws["A4"] = "Report Time"
-    ws["B4"] = datetime.now().strftime("%I:%M %p")
+    ws["B4"] = oman_time.strftime("%I:%M %p")
 
     ws["A5"] = "Branch"
     ws["B5"] = branch if branch else "All Branches"
