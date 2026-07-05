@@ -405,8 +405,8 @@ def get_questions(room):
 
 
 
-@app.route('/feedback/<branch>/<room>', methods=['GET', 'POST'])
-def feedback(branch, room):
+@app.route('/feedback/<branch>/<location>/<room>', methods=['GET', 'POST'])
+def feedback(branch, location, room):
 
     # جلب الأسئلة + اللغة
     lang = request.args.get("lang", "en")
@@ -418,6 +418,7 @@ def feedback(branch, room):
     room_name = room_names.get(room, room)
 
     room_lower = room.lower()
+    location_lower = location.lower()
 
 # تحديد نوع السؤال من QUESTIONS
     if "reception" in room_lower:
@@ -465,7 +466,8 @@ def feedback(branch, room):
 
             collection.insert_one({
                 "branch": branch,
-                "location": room,
+                "location": location,
+                "room": room,
                 "rating": rating,
                 "comment": comment,
                 "phone": None,
