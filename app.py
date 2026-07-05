@@ -411,7 +411,7 @@ def feedback(branch, location, room):
     # جلب الأسئلة + اللغة
     lang = request.args.get("lang", "en")
 
-    questions = get_questions(room)
+    questions = get_questions(f"{branch}_{location}")
 
     print(questions)
 
@@ -1793,28 +1793,11 @@ def generate_qr():
 
         branch = request.form.get("branch")
         location = request.form.get("location")
-        room_number = request.form.get("room").strip().lower().replace(" ", "_")
+        room_name = request.form.get("room").strip().lower().replace(" ", "_")
 
-        room_name = f"{location}-{room_number}"  # 👈 أو خليها location + room
-        # predefined = request.form.getlist("predefined")
-        
-        # questions_list = request.form.getlist("questions")
+        # 🔥 URL الصحيح (3 أجزاء)
+        url = f"https://starcare-feedback-1.onrender.com/feedback/{branch}/{location}/{room_name}"
 
-        # questions_list = [q.strip() for q in questions_list if q.strip()]
-
-        # questions_list = []
-
-# predefined
-        # if predefined:
-        #     questions_list.extend(predefined)
-
-# custom
-        # if custom_raw:
-        #     questions_list.extend([
-        #         q.strip() for q in custom_raw.split(",") if q.strip()
-        #     ])
-        # 🔥 URL موحد
-        url = f"https://starcare-feedback-1.onrender.com/feedback/{branch}/{location}/{room_number}"
         qr = qrcode.make(url)
 
         buffer = BytesIO()
@@ -1823,23 +1806,23 @@ def generate_qr():
 
         img_base64 = base64.b64encode(buffer.getvalue()).decode()
 
-
-
-        # 🔥 حفظ في DB
+        # حفظ في DB (بدون تغيير كبير)
         db.qr_codes.insert_one({
             "branch": branch,
             "location": location,
             "room_name": room_name,
-            "room_number": room_number,
             "url": url,
             "qr_image": img_base64,
             "created_at": datetime.now()
         })
+
         qr_image = img_base64
 
-    return render_template("qr_generator.html",
-                           qr_image=qr_image,
-                           url=url)
+    return render_template(
+        "qr_generator.html",
+        qr_image=qr_image,
+        url=url
+    )
 # ---------------- QR DASHBOARD ----------------
 @app.route('/qr_dashboard')
 def qr_dashboard():
