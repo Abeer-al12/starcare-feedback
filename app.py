@@ -415,7 +415,7 @@ def feedback(branch, location, room):
 
     print(questions)
 
-    room_name = room_names.get(room_number, room_number)
+    room_name = room_names.get(room, room)
 
     room_lower = room.lower()
     location_lower = location.lower()
@@ -1792,9 +1792,10 @@ def generate_qr():
     if request.method == "POST":
 
         branch = request.form.get("branch")
-        room_name = request.form.get("room_name")
-        room_number = request.form.get("room").strip().lower().replace(" ", "_")
         location = request.form.get("location")
+        room_number = request.form.get("room").strip().lower().replace(" ", "_")
+
+        room_name = f"{location}-{room_number}"  # 👈 أو خليها location + room
         # predefined = request.form.getlist("predefined")
         
         # questions_list = request.form.getlist("questions")
@@ -1832,7 +1833,6 @@ def generate_qr():
             "room_number": room_number,
             "url": url,
             "qr_image": img_base64,
-            # "questions": questions_list,
             "created_at": datetime.now()
         })
         qr_image = img_base64
@@ -1881,8 +1881,8 @@ def qr_dashboard():
 
         rooms_data.append({
             "branch": qr.get("branch"),
-            "room": qr.get("location"),
-            "name": room_names.get(qr.get("location"), qr.get("location")),
+            "room": qr.get("room_number"),
+            "name": qr.get("room_name", qr.get("room_number")),
 
             "count": collection.count_documents({
                 "branch": qr.get("branch"),
