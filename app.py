@@ -1816,11 +1816,11 @@ def generate_qr():
 
         qr_image = img_base64
 
-    return render_template(
-        "qr_generator.html",
-        qr_image=qr_image,
-        url=url
-    )
+return render_template(
+    "qr_generator.html",
+    qr_image=qr_image,
+    url=url
+)
 # ---------------- QR DASHBOARD ----------------
 @app.route('/qr_dashboard')
 def qr_dashboard():
