@@ -1138,9 +1138,6 @@ def download_pdf():
 
     for item in data:
 
-        import pprint
-        pprint.pprint(item.get("questions"))
-
     # ===========================
     # Date & Time
     # ===========================
@@ -1163,7 +1160,10 @@ def download_pdf():
         questions_text = ""
 
         for q in item.get("questions", []):
-            questions_text += f"{q['title']}: {q['value']}/5<br/>"
+            name = q.get("name", "Question")
+            value = q.get("value", "-")
+
+            questions_text += f"• {name}: {value}/5<br/>"
 
         if not questions_text:
             questions_text = "-"
