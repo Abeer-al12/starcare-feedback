@@ -415,7 +415,7 @@ def feedback(branch, room):
 
     print(questions)
 
-    room_name = room_names.get(room, room)
+    room_name = f"{location.upper()} - Room {room}"
 
     room_lower = room.lower()
     location_lower = location.lower()
@@ -1788,9 +1788,12 @@ def generate_qr():
     if request.method == "POST":
 
         branch = request.form.get("branch")
-        location = request.form.get("location").strip().lower().replace(" ", "_")
+        room_number = request.form.get("room_number")
+        location = request.form.get("location")
 
-        url = f"https://starcare-feedback-1.onrender.com/feedback/{branch}/{room}"
+        display_name = f"{location.title()} {room_number}"
+
+        url = f"https://starcare-feedback-1.onrender.com/feedback/{branch}/{location}/{room_number}"
 
         qr = qrcode.make(url)
 
