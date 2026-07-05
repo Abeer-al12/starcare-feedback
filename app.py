@@ -1509,7 +1509,8 @@ def download_excel():
         "Branch",
         "Department",
         "Room",
-        "Rating",
+        "Questions & Ratings",
+        "Average",
         "Comment",
         "Name",
         "Phone"
@@ -1542,13 +1543,28 @@ def download_excel():
             date_str = "-"
             time_str = "-"
 
+        questions = item.get("questions", [])
+
+        questions_text = ""
+        values = []
+
+        for q in questions:
+            title = q.get("title", "")
+            value = q.get("value", 0)
+
+            questions_text += f"{title}: ⭐ {value}\n"
+            values.append(float(value))
+
+        average = round(sum(values) / len(values), 2) if values else 0
+
         ws.append([
             date_str,
             time_str,
             item.get("branch", "-"),
-            item.get("location", "-"),      # department
-            item.get("room_number", "-"),   # room
-            f"{int(item.get('rating') or 0)}/5",
+            item.get("location", "-"),
+            item.get("room_number", "-"),
+            questions_text,
+            f"{average}/5",
             item.get("comment", ""),
             item.get("name", "-"),
             item.get("phone", "-"),
