@@ -405,8 +405,8 @@ def get_questions(room):
 
 
 
-@app.route('/feedback/<branch>/<location>/<room>', methods=['GET', 'POST'])
-def feedback(branch, location, room):
+@app.route('/feedback/<branch>/<room>', methods=['GET', 'POST'])
+def feedback(branch, room):
 
     # جلب الأسئلة + اللغة
     lang = request.args.get("lang", "en")
@@ -464,15 +464,15 @@ def feedback(branch, location, room):
 
         if rating >= 4:
 
-            collection.insert_one({
+             collection.insert_one({
                 "branch": branch,
-                "location": location,
-                "room": room,
+                "location": room,
                 "rating": rating,
                 "comment": comment,
                 "phone": None,
                 "name": None,
                 "date": datetime.now(),
+
 
     # ⭐ الجديد
                 "answers": {
@@ -484,7 +484,7 @@ def feedback(branch, location, room):
 
             return jsonify({
                 "status": "success",
-                "redirect": f"/thankyou/{branch}/{location}/{room}"
+                "redirect": f"/thankyou/{branch}/{room}"
             })
 
         # ⭐ low rating
@@ -1792,11 +1792,9 @@ def generate_qr():
     if request.method == "POST":
 
         branch = request.form.get("branch")
-        location = request.form.get("location")
-        room_name = request.form.get("room").strip().lower().replace(" ", "_")
+        location = request.form.get("location").strip().lower().replace(" ", "_")
 
-        # 🔥 URL الصحيح (3 أجزاء)
-        url = f"https://starcare-feedback-1.onrender.com/feedback/{branch}/{location}/{room_name}"
+        url = f"https://starcare-feedback-1.onrender.com/feedback/{branch}/{room}"
 
         qr = qrcode.make(url)
 
@@ -1806,15 +1804,19 @@ def generate_qr():
 
         img_base64 = base64.b64encode(buffer.getvalue()).decode()
 
-        # حفظ في DB (بدون تغيير كبير)
-        db.qr_codes.insert_one({
+        existing = db.qr_codes.find_one({
             "branch": branch,
-            "location": location,
-            "room_name": room_name,
-            "url": url,
-            "qr_image": img_base64,
-            "created_at": datetime.now()
+            "location": location
         })
+
+        if not existing:
+            db.qr_codes.insert_one({
+                "branch": branch,
+                "location": location,
+                "url": url,
+                "qr_image": img_base64,
+                "created_at": datetime.now()
+            })
 
         qr_image = img_base64
 
@@ -1864,8 +1866,8 @@ def qr_dashboard():
 
         rooms_data.append({
             "branch": qr.get("branch"),
-            "room": qr.get("room_number"),
-            "name": qr.get("room_name", qr.get("room_number")),
+            "room": qr.get("location"),
+            "name": room_names.get(qr.get("location"), qr.get("location")),
 
             "count": collection.count_documents({
                 "branch": qr.get("branch"),
