@@ -450,10 +450,10 @@ def feedback(branch, room):
 
     if request.method == "POST":
 
-    data = request.get_json()
+        data = request.get_json()
 
-    rating = data.get("rating")
-    comment = data.get("comment")
+        rating = data.get("rating")
+        comment = data.get("comment")
 
     if not rating:
         return jsonify({"error": "missing rating"})
