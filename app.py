@@ -377,31 +377,37 @@ QUESTIONS = {
 }
 
 
-def get_questions(room):
-    room_lower = room.lower()
+# def get_questions(room):
+#     room_lower = room.lower()
 
-    if "reception" in room_lower:
-        return QUESTIONS["reception"]
+#     if "reception" in room_lower:
+#         return QUESTIONS["reception"]
 
-    elif "waiting" in room_lower:
-        return QUESTIONS["waiting"]
+#     elif "waiting" in room_lower:
+#         return QUESTIONS["waiting"]
 
-    elif "consultation" in room_lower or "doctor" in room_lower:
-        return QUESTIONS["consultation"]
+#     elif "consultation" in room_lower or "doctor" in room_lower:
+#         return QUESTIONS["consultation"]
 
-    elif "xray" in room_lower:
-        return QUESTIONS["xray"]
+#     elif "xray" in room_lower:
+#         return QUESTIONS["xray"]
 
-    elif "lab" in room_lower:
-        return QUESTIONS["lab"]
+#     elif "lab" in room_lower:
+#         return QUESTIONS["lab"]
 
-    elif "pharmacy" in room_lower:
-        return QUESTIONS["pharmacy"]
+#     elif "pharmacy" in room_lower:
+#         return QUESTIONS["pharmacy"]
 
-    elif "toilet" in room_lower:
-        return QUESTIONS["toilet"]
+#     elif "toilet" in room_lower:
+#         return QUESTIONS["toilet"]
 
-    return QUESTIONS["consultation"]
+#     return QUESTIONS["consultation"]
+
+def get_questions(location):
+
+    location = location.lower()
+
+    return QUESTIONS.get(location, QUESTIONS["consultation"])
 
 
 
@@ -503,10 +509,26 @@ def feedback(branch, room):
     )
 
 
-# @app.route("/feedback/<branch>/<location>/<room_number>")
-# def feedback_new(branch, location, room_number):
+@app.route("/feedback/<branch>/<location>/<room_number>")
+def feedback_new(branch, location, room_number):
 
-#     room_name = f"{location.title()} {room_number}"
+    lang = request.args.get("lang", "en")
+
+    questions = get_questions(location)
+
+    room_name = f"{location.title()} {room_number}"
+
+    key = location.lower()
+
+    return render_template(
+        "feedback.html",
+        room_name=room_name,
+        branch=branch,
+        room=room_number,
+        location=key,
+        questions=questions,
+        lang=lang
+    )
 
 
 from datetime import datetime
@@ -521,13 +543,13 @@ def save_feedback():
         return jsonify({"success": False, "error": "No data"}), 400
 
     # ⭐ نوع الصفحة (xray / lab / reception ...)
-    room_type = data.get("location")
-
+    location = data.get("location")
+    room_number = data.get("room_number")
     # ⭐ الإجابات
     answers = data.get("answers", [])
 
     # ⭐ جلب الأسئلة حسب النوع
-    questions_list = QUESTIONS.get(room_type, {}).get("en", [])
+    questions_list = QUESTIONS.get(location, {}).get("en", [])
 
     # ⭐ تحويل الإجابات إلى أسئلة منظمة
     questions = []
@@ -542,8 +564,11 @@ def save_feedback():
     feedback = {
         "branch": data.get("branch"),
 
-        "location": room_type,
-        "room_number": data.get("room_number"),
+        "location": location,
+        "room_number": room_number,
+
+    # هذا الجديد
+        "room_display": f"{location.title()} {room_number}",
 
         "questions": questions,
 
