@@ -1130,7 +1130,7 @@ def download_pdf():
         "Branch",
         "Department",
         "Room",
-        "Rating",
+        "Questions",
         "Comment",
         "Name",
         "Phone"
@@ -1138,41 +1138,36 @@ def download_pdf():
 
     for item in data:
 
-        date_obj = item.get("date")
+    # ===========================
+    # Date & Time
+    # ===========================
+        date_str = "-"
+        time_str = "-"
 
-        if isinstance(date_obj, datetime):
-            date_str = date_obj.strftime("%Y-%m-%d")
-            time_str = date_obj.strftime("%I:%M %p")
-        else:
-            date_str = "-"
-            time_str = "-"
+        created = item.get("created_at")
 
-    for item in data:
-
-        date_obj = item.get("date")
-
-        if not date_obj:
-            date_str = "-"
-            time_str = "-"
-        else:
+        if created:
             try:
-                date_str = date_obj.strftime("%Y-%m-%d")
-                time_str = date_obj.strftime("%I:%M %p")
+                dt = datetime.strptime(created, "%Y-%m-%d %I:%M %p")
+                date_str = dt.strftime("%Y-%m-%d")
+                time_str = dt.strftime("%I:%M %p")
             except:
-                date_str = "-"
-                time_str = "-"
+                pass
 
-        rating = item.get("rating", 0)
+    # ===========================
+    # Questions
+    # ===========================
+        questions_text = ""
 
-        try:
-            rating = int(rating)
-        except:
-            rating = 0
+        for q in item.get("questions", []):
+            questions_text += f"{q['title']}: {q['value']}/5<br/>"
 
-        rating = int(item.get("rating") or 0)
+        if not questions_text:
+            questions_text = "-"
 
-        stars = f"{rating} out of 5"
-
+    # ===========================
+    # Comment
+    # ===========================
         comment = item.get("comment", "-")
 
         if len(comment) > 40:
@@ -1184,27 +1179,29 @@ def download_pdf():
             item.get("branch", "-"),
             item.get("location", "-").title(),
             item.get("room_number", "-"),
-            stars,
+            Paragraph(questions_text, styles["BodyText"]),
             comment,
             item.get("name", "-"),
             item.get("phone", "-")
         ])
 
-# 👇 خارج اللوب 100%
+# ===========================
+# Table
+# ===========================
     details_table = Table(
-    details,
-    colWidths=[
-        50,   # Date
-        50,   # Time
-        50,   # Branch
-        75,   # Department
-        55,   # Room
-        45,   # Rating
-        130,  # Comment
-        55,   # Name
-        60    # Phone
-    ]
-)
+        details,
+        colWidths=[
+            50,   # Date
+            50,   # Time
+            50,   # Branch
+            60,   # Department
+            50,   # Room
+            180,  # Questions
+            80,   # Comment
+            55,   # Name
+            60    # Phone
+        ]
+    )
 
     details_table.setStyle(TableStyle([
 
