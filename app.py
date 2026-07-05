@@ -1794,9 +1794,9 @@ def generate_qr():
         location = request.form.get("location")
         # predefined = request.form.getlist("predefined")
         
-        questions_list = request.form.getlist("questions")
+        # questions_list = request.form.getlist("questions")
 
-        questions_list = [q.strip() for q in questions_list if q.strip()]
+        # questions_list = [q.strip() for q in questions_list if q.strip()]
 
         # questions_list = []
 
@@ -1828,7 +1828,7 @@ def generate_qr():
             "room_number": room_number,
             "url": url,
             "qr_image": img_base64,
-            "questions": questions_list,
+            # "questions": questions_list,
             "created_at": datetime.now()
         })
         qr_image = img_base64
