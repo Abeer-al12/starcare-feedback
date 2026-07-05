@@ -405,8 +405,8 @@ def get_questions(room):
 
 
 
-@app.route('/feedback/<branch>/<room_display>')
-def feedback(branch, room_display):
+@app.route('/feedback/<branch>/<room>', methods=['GET', 'POST'])
+def feedback(branch, room):
 
     lang = request.args.get("lang", "en")
 
@@ -415,25 +415,18 @@ def feedback(branch, room_display):
     room_name = f"{location} {room}"
 
     room_lower = room.lower()
-    location, room_number = room_display.split("_")
+    location_lower = location.lower()
 
-    if "reception" in room_lower:
-        key = "reception"
-    elif "waiting" in room_lower:
-        key = "waiting"
-    elif "consultation" in room_lower or "doctor" in room_lower:
-        key = "consultation"
+    if "lab" in room_lower:
+        key = "lab"
     elif "xray" in room_lower:
         key = "xray"
-    elif "lab" in room_lower:
-        key = "lab"
     elif "pharmacy" in room_lower:
         key = "pharmacy"
-    elif "toilet" in room_lower:
-        key = "toilet"
     else:
         key = "consultation"
 
+    # ================= POST =================
     if request.method == "POST":
 
         data = request.get_json()
@@ -448,9 +441,9 @@ def feedback(branch, room_display):
 
         if rating >= 4:
 
-            collection.insert_one({
+            db.feedback.insert_one({
                 "branch": branch,
-                "location": location,
+                "location": key,
                 "room": room,
                 "rating": rating,
                 "comment": comment,
@@ -459,7 +452,7 @@ def feedback(branch, room_display):
 
             return jsonify({
                 "status": "success",
-                "redirect": f"/thankyou/{branch}/{location}/{room}"
+                "redirect": f"/thankyou/{branch}/{room}"
             })
 
         return jsonify({
