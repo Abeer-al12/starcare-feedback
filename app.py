@@ -411,11 +411,11 @@ def feedback(branch, room):
     # جلب الأسئلة + اللغة
     lang = request.args.get("lang", "en")
 
-    questions = get_questions(f"{branch}_{location}")
+    questions = get_questions(branch, location, room)
 
     print(questions)
 
-    room_name = f"{location.upper()} - Room {room}"
+    room_name = f"{location} {room}"
 
     room_lower = room.lower()
     location_lower = location.lower()
@@ -1788,11 +1788,13 @@ def generate_qr():
     if request.method == "POST":
 
         branch = request.form.get("branch")
-        room_number = request.form.get("room_number")
         location = request.form.get("location")
+        room_number = request.form.get("room_number").strip().lower().replace(" ", "_")
 
-        display_name = f"{location.title()} {room_number}"
+        # ⭐ اسم الغرفة الحقيقي
+        room_display = f"{location} {room_number}"
 
+        # ⭐ الرابط
         url = f"https://starcare-feedback-1.onrender.com/feedback/{branch}/{location}/{room_number}"
 
         qr = qrcode.make(url)
@@ -1803,27 +1805,21 @@ def generate_qr():
 
         img_base64 = base64.b64encode(buffer.getvalue()).decode()
 
-        existing = db.qr_codes.find_one({
+        db.qr_codes.insert_one({
             "branch": branch,
-            "location": location
+            "location": location,
+            "room_number": room_number,
+            "room_display": room_display,   # ⭐ مهم
+            "url": url,
+            "qr_image": img_base64,
+            "created_at": datetime.now()
         })
-
-        if not existing:
-            db.qr_codes.insert_one({
-                "branch": branch,
-                "location": location,
-                "url": url,
-                "qr_image": img_base64,
-                "created_at": datetime.now()
-            })
 
         qr_image = img_base64
 
-    return render_template(
-        "qr_generator.html",
-        qr_image=qr_image,
-        url=url
-    )
+    return render_template("qr_generator.html",
+                           qr_image=qr_image,
+                           url=url)
 # ---------------- QR DASHBOARD ----------------
 @app.route('/qr_dashboard')
 def qr_dashboard():
