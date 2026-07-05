@@ -597,6 +597,19 @@ def thankyou(branch, room):
         room=room,
         room_name=name
     )
+
+@app.route("/thankyou/<branch>/<location>/<room_number>")
+def thankyou_new(branch, location, room_number):
+
+    room_name = f"{location.title()} {room_number}"
+
+    return render_template(
+        "thankyou.html",
+        branch=branch,
+        location=location,
+        room=room_number,
+        room_name=room_name
+    )
 # ---------------- LOGIN ----------------
 @app.route('/login', methods=['GET','POST'])
 def login():
