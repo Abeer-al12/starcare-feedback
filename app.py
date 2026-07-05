@@ -1790,9 +1790,11 @@ def generate_qr():
     if request.method == "POST":
 
         branch = request.form.get("branch")
+        room_number = request.form.get("room").strip().lower().replace(" ", "_")
         location = request.form.get("location").strip().lower().replace(" ", "_")
 
-        url = f"https://starcare-feedback-1.onrender.com/feedback/{branch}/{room}"
+        # 🔥 URL موحد
+        url = f"https://starcare-feedback-1.onrender.com/feedback/{branch}/{room_number}"
 
         qr = qrcode.make(url)
 
@@ -1802,27 +1804,21 @@ def generate_qr():
 
         img_base64 = base64.b64encode(buffer.getvalue()).decode()
 
-        existing = db.qr_codes.find_one({
+        # 🔥 حفظ في DB
+        db.qr_codes.insert_one({
             "branch": branch,
-            "location": location
+            "room_number": room_number,
+            "location": location,
+            "url": url,
+            "qr_image": img_base64,
+            "created_at": datetime.now()
         })
-
-        if not existing:
-            db.qr_codes.insert_one({
-                "branch": branch,
-                "location": location,
-                "url": url,
-                "qr_image": img_base64,
-                "created_at": datetime.now()
-            })
 
         qr_image = img_base64
 
-    return render_template(
-        "qr_generator.html",
-        qr_image=qr_image,
-        url=url
-    )
+    return render_template("qr_generator.html",
+                           qr_image=qr_image,
+                           url=url)
 # ---------------- QR DASHBOARD ----------------
 @app.route('/qr_dashboard')
 def qr_dashboard():

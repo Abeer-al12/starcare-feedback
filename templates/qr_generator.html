@@ -123,12 +123,13 @@
             <form method="POST" action="/generate_qr">
 
                 <select name="branch" required>
-                    <option value="">Select Branch</option>
                     <option value="alhail">Al Hail</option>
                     <option value="mabella">Mabella</option>
                 </select>
 
-                <input type="text" name="location" placeholder="Room / Department Name" required>
+                <input type="text" name="location" placeholder="Department (e.g Consultation)" required>
+
+                <input type="text" name="room" placeholder="Room Number (e.g Consultation103)" required>
 
                 <button type="submit">Generate QR Code</button>
 
