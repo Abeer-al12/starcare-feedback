@@ -831,7 +831,7 @@ def download_pdf():
     branch = request.args.get("branch") or session.get("active_branch")
     location = request.args.get("location")
     role = session.get("role")
-    room = request.args.get("room")
+    category = request.args.get("category")
 
     filters = []
 
@@ -851,8 +851,8 @@ def download_pdf():
     if location:
         filters.append({"location": location})
 
-    if room:
-        filters.append({"room_number": room})
+    if category:
+        filters.append({"category": category})
 
 # 🔥 combine correctly
     if filters:
@@ -864,19 +864,11 @@ def download_pdf():
     data = list(collection.find(query))
 
     for i in data:
-
+        i["rating"] = float(i.get("rating") or 0)
+        i["category"] = i.get("category", "-")
         i["branch"] = i.get("branch", "-")
         i["location"] = i.get("location", "-")
-        i["room_number"] = i.get("room_number", "-")
         i["comment"] = i.get("comment", "-")
-
-        questions = i.get("questions", [])
-
-        if questions:
-            values = [float(q.get("value", 0)) for q in questions]
-            i["rating"] = round(sum(values) / len(values), 2)
-        else:
-            i["rating"] = 0
 
     # (حذفنا هذا الغلط القديم)
     # data = list(collection.find()) ❌
@@ -968,9 +960,10 @@ def download_pdf():
 
         ["Branch", branch if branch else "All Branches"],
 
-        ["Department", location if location else "All Departments"],
+        ["Location", location if location else "All Locations"],
 
-        ["Room", room if room else "All Rooms"]
+        ["Category", category if category else "All Categories"]
+
     ]
 
     info_table = Table(
@@ -1060,12 +1053,12 @@ def download_pdf():
     elements.append(Spacer(1, 20))
 
     elements.append(
-    Paragraph("<b>Department Performance Summary</b>", styles["Heading2"])
+    Paragraph("<b>Room Performance Summary</b>", styles["Heading2"])
 )
 
     elements.append(Spacer(1,10))
 
-    rows = [["Department", "Feedback", "Average", "Status"]]
+    rows = [["Room", "Feedback", "Average", "Status"]]
 
     for loc, v in stats.items():
 
@@ -1084,7 +1077,7 @@ def download_pdf():
             status = "Critical"
 
         rows.append([
-            loc.title(),
+            room_names.get(loc, loc),
             str(v["count"]),
             f"{avg_loc} ⭐",
             status
@@ -1128,46 +1121,51 @@ def download_pdf():
         "Date",
         "Time",
         "Branch",
-        "Department",
-        "Room",
-        "Questions",
+        "Location",
+        "Rating",
         "Comment",
+        "Patient",
         "Name",
         "Phone"
     ]]
 
     for item in data:
 
-    # ===========================
-    # Date & Time
-    # ===========================
-        date_str = "-"
-        time_str = "-"
+        date_obj = item.get("date")
 
-        created = item.get("created_at")
+        if isinstance(date_obj, datetime):
+            date_str = date_obj.strftime("%Y-%m-%d")
+            time_str = date_obj.strftime("%I:%M %p")
+        else:
+            date_str = "-"
+            time_str = "-"
 
-        if created:
+    for item in data:
+
+        date_obj = item.get("date")
+
+        if not date_obj:
+            date_str = "-"
+            time_str = "-"
+        else:
             try:
-                dt = datetime.strptime(created, "%Y-%m-%d %I:%M %p")
-                date_str = dt.strftime("%Y-%m-%d")
-                time_str = dt.strftime("%I:%M %p")
+                date_str = date_obj.strftime("%Y-%m-%d")
+                time_str = date_obj.strftime("%I:%M %p")
             except:
-                pass
+                date_str = "-"
+                time_str = "-"
 
-    # ===========================
-    # Questions
-    # ===========================
-        questions_text = ""
+        rating = item.get("rating", 0)
 
-        for q in item.get("questions", []):
-            questions_text += f"{q['title']}: {q['value']}/5<br/>"
+        try:
+            rating = int(rating)
+        except:
+            rating = 0
 
-        if not questions_text:
-            questions_text = "-"
+        rating = int(item.get("rating") or 0)
 
-    # ===========================
-    # Comment
-    # ===========================
+        stars = f"{rating} out of 5"
+
         comment = item.get("comment", "-")
 
         if len(comment) > 40:
@@ -1177,29 +1175,28 @@ def download_pdf():
             date_str,
             time_str,
             item.get("branch", "-"),
-            item.get("location", "-").title(),
-            item.get("room_number", "-"),
-            Paragraph(questions_text, styles["BodyText"]),
+            room_names.get(
+                item.get("location", "-"),
+                item.get("location", "-")
+            ),
+            stars,
             comment,
             item.get("name", "-"),
             item.get("phone", "-")
         ])
 
-# ===========================
-# Table
-# ===========================
-details_table = Table(
+# 👇 خارج اللوب 100%
+    details_table = Table(
     details,
     colWidths=[
-        50,   # Date
-        50,   # Time
-        50,   # Branch
-        60,   # Department
-        50,   # Room
-        180,  # Questions
-        80,   # Comment
-        55,   # Name
-        60    # Phone
+        55,
+        55,
+        55,
+        90,
+        55,
+        150,
+        65,
+        70
     ]
 )
 
@@ -1253,8 +1250,7 @@ details_table = Table(
     elements.append(Spacer(1,8))
 
     low_rows = [[
-        "Department",
-        "Room",
+        "Location",
         "Rating",
         "Comment",
         "Phone"
@@ -1272,18 +1268,17 @@ details_table = Table(
                 comment = comment[:40] + "..."
 
             low_rows.append([
-                item.get("location", "-").title(),
-                item.get("room_number", "-"),
+                room_names.get(item.get("location"), item.get("location")),
                 stars,
                 comment,
-                item.get("phone", "-")
+                item.get("phone","-")
             ])
 
     if len(low_rows) > 1:
 
         low_table = Table(
             low_rows,
-            colWidths=[90,60,60,190,80]
+            colWidths=[140,70,220,90]
         )
 
         low_table.setStyle(TableStyle([
@@ -1453,13 +1448,11 @@ def download_excel():
     ws["A1"].font = Font(size=18, bold=True, color="FFFFFF")
     ws["A1"].fill = PatternFill("solid", fgColor="00A79B")
 
-    oman_time = datetime.now(ZoneInfo("Asia/Muscat"))
-
     ws["A3"] = "Report Date"
-    ws["B3"] = oman_time.strftime("%Y-%m-%d")
+    ws["B3"] = datetime.now().strftime("%Y-%m-%d")
 
     ws["A4"] = "Report Time"
-    ws["B4"] = oman_time.strftime("%I:%M %p")
+    ws["B4"] = datetime.now().strftime("%I:%M %p")
 
     ws["A5"] = "Branch"
     ws["B5"] = branch if branch else "All Branches"
@@ -1516,8 +1509,7 @@ def download_excel():
         "Branch",
         "Department",
         "Room",
-        "Questions & Ratings",
-        "Average",
+        "Rating",
         "Comment",
         "Name",
         "Phone"
@@ -1550,28 +1542,13 @@ def download_excel():
             date_str = "-"
             time_str = "-"
 
-        questions = item.get("questions", [])
-
-        questions_text = ""
-        values = []
-
-        for q in questions:
-            title = q.get("title", "")
-            value = q.get("value", 0)
-
-            questions_text += f"{title}: ⭐ {value}\n"
-            values.append(float(value))
-
-        average = round(sum(values) / len(values), 2) if values else 0
-
         ws.append([
             date_str,
             time_str,
             item.get("branch", "-"),
-            item.get("location", "-"),
-            item.get("room_number", "-"),
-            questions_text,
-            f"{average}/5",
+            item.get("location", "-"),      # department
+            item.get("room_number", "-"),   # room
+            f"{int(item.get('rating') or 0)}/5",
             item.get("comment", ""),
             item.get("name", "-"),
             item.get("phone", "-"),
