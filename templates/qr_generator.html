@@ -156,8 +156,18 @@
 
                     <label><b>OR Add Custom Questions</b></label>
 
-                    <textarea name="custom_questions" placeholder="Write custom questions separated by commas"
-                        style="width:100%; padding:10px; border-radius:10px; border:1px solid #ddd;"></textarea>
+                    <div id="questionsContainer">
+
+                        <label><b>Questions</b></label>
+
+                        <div class="q-item">
+                            <input type="text" name="questions" placeholder="Enter question">
+                            <button type="button" onclick="removeQ(this)">❌</button>
+                        </div>
+
+                    </div>
+
+                    <button type="button" onclick="addQ()">+ Add Question</button>
 
                 </div>
 
@@ -184,6 +194,26 @@
 
     </div>
 
+    <script>
+
+        function addQ() {
+
+            let div = document.createElement("div");
+            div.className = "q-item";
+
+            div.innerHTML = `
+        <input type="text" name="questions" placeholder="Enter question">
+        <button type="button" onclick="removeQ(this)">❌</button>
+    `;
+
+            document.getElementById("questionsContainer").appendChild(div);
+        }
+
+        function removeQ(btn) {
+            btn.parentElement.remove();
+        }
+
+    </script>
 </body>
 
 </html>

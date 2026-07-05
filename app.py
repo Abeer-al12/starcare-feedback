@@ -1792,20 +1792,23 @@ def generate_qr():
         branch = request.form.get("branch")
         room_number = request.form.get("room").strip().lower().replace(" ", "_")
         location = request.form.get("location")
-        predefined = request.form.getlist("predefined")
-        custom_raw = request.form.get("custom_questions")
+        # predefined = request.form.getlist("predefined")
+        
+        questions_list = request.form.getlist("questions")
 
-        questions_list = []
+        questions_list = [q.strip() for q in questions_list if q.strip()]
+
+        # questions_list = []
 
 # predefined
-        if predefined:
-            questions_list.extend(predefined)
+        # if predefined:
+        #     questions_list.extend(predefined)
 
 # custom
-        if custom_raw:
-            questions_list.extend([
-                q.strip() for q in custom_raw.split(",") if q.strip()
-            ])
+        # if custom_raw:
+        #     questions_list.extend([
+        #         q.strip() for q in custom_raw.split(",") if q.strip()
+        #     ])
         # 🔥 URL موحد
         url = f"https://starcare-feedback-1.onrender.com/feedback/{branch}/{location}/{room_number}"
         qr = qrcode.make(url)
