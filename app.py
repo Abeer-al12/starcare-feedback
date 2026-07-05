@@ -831,7 +831,7 @@ def download_pdf():
     branch = request.args.get("branch") or session.get("active_branch")
     location = request.args.get("location")
     role = session.get("role")
-    category = request.args.get("category")
+    room = request.args.get("room")
 
     filters = []
 
@@ -851,8 +851,8 @@ def download_pdf():
     if location:
         filters.append({"location": location})
 
-    if category:
-        filters.append({"category": category})
+    if room:
+        filters.append({"room_number": room})
 
 # 🔥 combine correctly
     if filters:
@@ -864,11 +864,19 @@ def download_pdf():
     data = list(collection.find(query))
 
     for i in data:
-        i["rating"] = float(i.get("rating") or 0)
-        i["category"] = i.get("category", "-")
+
         i["branch"] = i.get("branch", "-")
         i["location"] = i.get("location", "-")
+        i["room_number"] = i.get("room_number", "-")
         i["comment"] = i.get("comment", "-")
+
+        questions = i.get("questions", [])
+
+        if questions:
+            values = [float(q.get("value", 0)) for q in questions]
+            i["rating"] = round(sum(values) / len(values), 2)
+        else:
+            i["rating"] = 0
 
     # (حذفنا هذا الغلط القديم)
     # data = list(collection.find()) ❌
@@ -960,10 +968,9 @@ def download_pdf():
 
         ["Branch", branch if branch else "All Branches"],
 
-        ["Location", location if location else "All Locations"],
+        ["Department", location if location else "All Departments"],
 
-        ["Category", category if category else "All Categories"]
-
+        ["Room", room if room else "All Rooms"]
     ]
 
     info_table = Table(
@@ -1053,12 +1060,12 @@ def download_pdf():
     elements.append(Spacer(1, 20))
 
     elements.append(
-    Paragraph("<b>Room Performance Summary</b>", styles["Heading2"])
+    Paragraph("<b>Department Performance Summary</b>", styles["Heading2"])
 )
 
     elements.append(Spacer(1,10))
 
-    rows = [["Room", "Feedback", "Average", "Status"]]
+    rows = [["Department", "Feedback", "Average", "Status"]]
 
     for loc, v in stats.items():
 
@@ -1077,7 +1084,7 @@ def download_pdf():
             status = "Critical"
 
         rows.append([
-            room_names.get(loc, loc),
+            loc.title(),
             str(v["count"]),
             f"{avg_loc} ⭐",
             status
@@ -1121,10 +1128,10 @@ def download_pdf():
         "Date",
         "Time",
         "Branch",
-        "Location",
+        "Department",
+        "Room",
         "Rating",
         "Comment",
-        "Patient",
         "Name",
         "Phone"
     ]]
@@ -1175,10 +1182,8 @@ def download_pdf():
             date_str,
             time_str,
             item.get("branch", "-"),
-            room_names.get(
-                item.get("location", "-"),
-                item.get("location", "-")
-            ),
+            item.get("location", "-").title(),
+            item.get("room_number", "-"),
             stars,
             comment,
             item.get("name", "-"),
@@ -1189,14 +1194,15 @@ def download_pdf():
     details_table = Table(
     details,
     colWidths=[
-        55,
-        55,
-        55,
-        90,
-        55,
-        150,
-        65,
-        70
+        50,   # Date
+        50,   # Time
+        50,   # Branch
+        75,   # Department
+        55,   # Room
+        45,   # Rating
+        130,  # Comment
+        55,   # Name
+        60    # Phone
     ]
 )
 
@@ -1250,7 +1256,8 @@ def download_pdf():
     elements.append(Spacer(1,8))
 
     low_rows = [[
-        "Location",
+        "Department",
+        "Room",
         "Rating",
         "Comment",
         "Phone"
@@ -1268,17 +1275,18 @@ def download_pdf():
                 comment = comment[:40] + "..."
 
             low_rows.append([
-                room_names.get(item.get("location"), item.get("location")),
+                item.get("location", "-").title(),
+                item.get("room_number", "-"),
                 stars,
                 comment,
-                item.get("phone","-")
+                item.get("phone", "-")
             ])
 
     if len(low_rows) > 1:
 
         low_table = Table(
             low_rows,
-            colWidths=[140,70,220,90]
+            colWidths=[90,60,60,190,80]
         )
 
         low_table.setStyle(TableStyle([
