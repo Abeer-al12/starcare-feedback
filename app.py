@@ -415,7 +415,7 @@ def feedback(branch, location, room):
 
     print(questions)
 
-    room_name = room_names.get(room, room)
+    room_name = room_names.get(room_number, room_number)
 
     room_lower = room.lower()
     location_lower = location.lower()
@@ -1792,6 +1792,7 @@ def generate_qr():
     if request.method == "POST":
 
         branch = request.form.get("branch")
+        room_name = request.form.get("room_name")
         room_number = request.form.get("room").strip().lower().replace(" ", "_")
         location = request.form.get("location")
         # predefined = request.form.getlist("predefined")
@@ -1827,6 +1828,7 @@ def generate_qr():
         db.qr_codes.insert_one({
             "branch": branch,
             "location": location,
+            "room_name": room_name,
             "room_number": room_number,
             "url": url,
             "qr_image": img_base64,
