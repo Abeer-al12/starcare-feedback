@@ -1792,7 +1792,20 @@ def generate_qr():
         branch = request.form.get("branch")
         room_number = request.form.get("room").strip().lower().replace(" ", "_")
         location = request.form.get("location").strip().lower().replace(" ", "_")
+        predefined = request.form.getlist("predefined")
+        custom_raw = request.form.get("custom_questions")
 
+        questions_list = []
+
+# predefined
+        if predefined:
+            questions_list.extend(predefined)
+
+# custom
+        if custom_raw:
+            questions_list.extend([
+                q.strip() for q in custom_raw.split(",") if q.strip()
+            ])
         # 🔥 URL موحد
         url = f"https://starcare-feedback-1.onrender.com/feedback/{branch}/{room_number}"
 
@@ -1804,16 +1817,17 @@ def generate_qr():
 
         img_base64 = base64.b64encode(buffer.getvalue()).decode()
 
+
+
         # 🔥 حفظ في DB
         db.qr_codes.insert_one({
             "branch": branch,
-            "room_number": room_number,
             "location": location,
             "url": url,
             "qr_image": img_base64,
+            "questions": questions_list,
             "created_at": datetime.now()
         })
-
         qr_image = img_base64
 
     return render_template("qr_generator.html",

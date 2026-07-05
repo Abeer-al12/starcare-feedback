@@ -127,9 +127,32 @@
                     <option value="mabella">Mabella</option>
                 </select>
 
-                <input type="text" name="location" placeholder="Department (e.g Consultation)" required>
-
+                <input type="text" name="location" placeholder="Room Name (e.g Consultation103)" required>
                 <input type="text" name="room" placeholder="Room Number (e.g Consultation103)" required>
+
+                <div style="margin-top:15px; text-align:left;">
+
+                    <label><b>Select Predefined Questions</b></label>
+
+                    <select id="predefined" multiple
+                        style="width:100%; padding:10px; border-radius:10px; border:1px solid #ddd;">
+
+                        <option value="Cleanliness">Cleanliness</option>
+                        <option value="Service">Service</option>
+                        <option value="Waiting Time">Waiting Time</option>
+                        <option value="Staff Behavior">Staff Behavior</option>
+                        <option value="Communication">Communication</option>
+
+                    </select>
+
+                    <br><br>
+
+                    <label><b>OR Add Custom Questions</b></label>
+
+                    <textarea name="custom_questions" placeholder="Write custom questions separated by commas"
+                        style="width:100%; padding:10px; border-radius:10px; border:1px solid #ddd;"></textarea>
+
+                </div>
 
                 <button type="submit">Generate QR Code</button>
 
