@@ -175,6 +175,15 @@ branch_rooms_map = {
     ]
 }
 
+
+location_names = {
+    "consultation": "Consultation",
+    "reception": "Reception",
+    "pharmacy": "Pharmacy",
+    "lab": "Laboratory",
+    "xray": "X-Ray",
+    "it": "IT Department"
+}
 # RECEPTION = [
 #     {
 #         "name": "welcome",
@@ -926,11 +935,27 @@ def download_pdf():
     data = list(collection.find(query))
 
     for i in data:
-        i["rating"] = float(i.get("rating") or 0)
+
         i["category"] = i.get("category", "-")
         i["branch"] = i.get("branch", "-")
         i["location"] = i.get("location", "-")
+        i["room_number"] = i.get("room_number", "-")
         i["comment"] = i.get("comment", "-")
+        i["questions"] = i.get("questions", [])
+
+    # حساب Overall Rating
+        if i.get("rating") is not None:
+            i["rating"] = float(i["rating"])
+        else:
+            values = []
+
+            for q in i["questions"]:
+                try:
+                    values.append(float(q.get("value", 0)))
+                except:
+                    pass
+
+            i["rating"] = round(sum(values) / len(values), 1) if values else 0
 
     # (حذفنا هذا الغلط القديم)
     # data = list(collection.find()) ❌
@@ -951,9 +976,25 @@ def download_pdf():
 
     stats = {}
 
-    for i in data:
+    for item in data:
 
-        loc = i["location"]
+        loc = item.get("location", "-")
+
+        overall = item.get("rating")
+
+        if overall is None:
+
+            questions = item.get("questions", [])
+
+            values = []
+
+            for q in questions:
+                try:
+                    values.append(float(q.get("value", 0)))
+                except:
+                    pass
+
+            overall = round(sum(values) / len(values), 2) if values else 0
 
         if loc not in stats:
             stats[loc] = {
@@ -962,7 +1003,7 @@ def download_pdf():
             }
 
         stats[loc]["count"] += 1
-        stats[loc]["total"] += i["rating"]
+        stats[loc]["total"] += overall
 
 
 
@@ -1013,12 +1054,12 @@ def download_pdf():
 # ===========================
 # Report Information
 # ===========================
-
+    oman_time = datetime.now(ZoneInfo("Asia/Muscat"))
     report_info = [
 
-        ["Report Date", datetime.now().strftime("%d %b %Y")],
+        ["Report Date", oman_time.strftime("%d %b %Y")],
 
-        ["Report Time", datetime.now().strftime("%I:%M %p")],
+        ["Report Time", oman_time.strftime("%I:%M %p")],
 
         ["Branch", branch if branch else "All Branches"],
 
@@ -1115,12 +1156,12 @@ def download_pdf():
     elements.append(Spacer(1, 20))
 
     elements.append(
-    Paragraph("<b>Room Performance Summary</b>", styles["Heading2"])
+    Paragraph("<b>Department Performance Summary</b>", styles["Heading2"])
 )
 
     elements.append(Spacer(1,10))
 
-    rows = [["Room", "Feedback", "Average", "Status"]]
+    rows = [["Department", "Feedback", "Average", "Status"]]
 
     for loc, v in stats.items():
 
@@ -1139,7 +1180,7 @@ def download_pdf():
             status = "Critical"
 
         rows.append([
-            room_names.get(loc, loc),
+            location_names.get(loc, loc),
             str(v["count"]),
             f"{avg_loc} ⭐",
             status
@@ -1183,84 +1224,93 @@ def download_pdf():
         "Date",
         "Time",
         "Branch",
-        "Location",
-        "Rating",
+        "Department",
+        "Overall",
+        "Questions",
         "Comment",
-        "Patient",
         "Name",
         "Phone"
     ]]
 
     for item in data:
 
-        date_obj = item.get("date")
+    # -----------------------
+    # Date & Time
+    # -----------------------
+        date_obj = item.get("created_at") or item.get("date")
+
+        date_str = "-"
+        time_str = "-"
 
         if isinstance(date_obj, datetime):
+
+            if date_obj.tzinfo is None:
+                date_obj = date_obj.replace(tzinfo=ZoneInfo("UTC"))
+
+            date_obj = date_obj.astimezone(ZoneInfo("Asia/Muscat"))
+
             date_str = date_obj.strftime("%Y-%m-%d")
             time_str = date_obj.strftime("%I:%M %p")
-        else:
-            date_str = "-"
-            time_str = "-"
 
-    for item in data:
+    # -----------------------
+    # Overall Rating
+    # -----------------------
+        overall = item.get("rating")
 
-        date_obj = item.get("date")
+        if overall is None:
 
-        if not date_obj:
-            date_str = "-"
-            time_str = "-"
-        else:
-            try:
-                date_str = date_obj.strftime("%Y-%m-%d")
-                time_str = date_obj.strftime("%I:%M %p")
-            except:
-                date_str = "-"
-                time_str = "-"
+            values = []
 
-        rating = item.get("rating", 0)
+            for q in item.get("questions", []):
+                try:
+                    values.append(float(q.get("value", 0)))
+                except:
+                    pass
 
-        try:
-            rating = int(rating)
-        except:
-            rating = 0
+            overall = round(sum(values) / len(values), 1) if values else 0
 
-        rating = int(item.get("rating") or 0)
+        stars = f"{overall}/5"
 
-        stars = f"{rating} out of 5"
+    # -----------------------
+    # Questions
+    # -----------------------
+        questions_text = ""
 
-        comment = item.get("comment", "-")
+        for q in item.get("questions", []):
 
-        if len(comment) > 40:
-            comment = comment[:40] + "..."
+            questions_text += (
+                f"• {q.get('title')}: "
+                f"{q.get('value')}/5<br/>"
+            )
+
+        if not questions_text:
+            questions_text = "-"
+
+        comment = item.get("comment") or "-"
 
         details.append([
             date_str,
             time_str,
             item.get("branch", "-"),
-            room_names.get(
-                item.get("location", "-"),
-                item.get("location", "-")
-            ),
+            item.get("location", "-"),
             stars,
+            Paragraph(questions_text, styles["BodyText"]),
             comment,
             item.get("name", "-"),
             item.get("phone", "-")
         ])
 
-# 👇 خارج اللوب 100%
-    details_table = Table(
-    details,
-    colWidths=[
-        55,
-        55,
-        55,
-        90,
-        55,
-        150,
-        65,
-        70
-    ]
-)
+        colWidths=[
+            55,   # Date
+            50,   # Time
+            55,   # Branch
+            65,   # Department
+            45,   # Overall
+            180,  # Questions
+            110,  # Comment
+            60,   # Name
+            70    # Phone
+        ]
 
     details_table.setStyle(TableStyle([
 
