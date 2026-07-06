@@ -1570,7 +1570,8 @@ def download_excel():
         "Branch",
         "Department",
         "Room",
-        "Rating",
+        "Overall Rating",
+        "Questions & Answers",
         "Comment",
         "Name",
         "Phone"
@@ -1603,13 +1604,23 @@ def download_excel():
             date_str = "-"
             time_str = "-"
 
+
+        questions = item.get("questions", [])
+
+        qa = ""
+
+        for i, q in enumerate(questions, start=1):
+            qa += f"{i}. {q.get('title')}\n"
+            qa += f"   Rating: {q.get('value')}/5\n\n"
+
         ws.append([
             date_str,
             time_str,
             item.get("branch", "-"),
-            item.get("location", "-"),      # department
-            item.get("room_number", "-"),   # room
+            item.get("location", "-"),
+            item.get("room_number", "-"),
             f"{int(item.get('rating') or 0)}/5",
+            qa,
             item.get("comment", ""),
             item.get("name", "-"),
             item.get("phone", "-"),
