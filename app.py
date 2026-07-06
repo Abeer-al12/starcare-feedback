@@ -1303,41 +1303,45 @@ def download_pdf():
     details_table = Table(
         details,
         colWidths=[
-            45,   # Date
+            50,   # Date
             45,   # Time
             55,   # Branch
-            70,   # Department
+            60,   # Department
             45,   # Overall
-            220,  # Questions
+            210,  # Questions
             90,   # Comment
             70,   # Name
-            75    # Phone
-        ]
+            70    # Phone
+        ],
+        repeatRows=1
     )
 
 
     details_table.setStyle(TableStyle([
 
-    ('BACKGROUND',(0,0),(-1,0),colors.HexColor("#00A79B")),
+        ('BACKGROUND',(0,0),(-1,0),colors.HexColor("#00A79B")),
+        ('TEXTCOLOR',(0,0),(-1,0),colors.white),
+        ('FONTNAME',(0,0),(-1,0),"Helvetica-Bold"),
+        ('FONTSIZE',(0,0),(-1,0),10),
 
-    ('TEXTCOLOR',(0,0),(-1,0),colors.white),
+        ('FONTSIZE',(0,1),(-1,-1),8),
 
-    ('FONTNAME',(0,0),(-1,0),"Helvetica-Bold"),
+        ('GRID',(0,0),(-1,-1),0.6,colors.black),
+        ('BOX',(0,0),(-1,-1),1,colors.black),
 
-    ('ALIGN',(0,0),(-1,-1),"CENTER"),
+        ('ALIGN',(0,0),(-1,0),"CENTER"),
+        ('ALIGN',(0,1),(4,-1),"CENTER"),
+        ('VALIGN',(0,0),(-1,-1),"TOP"),
 
-    ('GRID',(0,0),(-1,-1),0.4,colors.grey),
+        ('LEFTPADDING',(0,0),(-1,-1),5),
+        ('RIGHTPADDING',(0,0),(-1,-1),5),
+        ('TOPPADDING',(0,0),(-1,-1),6),
+        ('BOTTOMPADDING',(0,0),(-1,-1),6),
 
-    ('ROWBACKGROUNDS',(0,1),(-1,-1),[
-        colors.white,
-        colors.HexColor("#F8FDFC")
-    ]),
-
-    ('VALIGN',(0,0),(-1,-1),"MIDDLE"),
-
-    ('BOTTOMPADDING',(0,0),(-1,-1),8),
-
-    ('TOPPADDING',(0,0),(-1,-1),8),
+        ('ROWBACKGROUNDS',(0,1),(-1,-1),[
+            colors.white,
+            colors.HexColor("#F5F9F9")
+        ]),
 
     ]))
 
