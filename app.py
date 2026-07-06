@@ -1532,26 +1532,7 @@ def download_excel():
     # ===========================
     # Statistics
     # ===========================
-    ratings = []
-
-    for i in data:
-        try:
-            if i.get("rating") is not None:
-                ratings.append(float(i["rating"]))
-            else:
-                qs = i.get("questions", [])
-                vals = []
-
-                for q in qs:
-                    try:
-                        vals.append(float(q.get("value") or 0))
-                    except:
-                        vals.append(0)
-
-                ratings.append(sum(vals)/len(vals) if vals else 0)
-
-        except:
-            ratings.append(0)
+    ratings = [float(i.get("rating") or 0) for i in data]
 
     total = len(ratings)
     avg = round(sum(ratings)/total, 2) if total else 0
@@ -1613,34 +1594,39 @@ def download_excel():
     # ===========================
     for item in data:
 
-        date_obj = item.get("created_at") or item.get("date")
+        date_obj = item.get("created_at")
 
-    # إذا string
+        if not date_obj:
+            date_obj = item.get("date")
+
+    # إذا كان String نحوله إلى datetime
         if isinstance(date_obj, str):
             try:
-                date_obj = datetime.fromisoformat(date_obj)
+                date_obj = datetime.strptime(
+                    date_obj,
+                    "%Y-%m-%d %I:%M %p"
+                )
+                date_obj = date_obj.replace(tzinfo=ZoneInfo("Asia/Muscat"))
             except:
-                try:
-                    date_obj = datetime.strptime(date_obj, "%Y-%m-%d %I:%M %p")
-                except:
-                    date_obj = None
+                date_obj = None
 
-    # إذا datetime
-        if isinstance(date_obj, datetime):
+    # إذا كان datetime نحوله لتوقيت عمان
+        elif isinstance(date_obj, datetime):
 
-        # إذا بدون timezone → نخليه Muscat مباشرة (الأصح هنا)
+        # إذا datetime بدون timezone
             if date_obj.tzinfo is None:
-                date_obj = date_obj.replace(tzinfo=MUSCAT)
+                date_obj = date_obj.replace(tzinfo=ZoneInfo("UTC"))
 
-            date_obj = date_obj.astimezone(MUSCAT)
+            date_obj = date_obj.astimezone(ZoneInfo("Asia/Muscat"))
 
+    # تنسيق العرض
         if date_obj:
             date_str = date_obj.strftime("%Y-%m-%d")
             time_str = date_obj.strftime("%I:%M %p")
         else:
             date_str = "-"
             time_str = "-"
-
+            
         questions = item.get("questions", [])
 
         qa = ""
