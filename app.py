@@ -587,6 +587,7 @@ def save_feedback():
         "room_display": f"{location.title()} {room_number}",
 
         "questions": questions,
+        "rating": data.get("rating"),
 
         "comment": data.get("comment", ""),
         "name": data.get("name", "-"),
