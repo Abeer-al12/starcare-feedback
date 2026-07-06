@@ -373,7 +373,23 @@ QUESTIONS = {
             "هل كانت جميع المرافق تعمل بشكل صحيح؟",
             "بشكل عام، ما مدى رضاك عن دورة المياه؟"
         ]
-    }
+    },
+    "it": {
+        "en": [
+            "How quickly did the IT team respond to your request?",
+            "Was your issue resolved successfully?",
+            "How professional was the IT support staff?",
+            "How satisfied are you with the communication during the support process?",
+            "Overall, how satisfied are you with the IT service?"
+        ],
+        "ar": [
+            "ما مدى سرعة استجابة فريق تقنية المعلومات لطلبك؟",
+            "هل تم حل المشكلة بنجاح؟",
+            "ما مدى احترافية فريق تقنية المعلومات؟",
+            "ما مدى رضاك عن التواصل أثناء معالجة المشكلة؟",
+            "بشكل عام، ما مدى رضاك عن خدمة تقنية المعلومات؟"
+        ]
+    },
 }
 
 
