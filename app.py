@@ -1497,9 +1497,9 @@ def download_excel():
     data = list(collection.find(query))
 
 
-    if data:
-        print(data[0]["date"])
-        print(type(data[0]["date"]))
+    # if data:
+    #     print(data[0]["date"])
+    #     print(type(data[0]["date"]))
     # ===========================
     # Excel file
     # ===========================
@@ -1612,15 +1612,21 @@ def download_excel():
 
     # إذا كان datetime نحوله لتوقيت عمان
         elif isinstance(date_obj, datetime):
+
+        # إذا datetime بدون timezone
+            if date_obj.tzinfo is None:
+                date_obj = date_obj.replace(tzinfo=ZoneInfo("UTC"))
+
             date_obj = date_obj.astimezone(ZoneInfo("Asia/Muscat"))
 
+    # تنسيق العرض
         if date_obj:
             date_str = date_obj.strftime("%Y-%m-%d")
             time_str = date_obj.strftime("%I:%M %p")
         else:
             date_str = "-"
             time_str = "-"
-
+            
         questions = item.get("questions", [])
 
         qa = ""
