@@ -821,7 +821,7 @@ def add_user():
 def delete_user(username):
 
     if session.get("role") != "admin":
-        return "Forbidden", 403
+        return "Not Allowed", 403
 
     db.users.delete_one({"username": username})
 
@@ -832,7 +832,7 @@ def delete_user(username):
 def manage_users():
 
     if session.get("role") != "admin":
-        return "Forbidden", 403
+        return "Not Allowed", 403
 
     users = list(db.users.find())
 
@@ -842,7 +842,7 @@ def manage_users():
 def add_role():
 
     if session.get("role") != "admin":
-        return "Forbidden", 403
+        return "Not Allowed", 403
 
     if request.method == 'POST':
 
