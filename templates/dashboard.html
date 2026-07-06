@@ -331,7 +331,7 @@
                 <select name="location" onchange="this.form.submit()">
 
                     <option value="" data-en="All Locations" data-ar="كل الأقسام">
-                        All Locations / Services 
+                        All Locations / Services
                     </option>
 
                     {% for l in locations %}
@@ -397,17 +397,44 @@
         <!-- TABLE -->
         <table>
             <tr>
-                <th>Location</th>
-                <th>Room Number</th>
-                <th>Questions</th>
-                <th>Status</th>
-                <th>Date</th>
-                <th>Name</th>
-                <th>Phone</th>
+                <th data-en="Branch" data-ar="الفرع">Branch</th>
+
+                <th data-en="Location" data-ar="القسم">Location</th>
+
+                <th data-en="Room Number" data-ar="رقم الغرفة">
+                    Room Number
+                </th>
+
+                <th data-en="Questions" data-ar="الأسئلة">
+                    Questions
+                </th>
+
+                <th data-en="Status" data-ar="الحالة">
+                    Status
+                </th>
+
+                <th data-en="Date" data-ar="التاريخ">
+                    Date
+                </th>
+
+                <th data-en="Name" data-ar="الاسم">
+                    Name
+                </th>
+
+                <th data-en="Phone" data-ar="رقم الهاتف">
+                    Phone
+                </th>
+
+                {% if role == "admin" %}
+                <th data-en="Action" data-ar="الإجراء">
+                    Action
+                </th>
+                {% endif %}
             </tr>
 
             {% for item in data %}
             <tr>
+                <td>{{ item.branch or "-" }}</td>
                 <td>{{ item.location }}</td>
                 <td>{{ item.room_number or "-" }}</td>
 
