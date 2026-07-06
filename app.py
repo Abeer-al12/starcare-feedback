@@ -2076,9 +2076,12 @@ def delete_qr(qr_id):
     if "admin" not in session:
         return redirect("/login")
 
-    db.qr_codes.delete_one({
-        "_id": ObjectId(qr_id)
-    })
+    try:
+        db.qr_codes.delete_one({
+            "_id": ObjectId(qr_id)
+        })
+    except:
+        return "Invalid ID"
 
     return redirect("/qr_dashboard")
 # @app.route('/fix_branch')
