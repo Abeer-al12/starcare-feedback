@@ -1303,14 +1303,15 @@ def download_pdf():
     details_table = Table(
         details,
         colWidths=[
-            55,
-            55,
-            55,
-            90,
-            55,
-            150,
-            65,
-            70
+            45,   # Date
+            45,   # Time
+            55,   # Branch
+            70,   # Department
+            45,   # Overall
+            220,  # Questions
+            90,   # Comment
+            70,   # Name
+            75    # Phone
         ]
     )
 
