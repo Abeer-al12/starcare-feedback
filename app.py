@@ -1498,7 +1498,8 @@ def download_excel():
 
 
     if data:
-        print(data[0].keys())
+        print(data[0]["date"])
+        print(type(data[0]["date"]))
     # ===========================
     # Excel file
     # ===========================
