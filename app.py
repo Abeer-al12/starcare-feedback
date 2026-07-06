@@ -1300,17 +1300,20 @@ def download_pdf():
             item.get("phone", "-")
         ])
 
+    details_table = Table(
+        details,
         colWidths=[
-            55,   # Date
-            50,   # Time
-            55,   # Branch
-            65,   # Department
-            45,   # Overall
-            180,  # Questions
-            110,  # Comment
-            60,   # Name
-            70    # Phone
+            55,
+            55,
+            55,
+            90,
+            55,
+            150,
+            65,
+            70
         ]
+    )
+
 
     details_table.setStyle(TableStyle([
 
