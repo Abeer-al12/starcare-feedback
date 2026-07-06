@@ -409,7 +409,7 @@
             {% for item in data %}
             <tr>
                 <td>{{ item.location }}</td>
-                <td>{{ item.type }}</td>
+                <td>{{ item.room_number or "-" }}</td>
 
                 <td>
                     {% for q in item.questions %}
