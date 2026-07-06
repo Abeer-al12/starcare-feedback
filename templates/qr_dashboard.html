@@ -224,9 +224,9 @@
                         Copy Link
                     </button>
 
-                    <a href="/delete_qr/{{ room._id }}" class="deleteBtn" onclick="return confirm('Delete this QR?')">
-                        Delete
-                    </a>
+                    <form action="/delete_qr/{{ room._id }}" method="post" onsubmit="return confirm('Delete this QR?')">
+                        <button class="deleteBtn">Delete</button>
+                    </form>
 
                 </div>
 

@@ -2070,7 +2070,7 @@ def qr_dashboard():
     return render_template("qr_dashboard.html", rooms=rooms_data)
 
 
-@app.route("/delete_qr/<qr_id>")
+@app.route("/delete_qr/<qr_id>", methods=["POST"])
 def delete_qr(qr_id):
 
     if "admin" not in session:
