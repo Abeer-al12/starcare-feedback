@@ -1592,11 +1592,23 @@ def download_excel():
 
         date_obj = item.get("created_at")
 
+        if not date_obj:
+            date_obj = item.get("date")
+
+    # إذا كان String نحوله إلى datetime
         if isinstance(date_obj, str):
             try:
-                date_obj = datetime.strptime(date_obj, "%Y-%m-%d %I:%M %p")
+                date_obj = datetime.strptime(
+                    date_obj,
+                    "%Y-%m-%d %I:%M %p"
+                )
+                date_obj = date_obj.replace(tzinfo=ZoneInfo("Asia/Muscat"))
             except:
                 date_obj = None
+
+    # إذا كان datetime نحوله لتوقيت عمان
+        elif isinstance(date_obj, datetime):
+            date_obj = date_obj.astimezone(ZoneInfo("Asia/Muscat"))
 
         if date_obj:
             date_str = date_obj.strftime("%Y-%m-%d")
@@ -1604,7 +1616,6 @@ def download_excel():
         else:
             date_str = "-"
             time_str = "-"
-
 
         questions = item.get("questions", [])
 
