@@ -1497,10 +1497,8 @@ def download_excel():
     data = list(collection.find(query))
 
 
-    if len(data) > 0:
-        print("created_at =", data[0].get("created_at"))
-        print("type =", type(data[0].get("created_at")))
-
+    if data:
+        print(data[0].keys())
     # ===========================
     # Excel file
     # ===========================
