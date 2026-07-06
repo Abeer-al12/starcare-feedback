@@ -1455,6 +1455,8 @@ def download_excel():
     if 'admin' not in session:
         return redirect('/login')
 
+    query = {}
+
     branch = request.args.get("branch") or session.get("active_branch")
     location = request.args.get("location")
     room = request.args.get("room")
@@ -1465,7 +1467,7 @@ def download_excel():
     # =====================
     # Branch filter
     # =====================
-    if branch and branch != "all" and branch != "":
+    if branch and branch != "all":
         filters.append({"branch": branch})
 
     # =====================
@@ -1478,23 +1480,28 @@ def download_excel():
             filters.append({"location": {"$in": allowed_locations}})
 
     # =====================
-    # Location filter
+    # Location filter (department)
     # =====================
     if location:
         filters.append({"location": location})
 
     # =====================
-    # Room filter
+    # Room filter (IMPORTANT)
     # =====================
     if room:
         filters.append({"room_number": room})
 
-    query = {"$and": filters} if filters else {}
+    if filters:
+        query = {"$and": filters}
 
     data = list(collection.find(query))
 
+
+    # if data:
+    #     print(data[0]["date"])
+    #     print(type(data[0]["date"]))
     # ===========================
-    # Excel
+    # Excel file
     # ===========================
     wb = Workbook()
     ws = wb.active
@@ -1514,41 +1521,40 @@ def download_excel():
     ws["B4"] = datetime.now().strftime("%I:%M %p")
 
     ws["A5"] = "Branch"
-    ws["B5"] = branch or "All Branches"
+    ws["B5"] = branch if branch else "All Branches"
 
     ws["A6"] = "Location"
-    ws["B6"] = location or "All Departments"
+    ws["B6"] = location if location else "All Departments"
 
     ws["A7"] = "Room"
-    ws["B7"] = room or "All Rooms"
+    ws["B7"] = room if room else "All Rooms"
 
     # ===========================
-    # Ratings (FIXED)
+    # Statistics
     # ===========================
     ratings = []
 
-    for item in data:
+    for i in data:
+        try:
+            if i.get("rating") is not None:
+                ratings.append(float(i["rating"]))
+            else:
+                qs = i.get("questions", [])
+                vals = []
 
-        # ===== FIX OVERALL RATING =====
-        if item.get("rating") is not None:
-            try:
-                ratings.append(float(item["rating"]))
-            except:
-                ratings.append(0)
-        else:
-            qs = item.get("questions", [])
-            vals = []
+                for q in qs:
+                    try:
+                        vals.append(float(q.get("value") or 0))
+                    except:
+                        vals.append(0)
 
-            for q in qs:
-                try:
-                    vals.append(float(q.get("value") or 0))
-                except:
-                    vals.append(0)
+                ratings.append(sum(vals)/len(vals) if vals else 0)
 
-            ratings.append(round(sum(vals) / len(vals), 2) if vals else 0)
+        except:
+            ratings.append(0)
 
     total = len(ratings)
-    avg = round(sum(ratings) / total, 2) if total else 0
+    avg = round(sum(ratings)/total, 2) if total else 0
 
     five = len([r for r in ratings if r == 5])
     four = len([r for r in ratings if r == 4])
@@ -1578,7 +1584,7 @@ def download_excel():
     ws["E9"] = one
 
     # ===========================
-    # Header
+    # Table Header
     # ===========================
     row = 12
 
@@ -1603,51 +1609,53 @@ def download_excel():
         cell.alignment = Alignment(horizontal="center")
 
     # ===========================
-    # DATA ROWS (FIXED TIME + DATE)
+    # Data rows
     # ===========================
     for item in data:
 
         date_obj = item.get("created_at") or item.get("date")
 
-        date_str = "-"
-        time_str = "-"
-
-        try:
-            # string → datetime
-            if isinstance(date_obj, str):
+    # إذا string
+        if isinstance(date_obj, str):
+            try:
+                date_obj = datetime.fromisoformat(date_obj)
+            except:
                 try:
-                    date_obj = datetime.fromisoformat(date_obj)
-                except:
                     date_obj = datetime.strptime(date_obj, "%Y-%m-%d %I:%M %p")
+                except:
+                    date_obj = None
 
-            # timezone fix
-            if isinstance(date_obj, datetime):
+    # إذا datetime
+        if isinstance(date_obj, datetime):
 
-                if date_obj.tzinfo is None:
-                    date_obj = date_obj.replace(tzinfo=ZoneInfo("UTC"))
+        # إذا بدون timezone → نخليه Muscat مباشرة (الأصح هنا)
+            if date_obj.tzinfo is None:
+                date_obj = date_obj.replace(tzinfo=MUSCAT)
 
-                date_obj = date_obj.astimezone(ZoneInfo("Asia/Muscat"))
+            date_obj = date_obj.astimezone(MUSCAT)
 
-                date_str = date_obj.strftime("%Y-%m-%d")
-                time_str = date_obj.strftime("%I:%M %p")
+        if date_obj:
+            date_str = date_obj.strftime("%Y-%m-%d")
+            time_str = date_obj.strftime("%I:%M %p")
+        else:
+            date_str = "-"
+            time_str = "-"
 
-        except:
-            pass
+        questions = item.get("questions", [])
 
-        # ================= QA =================
         qa = ""
-        for i, q in enumerate(item.get("questions", []), start=1):
+
+        for i, q in enumerate(questions, start=1):
             qa += f"{i}. {q.get('title')}\n"
             qa += f"   Rating: {q.get('value')}/5\n\n"
 
-        # ================= ROW =================
         ws.append([
             date_str,
             time_str,
             item.get("branch", "-"),
             item.get("location", "-"),
             item.get("room_number", "-"),
-            f"{float(item.get('rating') or 0)}/5",
+            f"{int(item.get('rating') or 0)}/5",
             qa,
             item.get("comment", ""),
             item.get("name", "-"),
@@ -1662,16 +1670,16 @@ def download_excel():
     for row_cells in ws.iter_rows():
         for cell in row_cells:
             cell.border = Border(left=thin, right=thin, top=thin, bottom=thin)
-            cell.alignment = Alignment(vertical="top", wrap_text=True)
+            cell.alignment = Alignment(vertical="center", wrap_text=True)
 
     for col in ws.columns:
         length = max(len(str(c.value or "")) for c in col)
-        ws.column_dimensions[col[0].column_letter].width = min(length + 6, 45)
+        ws.column_dimensions[col[0].column_letter].width = min(length + 5, 40)
 
     ws.freeze_panes = "A13"
 
     # ===========================
-    # RETURN FILE
+    # Return file
     # ===========================
     buffer = BytesIO()
     wb.save(buffer)
