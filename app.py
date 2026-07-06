@@ -1572,11 +1572,13 @@ def download_excel():
     ws["A1"].font = Font(size=18, bold=True, color="FFFFFF")
     ws["A1"].fill = PatternFill("solid", fgColor="00A79B")
 
+    oman_now = datetime.now(ZoneInfo("Asia/Muscat"))
+
     ws["A3"] = "Report Date"
-    ws["B3"] = datetime.now().strftime("%Y-%m-%d")
+    ws["B3"] = oman_now.strftime("%Y-%m-%d")
 
     ws["A4"] = "Report Time"
-    ws["B4"] = datetime.now().strftime("%I:%M %p")
+    ws["B4"] = oman_now.strftime("%I:%M %p")
 
     ws["A5"] = "Branch"
     ws["B5"] = branch if branch else "All Branches"
@@ -1590,7 +1592,28 @@ def download_excel():
     # ===========================
     # Statistics
     # ===========================
-    ratings = [float(i.get("rating") or 0) for i in data]
+    ratings = []
+
+    for item in data:
+
+        if item.get("rating") is not None:
+            ratings.append(float(item["rating"]))
+
+        else:
+            qs = item.get("questions", [])
+
+            vals = []
+
+            for q in qs:
+                try:
+                    vals.append(float(q.get("value", 0)))
+                except:
+                    pass
+
+            if vals:
+                ratings.append(round(sum(vals) / len(vals), 2))
+            else:
+                ratings.append(0)
 
     total = len(ratings)
     avg = round(sum(ratings)/total, 2) if total else 0
@@ -1693,13 +1716,27 @@ def download_excel():
             qa += f"{i}. {q.get('title')}\n"
             qa += f"   Rating: {q.get('value')}/5\n\n"
 
+        rating = item.get("rating")
+
+        if rating is None:
+            qs = item.get("questions", [])
+            vals = []
+
+            for q in qs:
+                try:
+                    vals.append(float(q.get("value", 0)))
+                except:
+                    pass
+
+            rating = round(sum(vals) / len(vals), 1) if vals else 0
+
         ws.append([
             date_str,
             time_str,
             item.get("branch", "-"),
             item.get("location", "-"),
             item.get("room_number", "-"),
-            f"{int(item.get('rating') or 0)}/5",
+            f"{rating}/5",
             qa,
             item.get("comment", ""),
             item.get("name", "-"),
