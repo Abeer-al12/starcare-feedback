@@ -401,41 +401,29 @@
 
                 <th data-en="Location" data-ar="القسم">Location</th>
 
-                <th data-en="Room Number" data-ar="رقم الغرفة">
-                    Room Number
-                </th>
+                <th data-en="Room Number" data-ar="رقم الغرفة">Room Number</th>
 
-                <th data-en="Questions" data-ar="الأسئلة">
-                    Questions
-                </th>
+                <th data-en="Questions" data-ar="الأسئلة">Questions</th>
 
-                <th data-en="Status" data-ar="الحالة">
-                    Status
-                </th>
+                <th data-en="Status" data-ar="الحالة">Status</th>
 
-                <th data-en="Date" data-ar="التاريخ">
-                    Date
-                </th>
+                <th data-en="Comment" data-ar="التعليق">Comment</th>
 
-                <th data-en="Name" data-ar="الاسم">
-                    Name
-                </th>
+                <th data-en="Date" data-ar="التاريخ">Date</th>
 
-                <th data-en="Phone" data-ar="رقم الهاتف">
-                    Phone
-                </th>
+                <th data-en="Name" data-ar="الاسم">Name</th>
+
+                <th data-en="Phone" data-ar="رقم الهاتف">Phone</th>
 
                 {% if role == "admin" %}
-                <th data-en="Action" data-ar="الإجراء">
-                    Action
-                </th>
+                <th data-en="Action" data-ar="الإجراء">Action</th>
                 {% endif %}
             </tr>
 
             {% for item in data %}
             <tr>
                 <td>{{ item.branch or "-" }}</td>
-                <td>{{ item.location }}</td>
+                <td>{{ item.location or "-" }}</td>
                 <td>{{ item.room_number or "-" }}</td>
 
                 <td>
@@ -445,10 +433,9 @@
                     </div>
                     {% endfor %}
                 </td>
+
                 <td>
-
                     {% set low = item.questions | selectattr("value", "le", 3) | list %}
-
                     {% if low|length > 0 %}
                     <span style="color:red;">Issue</span>
                     {% else %}
@@ -456,6 +443,8 @@
                     {% endif %}
                 </td>
 
+                <!-- ✅ COMMENT ADDED HERE -->
+                <td>{{ item.comment or "-" }}</td>
 
                 <td>{{ item.created_at or item.date or "-" }}</td>
                 <td>{{ item.name or "-" }}</td>
@@ -470,7 +459,6 @@
                 </td>
             </tr>
             {% endfor %}
-
         </table>
 
     </div>
