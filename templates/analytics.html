@@ -362,31 +362,41 @@
                 {% for room in attention_rooms %}
 
                 <li style="
-        margin-bottom:15px;
-        color:red;
-        font-weight:bold;
-    ">
+    list-style:none;
+    background:#fff5f5;
+    padding:15px;
+    border-radius:15px;
+    border-left:5px solid red;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:15px;
+">
 
-                    🚨 {{ room.location }}
+                    <div>
 
-                    <br>
+                        <b style="color:red;">
+                            🚨 {{ room.location }}
+                        </b>
 
-                    Average Rating:
-                    {{ room.avg }}
+                        <br>
 
-                    <br><br>
+                        Average Rating:
+                        <strong>{{ room.avg }}</strong>
+
+                    </div>
+
 
                     <a href="/resolve_alert/{{ room.ids|join(',') }}" style="
-           background:#00A79B;
-           color:white;
-           padding:8px 15px;
-           border-radius:20px;
-           text-decoration:none;
-           ">
-
+background:#00A79B;
+color:white;
+padding:8px 18px;
+border-radius:20px;
+text-decoration:none;
+">
                         Mark as Done
-
                     </a>
+
 
                 </li>
 
@@ -409,20 +419,20 @@
 
         let labels = [
             {% for i in data %}
-            "{{ i.location }}",
+        "{{ i.location }}",
             {% endfor %}
         ];
 
         let counts = [
             {% for i in data %}
-            {{ i.count }},
-            {% endfor %}
+        { { i.count } },
+        {% endfor %}
         ];
 
         let avgs = [
             {% for i in data %}
-            {{ i.avg }},
-            {% endfor %}
+        { { i.avg } },
+        {% endfor %}
         ];
 
 
