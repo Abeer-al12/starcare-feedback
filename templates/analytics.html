@@ -295,15 +295,15 @@
 
         let counts = [
             {% for i in data %}
-        { { i.count } },
-        {% endfor %}
-];
+            {{ i.count }},
+            {% endfor %}
+        ];
 
         let avgs = [
             {% for i in data %}
-        { { i.avg } },
-        {% endfor %}
-];
+            {{ i.avg }},
+            {% endfor %}
+        ];
 
 
         // BAR
