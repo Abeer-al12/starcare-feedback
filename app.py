@@ -1910,7 +1910,10 @@ def analytics():
     if filters:
         query["$and"] = filters
 
-    query["status"] = {"$ne": "resolved"}
+    query["$or"] = [
+        {"status": {"$exists": False}},
+        {"status": {"$ne": "resolved"}}
+    ]
 
     data = list(collection.find(query))
 
