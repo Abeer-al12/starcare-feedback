@@ -425,7 +425,7 @@ text-decoration:none;
 
         let counts = [
             {% for i in data %}
-        { { i.count } },
+        {{ i.count }},
         {% endfor %}
         ];
 
