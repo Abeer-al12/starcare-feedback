@@ -1917,9 +1917,6 @@ def analytics():
 
     data = list(collection.find(query))
 
-    print("QUERY:", query)
-    print("TOTAL DATA:", len(data))
-    print("FIRST DATA:", data[:2])
 
     filtered = []
 
@@ -1956,7 +1953,22 @@ def analytics():
     for i in data:
 
         loc = i.get("location", "Unknown")
-        rating = float(i.get("rating") or 0)
+
+    # calculate rating from questions
+        if i.get("rating"):
+            rating = float(i.get("rating"))
+
+        elif i.get("questions"):
+
+            values = [
+                q.get("value",0)
+                for q in i["questions"]
+            ]
+
+            rating = sum(values) / len(values)
+
+        else:
+            rating = 0
 
         if loc not in stats:
             stats[loc] = {
