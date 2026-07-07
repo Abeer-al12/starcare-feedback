@@ -355,7 +355,52 @@
 
             <h3 id="alertTitle">Rooms Requiring Attention 🚨</h3>
 
-            <ul id="alerts"></ul>
+            <ul id="alerts">
+
+                {% if attention_rooms %}
+
+                {% for room in attention_rooms %}
+
+                <li style="
+        margin-bottom:15px;
+        color:red;
+        font-weight:bold;
+    ">
+
+                    🚨 {{ room.location }}
+
+                    <br>
+
+                    Average Rating:
+                    {{ room.avg }}
+
+                    <br><br>
+
+                    <a href="/resolve_alert/{{ room.id }}" style="
+           background:#00A79B;
+           color:white;
+           padding:8px 15px;
+           border-radius:20px;
+           text-decoration:none;
+           ">
+
+                        Mark as Done
+
+                    </a>
+
+                </li>
+
+                {% endfor %}
+
+                {% else %}
+
+                <li style="color:green;">
+                    ✔ All rooms performing well
+                </li>
+
+                {% endif %}
+
+            </ul>
 
         </div>
     </div>
@@ -364,20 +409,20 @@
 
         let labels = [
             {% for i in data %}
-            "{{ i.location }}",
+        "{{ i.location }}",
             {% endfor %}
         ];
 
         let counts = [
             {% for i in data %}
-            {{ i.count }},
-            {% endfor %}
+        { { i.count } },
+        {% endfor %}
         ];
 
         let avgs = [
             {% for i in data %}
-            {{ i.avg }},
-            {% endfor %}
+        { { i.avg } },
+        {% endfor %}
         ];
 
 
@@ -490,21 +535,21 @@
         document.getElementById("worstRoom").innerText =
             labels[avgs.indexOf(minAvg)];
 
-        let alerts = document.getElementById("alerts");
-        let foundAlert = false;
+        // let alerts = document.getElementById("alerts");
+        // let foundAlert = false;
 
-        for (let i = 0; i < avgs.length; i++) {
+        // for (let i = 0; i < avgs.length; i++) {
 
-            if (avgs[i] <= 3) {
+        //     if (avgs[i] <= 3) {
 
-                foundAlert = true;
+        //         foundAlert = true;
 
-                alerts.innerHTML +=
-                    `<li style="color:red;">
-            🚨 ${labels[i]} - Rating ${avgs[i]}
-        </li>`;
-            }
-        }
+        //         alerts.innerHTML +=
+        //             `<li style="color:red;">
+        //     🚨 ${labels[i]} - Rating ${avgs[i]}
+        // </li>`;
+        //     }
+        // }
 
         if (!foundAlert) {
             alerts.innerHTML =

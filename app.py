@@ -1991,6 +1991,15 @@ def analytics():
         for loc, v in stats.items()
     ]
 
+    # 🚨 Attention rooms
+    attention_rooms = []
+
+    for item in chart_data:
+
+        if item["avg"] <= 3:
+
+            attention_rooms.append(item)
+
     # Create attention alerts
     for loc, v in stats.items():
 
@@ -2022,6 +2031,7 @@ def analytics():
     return render_template(
         "analytics.html",
         data=chart_data,
+        attention_rooms=attention_rooms,
         branches=branches,
         locations=locations,
         rooms=rooms,
@@ -2041,13 +2051,11 @@ def resolve_alert(id):
     if 'admin' not in session:
         return redirect('/login')
 
-    alerts_collection.update_one(
+    collection.update_one(
         {"_id": ObjectId(id)},
         {
             "$set":{
-                "status":"resolved",
-                "resolved_by":session.get("username"),
-                "resolved_at":datetime.now()
+                "status":"resolved"
             }
         }
     )
