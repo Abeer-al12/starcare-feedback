@@ -164,6 +164,75 @@
             background: #00A79B;
             color: white;
         }
+
+        .filter-box {
+            background: white;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 5px 18px rgba(0, 0, 0, .08);
+            margin-bottom: 25px;
+
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-box select,
+        .filter-box input[type="date"] {
+
+            padding: 12px 15px;
+            border: 1px solid #d9e4ea;
+            border-radius: 12px;
+            font-size: 14px;
+            min-width: 170px;
+            background: #f9fbfc;
+            transition: .3s;
+        }
+
+        .filter-box select:focus,
+        .filter-box input:focus {
+
+            outline: none;
+            border-color: #00A79B;
+            box-shadow: 0 0 0 3px rgba(0, 167, 155, .15);
+        }
+
+        .filter-btn {
+
+            background: #00A79B;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: bold;
+            transition: .3s;
+        }
+
+        .filter-btn:hover {
+
+            background: #00897f;
+            transform: translateY(-2px);
+        }
+
+        .clear-btn {
+
+            background: #f1f5f8;
+            color: #555;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: .3s;
+        }
+
+        .clear-btn:hover {
+
+            background: #dde7ec;
+        }
     </style>
 </head>
 
@@ -191,10 +260,10 @@
             <button onclick="setLang('ar')">عربي</button>
         </div>
 
-        <form method="GET" style="display:flex;gap:15px;flex-wrap:wrap;margin-bottom:25px;">
+        <form method="GET" class="filter-box">
 
             <select name="branch">
-                <option value="">All Branches</option>
+                <option value="">🏥 All Branches</option>
 
                 {% for b in branches %}
                 <option value="{{ b }}" {% if selected_branch==b %}selected{% endif %}>
@@ -204,7 +273,7 @@
             </select>
 
             <select name="location">
-                <option value="">All Departments</option>
+                <option value="">📍 All Departments</option>
 
                 {% for l in locations %}
                 <option value="{{ l }}" {% if selected_location==l %}selected{% endif %}>
@@ -214,7 +283,7 @@
             </select>
 
             <select name="room">
-                <option value="">All Rooms</option>
+                <option value="">🚪 All Rooms</option>
 
                 {% for r in rooms %}
                 <option value="{{ r }}" {% if selected_room==r %}selected{% endif %}>
@@ -227,7 +296,13 @@
 
             <input type="date" name="end_date" value="{{ end_date or '' }}">
 
-            <button type="submit">Apply Filter</button>
+            <button type="submit" class="filter-btn">
+                Apply Filters
+            </button>
+
+            <a href="/analytics" class="clear-btn">
+                Clear
+            </a>
 
         </form>
         <h1>Analytics Dashboard</h1>
@@ -295,14 +370,14 @@
 
         let counts = [
             {% for i in data %}
-            {{ i.count }},
-            {% endfor %}
+        { { i.count } },
+        {% endfor %}
         ];
 
         let avgs = [
             {% for i in data %}
-            {{ i.avg }},
-            {% endfor %}
+        { { i.avg } },
+        {% endfor %}
         ];
 
 
