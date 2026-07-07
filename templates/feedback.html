@@ -460,7 +460,22 @@
                     nameRequired: "الاسم مطلوب",
                     phoneRequired: "رقم الهاتف لازم يكون 8 أرقام"
                 }
-            }
+            },
+
+            googleTitle: {
+                en: "Loved our service? ⭐",
+                ar: "هل أعجبتك خدمتنا؟ ⭐"
+            },
+
+            googleText: {
+                en: "We'd really appreciate it if you could leave us a review on Google.",
+                ar: "يسعدنا كثيرًا أن تشارك تجربتك معنا على خرائط Google."
+            },
+
+            googleBtn: {
+                en: "⭐ Review us on Google",
+                ar: "⭐ قيّمنا على خرائط Google"
+            },
         };
 
         const translations = {
@@ -597,6 +612,25 @@
             <input type="text" id="popupPhone" placeholder="Phone Number"
                 style="width:100%;padding:10px;margin:8px 0;border:1px solid #ddd;border-radius:10px;">
 
+            <div id="googleReviewBox" style="margin:20px 0;text-align:center;display:none;">
+
+                <p id="googleTitle" style="font-weight:bold;font-size:16px;"></p>
+
+                <p id="googleText" style="color:#666;"></p>
+
+                <a id="googleBtn" href="https://maps.app.goo.gl/MwWnzeJvRJ2xisDw7" target="_blank" style="
+            display:inline-block;
+            margin-top:10px;
+            background:#4285F4;
+            color:white;
+            text-decoration:none;
+            padding:12px 20px;
+            border-radius:10px;
+            font-weight:bold;">
+                </a>
+
+            </div>
+
             <button id="popupBtn" data-key="submit" onclick="submitLowRating()"
                 style="width:100%;padding:12px;margin-top:10px;background:#00A79B;color:white;border:none;border-radius:10px;">
                 Submit
@@ -654,6 +688,11 @@
             isLowRating = answers.some(a => a <= 3);
 
             // 4️⃣ فتح البوب أب
+            document.getElementById("phonePopup").style.display = "flex";
+            setPopupLang(currentLang);
+
+            isLowRating = answers.some(a => a <= 3);
+
             document.getElementById("phonePopup").style.display = "flex";
             setPopupLang(currentLang);
 
@@ -761,6 +800,15 @@
 
             document.getElementById("skipBtn").innerText =
                 i18n.skip[lang];
+
+            document.getElementById("googleTitle").innerText =
+                i18n.googleTitle[lang];
+
+            document.getElementById("googleText").innerText =
+                i18n.googleText[lang];
+
+            document.getElementById("googleBtn").innerText =
+                i18n.googleBtn[lang];
         }
 
     </script>
