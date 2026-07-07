@@ -684,17 +684,21 @@
             // 2️⃣ حفظ التعليق
             tempComment = document.getElementById("commentBox").value;
 
-            // 3️⃣ تحديد هل فيه تقييم منخفض
+            // تحديد هل فيه تقييم منخفض
             isLowRating = answers.some(a => a <= 3);
 
-            // 4️⃣ فتح البوب أب
+            // فتح البوب أب
             document.getElementById("phonePopup").style.display = "flex";
+
+            // تحديث اللغة
             setPopupLang(currentLang);
 
-            isLowRating = answers.some(a => a <= 3);
-
-            document.getElementById("phonePopup").style.display = "flex";
-            setPopupLang(currentLang);
+            // إظهار أو إخفاء Google Review
+            if (isLowRating) {
+                document.getElementById("googleReviewBox").style.display = "none";
+            } else {
+                document.getElementById("googleReviewBox").style.display = "block";
+            }
 
             // 5️⃣ إظهار/إخفاء زر skip
             // document.getElementById("skipBtn").style.display =
