@@ -366,16 +366,16 @@
             {% for i in data %}
         "{{ i.location }}",
             {% endfor %}
-];
+        ];
 
         let counts = [
-            {% for i in data %}
+        {% for i in data %}
         { { i.count } },
         {% endfor %}
         ];
 
         let avgs = [
-            {% for i in data %}
+        {% for i in data %}
         { { i.avg } },
         {% endfor %}
         ];
