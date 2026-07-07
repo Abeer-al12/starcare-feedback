@@ -1991,6 +1991,8 @@ def analytics():
         for loc, v in stats.items()
     ]
 
+    print("CHART DATA:", chart_data)
+
     # 🚨 Attention rooms
     attention_rooms = []
 
@@ -1999,6 +2001,8 @@ def analytics():
         if item["avg"] <= 3:
 
             attention_rooms.append(item)
+
+    print("ATTENTION:", attention_rooms)
 
     # Create attention alerts
     for loc, v in stats.items():
