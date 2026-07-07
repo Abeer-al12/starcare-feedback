@@ -1945,6 +1945,8 @@ def analytics():
 
     for i in data:
 
+        print(i)
+
         loc = i.get("location", "Unknown")
         rating = float(i.get("rating") or 0)
 
