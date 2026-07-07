@@ -658,8 +658,8 @@
             setPopupLang(currentLang);
 
             // 5️⃣ إظهار/إخفاء زر skip
-            document.getElementById("skipBtn").style.display =
-                isLowRating ? "none" : "block";
+            // document.getElementById("skipBtn").style.display =
+            //     isLowRating ? "block" : "none";
         });
 
 
@@ -697,14 +697,8 @@
         // ================= SKIP =================
         function skipContact() {
 
-            if (isLowRating) {
-                alert(currentLang === "ar"
-                    ? "الاسم ورقم الهاتف مطلوبان"
-                    : "Name and phone are required");
-                return;
-            }
-
             sendData(null, null);
+
         }
 
 
