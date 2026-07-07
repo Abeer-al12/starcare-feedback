@@ -72,6 +72,7 @@ client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=5000)
 db = client["starcare_feedback"]
 collection = db["feedback"]
 users_collection = db["users"]
+alerts_collection = db.alerts
 
 # db.users.insert_one({
 #     "username": "admin",
@@ -1909,6 +1910,8 @@ def analytics():
     if filters:
         query["$and"] = filters
 
+    query["status"] = {"$ne": "resolved"}
+
     data = list(collection.find(query))
 
     filtered = []
@@ -1946,25 +1949,22 @@ def analytics():
     for i in data:
 
         loc = i.get("location", "Unknown")
-
-        questions = i.get("questions", [])
-
-        if questions:
-            rating = sum(q.get("value", 0) for q in questions) / len(questions)
-        else:
-            rating = 0
+        rating = float(i.get("rating") or 0)
 
         if loc not in stats:
             stats[loc] = {
-                "count": 0,
-                "total": 0
-            }
+            "count": 0,
+            "total": 0,
+            "ids": []
+        }
 
         stats[loc]["count"] += 1
         stats[loc]["total"] += rating
+        stats[loc]["ids"].append(str(i["_id"]))
 
     chart_data = [
         {
+            "ids": v["ids"],
             "location": room_names.get(loc, loc),
             "count": v["count"],
             "avg": round(v["total"] / v["count"], 2)
@@ -1972,22 +1972,68 @@ def analytics():
         for loc, v in stats.items()
     ]
 
+    # Create attention alerts
+    for loc, v in stats.items():
+
+        avg = round(v["total"] / v["count"], 2)
+
+        if avg <= 3:
+
+            existing = alerts_collection.find_one({
+                "location": loc,
+                "status": "open"
+            })
+
+            if not existing:
+
+                alerts_collection.insert_one({
+                    "location": loc,
+                    "average_rating": avg,
+                    "status": "open",
+                    "created_at": datetime.now()
+                })
+
     branches = sorted(collection.distinct("branch"))
     locations = sorted(collection.distinct("location"))
     rooms = sorted(collection.distinct("room_number"))
 
+    alerts = list(alerts_collection.find({
+        "status":"open"
+    }))
     return render_template(
         "analytics.html",
         data=chart_data,
         branches=branches,
         locations=locations,
         rooms=rooms,
+        alerts=alerts,
         selected_branch=branch,
         selected_location=location,
         selected_room=room,
         start_date=start_date,
         end_date=end_date
     )
+
+
+
+@app.route('/resolve_alert/<id>')
+def resolve_alert(id):
+
+    if 'admin' not in session:
+        return redirect('/login')
+
+    alerts_collection.update_one(
+        {"_id": ObjectId(id)},
+        {
+            "$set":{
+                "status":"resolved",
+                "resolved_by":session.get("username"),
+                "resolved_at":datetime.now()
+            }
+        }
+    )
+
+    return redirect('/analytics')
 # ---------------- GENERATE QR ----------------
 
 
