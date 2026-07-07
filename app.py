@@ -1917,6 +1917,10 @@ def analytics():
 
     data = list(collection.find(query))
 
+    print("QUERY:", query)
+    print("TOTAL DATA:", len(data))
+    print("FIRST DATA:", data[:2])
+
     filtered = []
 
     for item in data:
