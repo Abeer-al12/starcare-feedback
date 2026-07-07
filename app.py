@@ -1991,18 +1991,16 @@ def analytics():
         for loc, v in stats.items()
     ]
 
-    print("CHART DATA:", chart_data)
 
     # 🚨 Attention rooms
     attention_rooms = []
 
     for item in chart_data:
 
-        if item["avg"] <= 3:
+        if item["avg"] < 4:
 
             attention_rooms.append(item)
 
-    print("ATTENTION:", attention_rooms)
 
     # Create attention alerts
     for loc, v in stats.items():
@@ -2049,14 +2047,20 @@ def analytics():
 
 
 
-@app.route('/resolve_alert/<id>')
-def resolve_alert(id):
+@app.route('/resolve_alert/<ids>')
+def resolve_alert(ids):
 
     if 'admin' not in session:
         return redirect('/login')
 
-    collection.update_one(
-        {"_id": ObjectId(id)},
+    ids = ids.split(",")
+
+    collection.update_many(
+        {
+            "_id":{
+                "$in":[ObjectId(i) for i in ids]
+            }
+        },
         {
             "$set":{
                 "status":"resolved"
