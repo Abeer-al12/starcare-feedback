@@ -1945,10 +1945,14 @@ def analytics():
 
     for i in data:
 
-        print(i)
-
         loc = i.get("location", "Unknown")
-        rating = float(i.get("rating") or 0)
+
+        questions = i.get("questions", [])
+
+        if questions:
+            rating = sum(q.get("value", 0) for q in questions) / len(questions)
+        else:
+            rating = 0
 
         if loc not in stats:
             stats[loc] = {
