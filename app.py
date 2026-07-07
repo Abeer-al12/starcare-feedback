@@ -1887,17 +1887,58 @@ def analytics():
     if 'admin' not in session:
         return redirect('/login')
 
-    # 🌿 الفرع الحالي
-    branch = session.get("active_branch")
+    branch = request.args.get("branch")
+    location = request.args.get("location")
+    room = request.args.get("room")
+    start_date = request.args.get("start_date")
+    end_date = request.args.get("end_date")
 
-    # 📦 query
     query = {}
 
-    if branch:
-        query["branch"] = branch
+    filters = []
 
-    # 📊 جلب البيانات
+    if branch:
+        filters.append({"branch": branch})
+
+    if location:
+        filters.append({"location": location})
+
+    if room:
+        filters.append({"room_number": room})
+
+    if filters:
+        query["$and"] = filters
+
     data = list(collection.find(query))
+
+    filtered = []
+
+    for item in data:
+
+        date_obj = item.get("created_at") or item.get("date")
+
+        if isinstance(date_obj, str):
+            try:
+                date_obj = datetime.strptime(date_obj, "%Y-%m-%d %I:%M %p")
+            except:
+                try:
+                    date_obj = datetime.strptime(date_obj, "%Y-%m-%d")
+                except:
+                    date_obj = None
+
+        if start_date:
+            start = datetime.strptime(start_date, "%Y-%m-%d")
+            if not date_obj or date_obj < start:
+                continue
+
+        if end_date:
+            end = datetime.strptime(end_date, "%Y-%m-%d")
+            if not date_obj or date_obj > end:
+                continue
+
+        filtered.append(item)
+
+    data = filtered
 
     # 📈 stats
     stats = {}
@@ -1925,9 +1966,21 @@ def analytics():
         for loc, v in stats.items()
     ]
 
+    branches = sorted(collection.distinct("branch"))
+    locations = sorted(collection.distinct("location"))
+    rooms = sorted(collection.distinct("room_number"))
+
     return render_template(
         "analytics.html",
-        data=chart_data
+        data=chart_data,
+        branches=branches,
+        locations=locations,
+        rooms=rooms,
+        selected_branch=branch,
+        selected_location=location,
+        selected_room=room,
+        start_date=start_date,
+        end_date=end_date
     )
 # ---------------- GENERATE QR ----------------
 
