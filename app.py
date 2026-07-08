@@ -375,13 +375,15 @@ QUESTIONS = {
             "How clean was the restroom?",
             "Were all supplies available?",
             "Did all facilities work properly?",
-            "Overall, how satisfied are you with the restroom?"
+            "How comfortable was your restroom experience?",
+            "How satisfied are you with the overall restroom service?"
         ],
         "ar": [
             "ما مدى نظافة دورة المياه؟",
             "هل كانت جميع المستلزمات متوفرة؟",
             "هل كانت جميع المرافق تعمل بشكل صحيح؟",
-            "بشكل عام، ما مدى رضاك عن دورة المياه؟"
+            "ما مدى راحتك أثناء استخدام دورة المياه؟",
+            "ما مدى رضاك بشكل عام عن خدمة دورة المياه؟"
         ]
     },
     "it": {
