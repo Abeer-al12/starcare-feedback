@@ -618,15 +618,20 @@ def thankyou(branch, room):
 
     name = room_names.get(room, room)
 
+    google = request.args.get("google") == "1"
+
     return render_template(
         "thankyou.html",
         branch=branch,
         room=room,
-        room_name=name
+        room_name=name,
+        google=google
     )
 
-@app.route("/thankyou/<branch>/<location>/<room>")
-def thankyou(branch, location, room):
+@app.route("/thankyou/<branch>/<location>/<room_number>")
+def thankyou_new(branch, location, room_number):
+
+    room_name = f"{location.title()} {room_number}"
 
     google = request.args.get("google") == "1"
 
@@ -634,7 +639,8 @@ def thankyou(branch, location, room):
         "thankyou.html",
         branch=branch,
         location=location,
-        room=room,
+        room=room_number,
+        room_name=room_name,
         google=google
     )
 # ---------------- LOGIN ----------------
