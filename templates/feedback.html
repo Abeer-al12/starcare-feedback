@@ -547,6 +547,19 @@
             });
 
             document.querySelectorAll(".stars label").forEach(label => {
+
+                label.setAttribute(
+                    "data-label",
+                    lang === "ar"
+                        ? label.dataset.arLabel
+                        : label.dataset.enLabel
+                );
+
+            });
+
+
+
+            document.querySelectorAll(".stars label").forEach(label => {
                 const text = label.dataset[lang + "Label"];
                 if (text) {
                     label.setAttribute("data-label", text);
