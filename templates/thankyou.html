@@ -80,6 +80,41 @@
             border-radius: 18px;
             font-weight: bold;
         }
+
+        .google-review-box {
+            margin: 25px 0;
+            padding: 20px;
+            background: #f8fcff;
+            border: 2px solid #00A79B;
+            border-radius: 18px;
+        }
+
+        .google-review-box h3 {
+            margin: 0 0 10px;
+            color: #00A79B;
+        }
+
+        .google-review-box p {
+            margin-bottom: 18px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .google-btn {
+            display: inline-block;
+            background: #4285F4;
+            color: white;
+            text-decoration: none;
+            padding: 14px 25px;
+            border-radius: 14px;
+            font-weight: bold;
+            transition: .3s;
+        }
+
+        .google-btn:hover {
+            background: #2b63c7;
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 
@@ -105,15 +140,15 @@
 
         <div class="google-review-box">
 
-            <h3>⭐ Loved your experience?</h3>
+            <h3 id="googleTitle">⭐ Loved your experience?</h3>
 
-            <p>
+            <p id="googleText">
                 We'd really appreciate a quick review on Google.
             </p>
 
-            <a href="https://maps.app.goo.gl/MwWnzeJvRJ2xisDw7" target="_blank" class="google-btn">
+            <a id="googleBtn" href="https://maps.app.goo.gl/MwWnzeJvRJ2xisDw7" target="_blank" class="google-btn">
 
-                Leave a Google Review
+                ⭐ Leave a Google Review
 
             </a>
 
@@ -142,6 +177,24 @@
                 (lang === "ar")
                     ? "ملاحظاتك تساعدنا على تحسين الخدمة وتقديم رعاية أفضل."
                     : "Your feedback helps us improve and provide better care.";
+
+            if (document.getElementById("googleTitle")) {
+
+                document.getElementById("googleTitle").innerText =
+                    (lang === "ar")
+                        ? "🌟 أعجبتك تجربتك؟"
+                        : "⭐ Loved your experience?";
+
+                document.getElementById("googleText").innerText =
+                    (lang === "ar")
+                        ? "يسعدنا أن تشارك تجربتك معنا على خرائط Google، فهذا يساعد الآخرين في التعرف على خدماتنا."
+                        : "We'd really appreciate it if you could share your experience with us on Google Maps.";
+
+                document.getElementById("googleBtn").innerText =
+                    (lang === "ar")
+                        ? "⭐ قيّمنا على Google"
+                        : "⭐ Leave a Google Review";
+            }
         }
 
         window.onload = function () {
