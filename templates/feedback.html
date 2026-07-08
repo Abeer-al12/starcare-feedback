@@ -612,7 +612,7 @@
             <input type="text" id="popupPhone" placeholder="Phone Number"
                 style="width:100%;padding:10px;margin:8px 0;border:1px solid #ddd;border-radius:10px;">
 
-            <div id="googleReviewBox" style="margin:20px 0;text-align:center;display:none;">
+            <!-- <div id="googleReviewBox" style="margin:20px 0;text-align:center;display:none;">
 
                 <p id="googleTitle" style="font-weight:bold;font-size:16px;"></p>
 
@@ -629,7 +629,7 @@
             font-weight:bold;">
                 </a>
 
-            </div>
+            </div> -->
 
             <button id="popupBtn" data-key="submit" onclick="submitLowRating()"
                 style="width:100%;padding:12px;margin-top:10px;background:#00A79B;color:white;border:none;border-radius:10px;">
@@ -683,20 +683,22 @@
 
             // 2️⃣ حفظ التعليق
             tempComment = document.getElementById("commentBox").value;
+
             // تحديد هل فيه تقييم منخفض
             isLowRating = answers.some(a => a <= 3);
 
-            // فتح البوب أب
-            document.getElementById("phonePopup").style.display = "flex";
-
-            // تحديث اللغة
-            setPopupLang(currentLang);
-
-            // إظهار أو إخفاء Google Review
+            // إذا التقييم منخفض افتح البوب أب
             if (isLowRating) {
-                document.getElementById("googleReviewBox").style.display = "none";
-            } else {
-                document.getElementById("googleReviewBox").style.display = "block";
+
+                document.getElementById("phonePopup").style.display = "flex";
+                setPopupLang(currentLang);
+
+            }
+            // إذا التقييم ممتاز احفظ مباشرة
+            else {
+
+                sendData(null, null);
+
             }
 
             // 5️⃣ إظهار/إخفاء زر skip
