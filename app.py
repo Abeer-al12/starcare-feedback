@@ -618,14 +618,11 @@ def thankyou(branch, room):
 
     name = room_names.get(room, room)
 
-    google = request.args.get("google") == "1"
-
     return render_template(
         "thankyou.html",
         branch=branch,
         room=room,
-        room_name=name,
-        google=google
+        room_name=name
     )
 
 @app.route("/thankyou/<branch>/<location>/<room>")
