@@ -834,6 +834,13 @@
             //     i18n.googleBtn[lang];
         }
 
+window.onload = function () {
+
+    let savedLang = localStorage.getItem("lang") || "en";
+
+    setLang(savedLang);
+
+};
     </script>
     <div id="toast"></div>
 </body>
