@@ -683,7 +683,6 @@
 
             // 2️⃣ حفظ التعليق
             tempComment = document.getElementById("commentBox").value;
-
             // تحديد هل فيه تقييم منخفض
             isLowRating = answers.some(a => a <= 3);
 
@@ -772,10 +771,15 @@
 
                     if (!data.success) return;
 
-                    const redirectUrl =
+                    let redirectUrl =
                         "{{ location }}" && "{{ room }}"
                             ? `/thankyou/{{ branch }}/{{ location }}/{{ room }}`
                             : `/thankyou/{{ branch }}/{{ room }}`;
+
+                    // إذا التقييم ممتاز نرسل متغير للجوجل
+                    if (!isLowRating) {
+                        redirectUrl += "?google=1";
+                    }
 
                     window.location.href = redirectUrl;
 

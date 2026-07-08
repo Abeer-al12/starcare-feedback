@@ -1,134 +1,156 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Thank You</title>
 
     <style>
-        body{
-            margin:0;
-            height:100vh;
-            display:flex;
-            justify-content:center;
-            align-items:center;
-            background:#f6fbfc;
-            font-family:Arial;
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #f6fbfc;
+            font-family: Arial;
         }
 
-        .card{
-            background:white;
-            width:420px;
-            padding:40px;
-            border-radius:30px;
-            text-align:center;
-            box-shadow:0 8px 25px rgba(0,0,0,.10);
+        .card {
+            background: white;
+            width: 420px;
+            padding: 40px;
+            border-radius: 30px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, .10);
         }
 
-        .logo{
-            width:200px;
-            margin:0 auto 20px;
-            display:block;
+        .logo {
+            width: 200px;
+            margin: 0 auto 20px;
+            display: block;
         }
 
-        h1{
-            color:#1b2a41;
+        h1 {
+            color: #1b2a41;
         }
 
-        p{
-            color:#666;
-            font-size:17px;
+        p {
+            color: #666;
+            font-size: 17px;
         }
 
-        .location{
-            margin:20px 0;
-            color:#00A79B;
-            font-weight:bold;
-            font-size:19px;
+        .location {
+            margin: 20px 0;
+            color: #00A79B;
+            font-weight: bold;
+            font-size: 19px;
         }
 
         /* زر اللغة نفس ستايلك */
-        .lang-switch{
-            display:flex;
-            justify-content:center;
-            gap:10px;
-            margin-bottom:15px;
+        .lang-switch {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
         }
 
-        .lang-switch button{
-            background:#eafcfd;
-            color:#00A79B;
-            border:1px solid #00A79B;
-            padding:8px 18px;
-            border-radius:12px;
-            cursor:pointer;
-            font-size:14px;
-            transition:.3s;
+        .lang-switch button {
+            background: #eafcfd;
+            color: #00A79B;
+            border: 1px solid #00A79B;
+            padding: 8px 18px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: .3s;
         }
 
-        .lang-switch button:hover{
-            background:#00A79B;
-            color:white;
+        .lang-switch button:hover {
+            background: #00A79B;
+            color: white;
         }
 
-        .btn{
-            display:inline-block;
-            margin-top:15px;
-            text-decoration:none;
-            background:#00A79B;
-            color:white;
-            padding:14px 28px;
-            border-radius:18px;
-            font-weight:bold;
+        .btn {
+            display: inline-block;
+            margin-top: 15px;
+            text-decoration: none;
+            background: #00A79B;
+            color: white;
+            padding: 14px 28px;
+            border-radius: 18px;
+            font-weight: bold;
         }
     </style>
 </head>
 
 <body>
 
-<div class="card">
+    <div class="card">
 
-    <img src="{{ url_for('static', filename='LOGO.webp') }}" class="logo">
+        <img src="{{ url_for('static', filename='LOGO.webp') }}" class="logo">
 
-    <!-- Language buttons -->
-    <div class="lang-switch">
-        <button onclick="setLang('en')">English</button>
-        <button onclick="setLang('ar')">عربي</button>
+        <!-- Language buttons -->
+        <div class="lang-switch">
+            <button onclick="setLang('en')">English</button>
+            <button onclick="setLang('ar')">عربي</button>
+        </div>
+
+        <h1 id="title">Thank You!</h1>
+
+        <p id="desc">
+            Your feedback helps us improve and provide better care.
+        </p>
+
+        {% if google %}
+
+        <div class="google-review-box">
+
+            <h3>⭐ Loved your experience?</h3>
+
+            <p>
+                We'd really appreciate a quick review on Google.
+            </p>
+
+            <a href="https://maps.app.goo.gl/MwWnzeJvRJ2xisDw7" target="_blank" class="google-btn">
+
+                Leave a Google Review
+
+            </a>
+
+        </div>
+
+        {% endif %}
+
+        <div class="location" id="room">
+            {{ room_name }}
+        </div>
+
     </div>
 
-    <h1 id="title">Thank You!</h1>
+    <script>
 
-    <p id="desc">
-        Your feedback helps us improve and provide better care.
-    </p>
+        function setLang(lang) {
 
-    <div class="location" id="room">
-        {{ room_name }}
-    </div>
+            localStorage.setItem("lang", lang);
 
-</div>
+            document.documentElement.dir = (lang === "ar") ? "rtl" : "ltr";
 
-<script>
+            document.getElementById("title").innerText =
+                (lang === "ar") ? "شكراً لك!" : "Thank You!";
 
-function setLang(lang){
+            document.getElementById("desc").innerText =
+                (lang === "ar")
+                    ? "ملاحظاتك تساعدنا على تحسين الخدمة وتقديم رعاية أفضل."
+                    : "Your feedback helps us improve and provide better care.";
+        }
 
-    localStorage.setItem("lang", lang);
+        window.onload = function () {
+            let lang = localStorage.getItem("lang") || "en";
+            setLang(lang);
+        }
 
-    document.documentElement.dir = (lang === "ar") ? "rtl" : "ltr";
-
-    document.getElementById("title").innerText =
-        (lang === "ar") ? "شكراً لك!" : "Thank You!";
-
-    document.getElementById("desc").innerText =
-        (lang === "ar")
-        ? "ملاحظاتك تساعدنا على تحسين الخدمة وتقديم رعاية أفضل."
-        : "Your feedback helps us improve and provide better care.";
-}
-
-window.onload = function(){
-    let lang = localStorage.getItem("lang") || "en";
-    setLang(lang);
-}
-
-</script>
+    </script>
 
 </body>
+
 </html>

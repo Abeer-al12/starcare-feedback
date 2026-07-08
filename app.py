@@ -618,24 +618,27 @@ def thankyou(branch, room):
 
     name = room_names.get(room, room)
 
+    google = request.args.get("google") == "1"
+
     return render_template(
         "thankyou.html",
         branch=branch,
         room=room,
-        room_name=name
+        room_name=name,
+        google=google
     )
 
-@app.route("/thankyou/<branch>/<location>/<room_number>")
-def thankyou_new(branch, location, room_number):
+@app.route("/thankyou/<branch>/<location>/<room>")
+def thankyou(branch, location, room):
 
-    room_name = f"{location.title()} {room_number}"
+    google = request.args.get("google") == "1"
 
     return render_template(
         "thankyou.html",
         branch=branch,
         location=location,
-        room=room_number,
-        room_name=room_name
+        room=room,
+        google=google
     )
 # ---------------- LOGIN ----------------
 @app.route('/login', methods=['GET','POST'])
