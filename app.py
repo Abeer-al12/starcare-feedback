@@ -125,7 +125,8 @@ room_names = {
     "it":"IT Department",
     "admin":"Administration",
     "toilet":"Restroom",
-    "Sample_Collaction":"Sample Collection Room"
+    "Sample_Collaction":"Sample Collection Room",
+    "visa_medical": "Visa Medical Facility"
 }
 
 branch_rooms_map = {
@@ -173,7 +174,11 @@ branch_rooms_map = {
         "xray301",
         "ultrasound301",
         "reception"
-    ]
+    ],
+
+    "stardiagnostics": [
+        "visa_medical"
+    ],
 }
 
 
@@ -183,7 +188,8 @@ location_names = {
     "pharmacy": "Pharmacy",
     "lab": "Laboratory",
     "xray": "X-Ray",
-    "it": "IT Department"
+    "it": "IT Department",
+
 }
 # RECEPTION = [
 #     {
@@ -400,6 +406,24 @@ QUESTIONS = {
             "ما مدى احترافية فريق تقنية المعلومات؟",
             "ما مدى رضاك عن التواصل أثناء معالجة المشكلة؟",
             "بشكل عام، ما مدى رضاك عن خدمة تقنية المعلومات؟"
+        ]
+    },
+    "visa_medical": {
+
+        "en": [
+            "Was the process clearly explained to you?",
+            "How was your waiting time before being attended to?",
+            "How would you rate the staff's behavior and professionalism?",
+            "How would you rate the overall cleanliness and hygiene of the facility?",
+            "Would you recommend this facility to others requiring a Visa Medical?"
+        ],
+
+        "ar": [
+            "هل تم شرح الإجراءات لك بوضوح؟",
+            "كيف كان وقت الانتظار قبل أن يتم خدمتك؟",
+            "كيف تقيم تعامل واحترافية الموظفين؟",
+            "كيف تقيم النظافة العامة ومستوى التعقيم في المنشأة؟",
+            "هل توصي بهذه المنشأة للآخرين الراغبين في إجراء الفحص الطبي للتأشيرة؟"
         ]
     },
 }
